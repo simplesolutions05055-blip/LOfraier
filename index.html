@@ -791,6 +791,110 @@ footer{
 @media (min-width:921px){
   .nav-cta{margin-inline-start:8px}
 }
+
+/* ===== REAL LOGO IN NAV ===== */
+.brand .logo-img{
+  height:42px;width:auto;display:block;
+  filter:drop-shadow(0 4px 16px rgba(212,175,55,.25));
+}
+.brand-foot .logo-img{height:38px}
+
+/* ===== SINCE BADGE ===== */
+.since-badge{
+  display:inline-flex;align-items:center;gap:8px;
+  font-size:11px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;
+  padding:6px 12px;border-radius:999px;
+  background:rgba(212,175,55,.1);
+  border:1px solid rgba(212,175,55,.35);
+  color:var(--gold-bright);
+  margin-inline-start:10px;
+}
+.since-badge .yrs{
+  font-family:'Playfair Display',serif;font-style:italic;font-weight:900;
+  font-size:14px;color:#fff;
+}
+
+/* ===== HERO ROBOT FLOATING ===== */
+.hero-robot{
+  position:absolute;
+  bottom:-40px;left:-60px;
+  width:280px;height:auto;z-index:1;
+  opacity:.85;
+  filter:drop-shadow(0 30px 60px rgba(91,58,168,.5));
+  animation:floatRobot 6s ease-in-out infinite;
+  pointer-events:none;
+}
+@keyframes floatRobot{0%,100%{transform:translateY(0) rotate(-2deg)}50%{transform:translateY(-12px) rotate(2deg)}}
+@media (max-width:980px){.hero-robot{width:200px;left:-30px;bottom:-20px}}
+@media (max-width:640px){.hero-robot{display:none}}
+
+/* ===== CLIENTS MARQUEE ===== */
+.clients{
+  padding:80px 0;
+  position:relative;
+  border-top:1px solid var(--glass-border);
+  border-bottom:1px solid var(--glass-border);
+  background:linear-gradient(180deg, rgba(255,255,255,.015), transparent);
+}
+.clients-head{text-align:center;margin-bottom:50px}
+.clients-head .num-big{
+  font-family:'Playfair Display',serif;font-style:italic;font-weight:900;
+  font-size:clamp(54px,7vw,96px);
+  background:linear-gradient(135deg,#fff,#d4af37 60%,#b8860b);
+  -webkit-background-clip:text;background-clip:text;color:transparent;
+  line-height:1;letter-spacing:-.03em;
+}
+.clients-head h3{font-size:clamp(20px,2vw,28px);font-weight:700;margin-top:8px;color:#fff}
+.clients-head p{color:var(--text-dim);margin-top:8px;font-size:15px}
+
+.marquee{
+  position:relative;
+  overflow:hidden;
+  -webkit-mask-image:linear-gradient(90deg,transparent,#000 8%,#000 92%,transparent);
+  mask-image:linear-gradient(90deg,transparent,#000 8%,#000 92%,transparent);
+}
+.marquee-track{
+  display:flex;gap:60px;
+  width:max-content;
+  animation:marquee 50s linear infinite;
+  align-items:center;
+}
+.marquee:hover .marquee-track{animation-play-state:paused}
+.marquee-track img{
+  height:48px;width:auto;max-width:160px;object-fit:contain;
+  filter:brightness(0) invert(1);
+  opacity:.55;
+  transition:opacity .3s ease, filter .3s ease, transform .3s ease;
+}
+.marquee-track img:hover{opacity:1;transform:scale(1.1)}
+.marquee-track.row-2{animation:marquee-rev 60s linear infinite;margin-top:36px}
+@keyframes marquee{from{transform:translateX(0)}to{transform:translateX(-50%)}}
+@keyframes marquee-rev{from{transform:translateX(-50%)}to{transform:translateX(0)}}
+
+/* ===== REAL IMAGE WORKS ===== */
+.work .bg-img{
+  position:absolute;inset:0;
+  background-size:cover;background-position:center;
+  transition:transform .8s ease;
+}
+.work .bg-img.contain{background-size:contain;background-repeat:no-repeat;background-color:#0a0e27}
+.work:hover .bg-img{transform:scale(1.08)}
+
+/* ===== AI SECTION ROBOT ===== */
+.tech-visual .robot-overlay{
+  position:absolute;inset:0;display:grid;place-items:center;z-index:3;pointer-events:none;
+}
+.tech-visual .robot-overlay img{
+  width:65%;height:auto;
+  filter:drop-shadow(0 30px 60px rgba(123,76,255,.4));
+  animation:floatRobot 7s ease-in-out infinite;
+}
+.tech-visual .orbit{opacity:.55}
+
+/* ===== MUNI CARD REAL IMAGE ===== */
+.muni-card .visual.img{
+  background-size:cover;background-position:center;
+}
 </style>
 </head>
 <body>
@@ -803,12 +907,12 @@ footer{
 
 <!-- NAV -->
 <nav class="nav" id="nav">
-  <div class="brand">
-    <div class="logo" aria-hidden="true"></div>
-    <div class="name">Web<span>XP</span></div>
-  </div>
+  <a class="brand" href="#" aria-label="WebXP">
+    <img class="logo-img" src="https://www.webxp.co.il/wp-content/uploads/2025/03/logo-w.png" alt="WebXP" loading="eager" />
+  </a>
   <div class="nav-links" id="navLinks">
     <a href="#why">למה אנחנו</a>
+    <a href="#clients">לקוחות</a>
     <a href="#works">עבודות</a>
     <a href="#municipal">פתרונות לרשויות</a>
     <a href="#process">תהליך</a>
@@ -827,7 +931,10 @@ footer{
   <div class="hero-canvas" aria-hidden="true"></div>
   <div class="container hero-grid">
     <div>
-      <span class="eyebrow reveal">Creative Municipal Solutions · משרד יצירה לרשויות</span>
+      <div class="reveal" style="display:flex;flex-wrap:wrap;align-items:center;gap:10px">
+        <span class="eyebrow">Creative Municipal Solutions · משרד יצירה לרשויות</span>
+        <span class="since-badge">★ <span class="yrs">2006</span> · 20 שנות חדשנות דיגיטלית</span>
+      </div>
       <h1 class="reveal reveal-delay-1">
         <span class="line-en">WebXP</span>
         <span class="line-he">פתרונות גרפיקה ודיגיטל לרשויות מובילות בישראל</span>
@@ -855,6 +962,7 @@ footer{
     </div>
 
     <div class="hero-visual reveal reveal-delay-2" aria-hidden="true">
+      <img class="hero-robot" src="https://www.webxp.co.il/wp-content/uploads/2025/06/ROBOT222-1.png" alt="" loading="lazy" />
       <div class="tile tile-1 mock-event">
         <span class="tag">EVENT · אירוע עירוני</span>
         <div class="mock"><h4>פסטיבל הקיץ</h4><p>קמפיין רב־ערוצי</p></div>
@@ -924,6 +1032,77 @@ footer{
   </div>
 </section>
 
+<!-- CLIENTS MARQUEE -->
+<section class="clients" id="clients">
+  <div class="container">
+    <div class="clients-head reveal">
+      <div class="num-big">+150</div>
+      <h3>ארגונים, רשויות וחברות מובילות סומכים עלינו</h3>
+      <p>מעיריות וגופים ציבוריים ועד חברות הייטק וקמעונאות — מערך WebXP נבחן כל יום בשטח.</p>
+    </div>
+  </div>
+  <div class="marquee reveal">
+    <div class="marquee-track">
+      <img src="https://www.webxp.co.il/wp-content/uploads/2025/09/logo_kfaryona.png" alt="" />
+      <img src="https://www.webxp.co.il/wp-content/uploads/2025/08/פתח_תקווה_-_קצב.png" alt="" />
+      <img src="https://www.webxp.co.il/wp-content/uploads/2025/02/Olenik-Law-LOGO2.png" alt="" />
+      <img src="https://www.webxp.co.il/wp-content/uploads/2025/08/logo-trigo.png" alt="" />
+      <img src="https://www.webxp.co.il/wp-content/uploads/2025/09/cropped-levin-logo-hebrew.png" alt="" />
+      <img src="https://www.webxp.co.il/wp-content/uploads/2025/09/MC-1024x432.png" alt="" />
+      <img src="https://www.webxp.co.il/wp-content/uploads/2025/09/sbc-investments2.png" alt="" />
+      <img src="https://www.webxp.co.il/wp-content/uploads/2025/09/de-capsul-logo-white.png" alt="" />
+      <img src="https://www.webxp.co.il/wp-content/uploads/2025/09/LOGO-LOMELO.png" alt="" />
+      <img src="https://www.webxp.co.il/wp-content/uploads/2025/09/cropped-Haama-Logo.png" alt="" />
+      <img src="https://www.webxp.co.il/wp-content/uploads/2025/09/aldenaire-1.png" alt="" />
+      <img src="https://www.webxp.co.il/wp-content/uploads/2025/09/LOGO_HAEDCHEF2.png" alt="" />
+      <img src="https://www.webxp.co.il/wp-content/uploads/2025/09/estrategic.png" alt="" />
+      <!-- duplicate for seamless loop -->
+      <img src="https://www.webxp.co.il/wp-content/uploads/2025/09/logo_kfaryona.png" alt="" />
+      <img src="https://www.webxp.co.il/wp-content/uploads/2025/08/פתח_תקווה_-_קצב.png" alt="" />
+      <img src="https://www.webxp.co.il/wp-content/uploads/2025/02/Olenik-Law-LOGO2.png" alt="" />
+      <img src="https://www.webxp.co.il/wp-content/uploads/2025/08/logo-trigo.png" alt="" />
+      <img src="https://www.webxp.co.il/wp-content/uploads/2025/09/cropped-levin-logo-hebrew.png" alt="" />
+      <img src="https://www.webxp.co.il/wp-content/uploads/2025/09/MC-1024x432.png" alt="" />
+      <img src="https://www.webxp.co.il/wp-content/uploads/2025/09/sbc-investments2.png" alt="" />
+      <img src="https://www.webxp.co.il/wp-content/uploads/2025/09/de-capsul-logo-white.png" alt="" />
+      <img src="https://www.webxp.co.il/wp-content/uploads/2025/09/LOGO-LOMELO.png" alt="" />
+      <img src="https://www.webxp.co.il/wp-content/uploads/2025/09/cropped-Haama-Logo.png" alt="" />
+      <img src="https://www.webxp.co.il/wp-content/uploads/2025/09/aldenaire-1.png" alt="" />
+      <img src="https://www.webxp.co.il/wp-content/uploads/2025/09/LOGO_HAEDCHEF2.png" alt="" />
+      <img src="https://www.webxp.co.il/wp-content/uploads/2025/09/estrategic.png" alt="" />
+    </div>
+    <div class="marquee-track row-2">
+      <img src="https://www.webxp.co.il/wp-content/uploads/2025/09/cropped-cropped-cropped-לוגו-נובה-שערים.png" alt="" />
+      <img src="https://www.webxp.co.il/wp-content/uploads/2025/09/cropped-Artboard-2-copy-1024x293.png" alt="" />
+      <img src="https://www.webxp.co.il/wp-content/uploads/2025/09/לוגו-דויד-אנרגיה.png" alt="" />
+      <img src="https://www.webxp.co.il/wp-content/uploads/2025/09/Frame-1261154312.png" alt="" />
+      <img src="https://www.webxp.co.il/wp-content/uploads/2025/09/carDate-logo.png" alt="" />
+      <img src="https://www.webxp.co.il/wp-content/uploads/2025/09/cover_png_320_124-1.png" alt="" />
+      <img src="https://www.webxp.co.il/wp-content/uploads/2025/09/השקעות-נדלן-בקפריסין.png" alt="" />
+      <img src="https://www.webxp.co.il/wp-content/uploads/2025/09/logo_superNG-1.png" alt="" />
+      <img src="https://www.webxp.co.il/wp-content/uploads/2025/09/dlogo.png" alt="" />
+      <img src="https://www.webxp.co.il/wp-content/uploads/2025/03/logo6.png" alt="" />
+      <img src="https://www.webxp.co.il/wp-content/uploads/2025/09/Artboard-7-1.png" alt="" />
+      <img src="https://www.webxp.co.il/wp-content/uploads/2025/03/logo4.png" alt="" />
+      <img src="https://www.webxp.co.il/wp-content/uploads/2025/09/logo_final_large_Size2-1024x232.png" alt="" />
+      <!-- duplicate -->
+      <img src="https://www.webxp.co.il/wp-content/uploads/2025/09/cropped-cropped-cropped-לוגו-נובה-שערים.png" alt="" />
+      <img src="https://www.webxp.co.il/wp-content/uploads/2025/09/cropped-Artboard-2-copy-1024x293.png" alt="" />
+      <img src="https://www.webxp.co.il/wp-content/uploads/2025/09/לוגו-דויד-אנרגיה.png" alt="" />
+      <img src="https://www.webxp.co.il/wp-content/uploads/2025/09/Frame-1261154312.png" alt="" />
+      <img src="https://www.webxp.co.il/wp-content/uploads/2025/09/carDate-logo.png" alt="" />
+      <img src="https://www.webxp.co.il/wp-content/uploads/2025/09/cover_png_320_124-1.png" alt="" />
+      <img src="https://www.webxp.co.il/wp-content/uploads/2025/09/השקעות-נדלן-בקפריסין.png" alt="" />
+      <img src="https://www.webxp.co.il/wp-content/uploads/2025/09/logo_superNG-1.png" alt="" />
+      <img src="https://www.webxp.co.il/wp-content/uploads/2025/09/dlogo.png" alt="" />
+      <img src="https://www.webxp.co.il/wp-content/uploads/2025/03/logo6.png" alt="" />
+      <img src="https://www.webxp.co.il/wp-content/uploads/2025/09/Artboard-7-1.png" alt="" />
+      <img src="https://www.webxp.co.il/wp-content/uploads/2025/03/logo4.png" alt="" />
+      <img src="https://www.webxp.co.il/wp-content/uploads/2025/09/logo_final_large_Size2-1024x232.png" alt="" />
+    </div>
+  </div>
+</section>
+
 <!-- WORKS / GALLERY -->
 <section class="section" id="works">
   <div class="container">
@@ -949,7 +1128,7 @@ footer{
 
     <div class="gallery" id="gallery">
       <div class="work w-l reveal" data-cat="campaigns events">
-        <div class="bg bg-a"></div>
+        <div class="bg bg-img" style="background-image:url('https://www.webxp.co.il/wp-content/uploads/2025/08/1_2640277495_huge.png')"></div>
         <div class="ovr">
           <div class="cat">קמפיין · אירוע</div>
           <h4>פסטיבל הגליל — ליין־אפ מלא</h4>
@@ -957,7 +1136,7 @@ footer{
         </div>
       </div>
       <div class="work w-m reveal reveal-delay-1" data-cat="instagram municipalities">
-        <div class="bg bg-b"></div>
+        <div class="bg bg-img" style="background-image:url('https://www.webxp.co.il/wp-content/uploads/2025/08/4_2427686317.png')"></div>
         <div class="ovr">
           <div class="cat">אינסטגרם · עירייה</div>
           <h4>קמפיין הסברה לתושבים</h4>
@@ -979,7 +1158,7 @@ footer{
         </div>
       </div>
       <div class="work w-w reveal" data-cat="billboards municipalities">
-        <div class="bg bg-d"></div>
+        <div class="bg bg-img" style="background-image:url('https://www.webxp.co.il/wp-content/uploads/2025/08/BG2.png')"></div>
         <div class="ovr">
           <div class="cat">שילוט חוצות</div>
           <h4>קמפיין רחוב — אכפת לנו מהעיר</h4>
@@ -994,7 +1173,7 @@ footer{
         </div>
       </div>
       <div class="work w-m reveal" data-cat="events campaigns">
-        <div class="bg bg-g"></div>
+        <div class="bg bg-img" style="background-image:url('https://www.webxp.co.il/wp-content/uploads/2025/09/1_2646608689.png')"></div>
         <div class="ovr">
           <div class="cat">אירוע</div>
           <h4>הדלקת נרות בעיר</h4>
@@ -1002,7 +1181,7 @@ footer{
         </div>
       </div>
       <div class="work w-m reveal reveal-delay-1" data-cat="youtube video">
-        <div class="bg bg-e"></div>
+        <div class="bg bg-img" style="background-image:url('https://www.webxp.co.il/wp-content/uploads/2025/08/3_2483984605.png')"></div>
         <div class="ovr">
           <div class="cat">יוטיוב · וידאו</div>
           <h4>סרט תדמית עירוני</h4>
@@ -1010,7 +1189,7 @@ footer{
         </div>
       </div>
       <div class="work w-m reveal reveal-delay-2" data-cat="instagram facebook">
-        <div class="bg bg-i"></div>
+        <div class="bg bg-img" style="background-image:url('https://www.webxp.co.il/wp-content/uploads/2025/08/1_2298372459.png')"></div>
         <div class="ovr">
           <div class="cat">סושיאל</div>
           <h4>מארז ערוצי — חודש שלם</h4>
@@ -1181,6 +1360,9 @@ footer{
       </div>
 
       <div class="tech-visual reveal" aria-hidden="true">
+        <div class="robot-overlay">
+          <img src="https://www.webxp.co.il/wp-content/uploads/2025/06/ROBOT3-1-1024x1024.png" alt="WebXP AI" loading="lazy" />
+        </div>
         <div class="orbit">
           <div class="ring r1"></div>
           <div class="ring r2"></div>
@@ -1351,9 +1533,11 @@ footer{
 <footer>
   <div class="container">
     <div class="foot-grid">
-      <div class="foot-col foot-brand">
-        <div class="brand"><div class="logo"></div><div class="name">Web<span>XP</span></div></div>
-        <p>Creative Municipal Solutions — מערך גרפיקה, מדיה ודיגיטל מתקדם לרשויות מובילות בישראל. עיר חכמה. תקשורת חכמה.</p>
+      <div class="foot-col foot-brand brand-foot">
+        <a class="brand" href="https://www.webxp.co.il" target="_blank" rel="noopener" aria-label="WebXP">
+          <img class="logo-img" src="https://www.webxp.co.il/wp-content/uploads/2025/03/logo-w.png" alt="WebXP" loading="lazy" />
+        </a>
+        <p>Creative Municipal Solutions — מערך גרפיקה, מדיה ודיגיטל מתקדם לרשויות מובילות בישראל. הדיגיטלי מאז 2006 · 20 שנות חדשנות. עיר חכמה. תקשורת חכמה.</p>
         <div class="socials">
           <a href="#" aria-label="Instagram"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="2" width="20" height="20" rx="5"/><path d="M16 11.37A4 4 0 1112.63 8 4 4 0 0116 11.37zM17.5 6.5h.01"/></svg></a>
           <a href="#" aria-label="Facebook"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 2h-3a5 5 0 00-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 011-1h3z"/></svg></a>
@@ -1383,7 +1567,7 @@ footer{
         <a href="tel:0500000000">0500000000</a>
         <a href="mailto:hello@webxp.co.il">hello@webxp.co.il</a>
         <a href="#">וואטסאפ ישיר</a>
-        <a href="#">webxp.co.il</a>
+        <a href="https://www.webxp.co.il" target="_blank" rel="noopener">webxp.co.il</a>
       </div>
     </div>
     <div class="foot-bottom">
