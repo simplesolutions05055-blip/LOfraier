@@ -895,6 +895,149 @@ footer{
 .muni-card .visual.img{
   background-size:cover;background-position:center;
 }
+
+/* ===== GOVERNMENT CLIENTS SHOWCASE ===== */
+.gov-section{
+  padding:80px 0 40px;
+  position:relative;
+}
+.gov-grid{
+  display:grid;grid-template-columns:repeat(4,1fr);gap:22px;margin-top:50px;
+}
+@media (max-width:980px){.gov-grid{grid-template-columns:repeat(2,1fr)}}
+@media (max-width:480px){.gov-grid{grid-template-columns:1fr}}
+.gov-card{
+  position:relative;
+  aspect-ratio:1/1.05;
+  border-radius:var(--r-lg);
+  background:linear-gradient(180deg, rgba(255,255,255,.06), rgba(255,255,255,.02));
+  border:1px solid var(--glass-border);
+  backdrop-filter:blur(20px);
+  overflow:hidden;
+  transition:transform .4s ease, border-color .4s ease, box-shadow .4s ease;
+  display:flex;flex-direction:column;align-items:center;justify-content:center;
+  padding:24px;text-align:center;
+}
+.gov-card:hover{
+  transform:translateY(-6px);
+  border-color:rgba(212,175,55,.45);
+  box-shadow:0 30px 60px rgba(0,0,0,.5), var(--glow-gold);
+}
+.gov-card .badge-active{
+  position:absolute;top:14px;left:14px;
+  display:inline-flex;align-items:center;gap:6px;
+  font-size:10px;font-weight:700;letter-spacing:1px;text-transform:uppercase;
+  padding:5px 10px;border-radius:999px;
+  background:rgba(6,214,160,.12);color:#06d6a0;
+  border:1px solid rgba(6,214,160,.3);
+}
+.gov-card .badge-active::before{content:"";width:5px;height:5px;border-radius:50%;background:#06d6a0;box-shadow:0 0 8px #06d6a0;animation:pulseDot 2s ease-in-out infinite}
+@keyframes pulseDot{0%,100%{opacity:.4}50%{opacity:1}}
+.gov-card .logo-frame{
+  width:100%;flex:1;display:grid;place-items:center;
+  position:relative;margin-bottom:16px;
+}
+.gov-card .logo-frame img{
+  max-width:78%;max-height:78%;width:auto;height:auto;
+  object-fit:contain;
+  filter:drop-shadow(0 8px 24px rgba(0,0,0,.4));
+  background:#fff;
+  padding:18px;border-radius:18px;
+  border:1px solid rgba(255,255,255,.08);
+  /* hide alt text styling when img missing — fallback below shows */
+}
+/* CSS-only fallback "logos" — render the placeholder if img fails */
+.gov-card .logo-fallback{
+  width:78%;aspect-ratio:1/1;
+  border-radius:18px;
+  display:grid;place-items:center;
+  position:relative;overflow:hidden;
+  background:#fff;
+  border:1px solid rgba(255,255,255,.1);
+  box-shadow:0 12px 40px rgba(0,0,0,.4);
+}
+.gov-card .logo-fallback .name-he{
+  font-weight:900;font-size:clamp(22px,2.6vw,32px);
+  letter-spacing:-.01em;line-height:1;
+}
+.gov-card .logo-fallback .name-en{
+  font-size:11px;font-weight:700;letter-spacing:3px;
+  margin-top:8px;text-transform:uppercase;
+}
+.gov-card .logo-fallback .ornament{
+  position:absolute;border-radius:50%;
+  filter:blur(2px);
+}
+/* Herzliya — multi-color star aesthetic */
+.gov-card .fb-herzliya{background:#fff;color:#0d3a8c}
+.gov-card .fb-herzliya::before{
+  content:"";position:absolute;top:18%;right:14%;
+  width:34%;aspect-ratio:1/1;
+  background:
+    conic-gradient(from 30deg,
+      #f15a29 0 60deg,
+      #f7b32b 60deg 120deg,
+      #6cba3d 120deg 180deg,
+      #1a85c8 180deg 240deg,
+      #5fc6e6 240deg 300deg,
+      #8a4a25 300deg 360deg);
+  clip-path:polygon(50% 0%, 61% 35%, 98% 35%, 68% 57%, 79% 91%, 50% 70%, 21% 91%, 32% 57%, 2% 35%, 39% 35%);
+  filter:drop-shadow(0 4px 12px rgba(0,0,0,.15));
+}
+.gov-card .fb-herzliya .name-he{margin-top:30%;font-size:clamp(18px,2.2vw,26px)}
+.gov-card .fb-herzliya .tagline{
+  font-size:10px;color:#5fc6e6;font-weight:700;margin-top:6px;letter-spacing:1px;
+}
+/* Ashdod — flame stripes */
+.gov-card .fb-ashdod{background:#fff;color:#e94e1b}
+.gov-card .fb-ashdod::before{
+  content:"";position:absolute;top:14%;left:50%;transform:translateX(-50%);
+  width:42%;aspect-ratio:.7;
+  background:linear-gradient(90deg,
+    #f7b32b 0 25%,
+    #e94e1b 25% 50%,
+    #6cba3d 50% 75%,
+    #1a85c8 75% 100%);
+  clip-path:polygon(50% 0%, 65% 60%, 60% 100%, 40% 100%, 35% 60%);
+}
+.gov-card .fb-ashdod .name-he{margin-top:48%;font-size:clamp(20px,2.4vw,28px)}
+.gov-card .fb-ashdod .name-en{color:#1a85c8}
+/* Petach Tikva — dotted ring */
+.gov-card .fb-petach{background:#fff;color:#3a3a3a}
+.gov-card .fb-petach::before{
+  content:"";position:absolute;top:14%;left:50%;transform:translateX(-50%);
+  width:38%;aspect-ratio:1/1;border-radius:50%;
+  background:
+    radial-gradient(circle at 50% 8%, #f7b32b 4%, transparent 5%),
+    radial-gradient(circle at 78% 18%, #e94e1b 4%, transparent 5%),
+    radial-gradient(circle at 92% 50%, #f7b32b 4%, transparent 5%),
+    radial-gradient(circle at 78% 82%, #6cba3d 4%, transparent 5%),
+    radial-gradient(circle at 50% 92%, #6cba3d 4%, transparent 5%),
+    radial-gradient(circle at 22% 82%, #f7b32b 4%, transparent 5%),
+    radial-gradient(circle at 8% 50%, #e94e1b 4%, transparent 5%),
+    radial-gradient(circle at 22% 18%, #6cba3d 4%, transparent 5%);
+}
+.gov-card .fb-petach .name-he{margin-top:42%;font-size:clamp(16px,2vw,22px)}
+.gov-card .fb-petach .name-en{color:#888;font-weight:600}
+/* Ramat Hadassah — tree icon */
+.gov-card .fb-ramat{background:#fff;color:#3a3a3a}
+.gov-card .fb-ramat::before{
+  content:"";position:absolute;top:14%;left:50%;transform:translateX(-50%);
+  width:36%;aspect-ratio:1/1;
+  background:
+    radial-gradient(ellipse at 50% 35%, #6cba3d 0 32%, transparent 33%),
+    radial-gradient(ellipse at 35% 25%, #88c93d 0 18%, transparent 19%),
+    radial-gradient(ellipse at 65% 25%, #88c93d 0 18%, transparent 19%),
+    linear-gradient(#6b3a1a, #6b3a1a) 50% 70%/8% 30% no-repeat;
+}
+.gov-card .fb-ramat .name-he{margin-top:42%;font-size:clamp(13px,1.6vw,17px);font-weight:800;line-height:1.2}
+.gov-card .fb-ramat .tagline{font-size:9px;color:#6cba3d;font-weight:700;margin-top:6px;letter-spacing:1.5px}
+
+.gov-card .city-label{
+  font-size:14px;font-weight:700;color:#fff;margin-top:6px;
+}
+.gov-card .city-sub{font-size:12px;color:var(--text-mute);margin-top:3px;letter-spacing:.5px}
+
 </style>
 </head>
 <body>
@@ -1028,6 +1171,71 @@ footer{
         <h3>צוות מקצועי</h3>
         <p>מעצבים בכירים, עורכי וידאו, אנימטורים, אנשי סושיאל ומנהלי לקוח. מומחיות לכל תחום.</p>
       </div>
+    </div>
+  </div>
+</section>
+
+<!-- GOVERNMENT / MUNICIPALITIES SHOWCASE -->
+<section class="gov-section" id="government">
+  <div class="container">
+    <div class="section-head reveal" style="text-align:center;margin-bottom:0">
+      <span class="eyebrow" style="margin-bottom:18px">★ רשויות וגופי ממשל פעילים</span>
+      <h2 class="section-title" style="margin:18px 0 12px">רשויות מובילות <span class="accent">כבר עובדות איתנו.</span></h2>
+      <p class="section-sub" style="margin:0 auto">מערך WebXP נבחן בשטח אצל עיריות גדולות, גופי ממשל וכפרי נוער — אותו DNA, אותו סטנדרט, אותה מהירות.</p>
+    </div>
+
+    <div class="gov-grid">
+      <article class="gov-card reveal">
+        <span class="badge-active">לקוח פעיל</span>
+        <div class="logo-frame">
+          <img src="assets/clients/herzliya.png" alt="עיריית הרצליה" data-fallback="herzliya" onerror="this.style.display='none';this.nextElementSibling.style.display='grid'" />
+          <div class="logo-fallback fb-herzliya" style="display:none">
+            <div class="name-he">הרצליה</div>
+            <div class="tagline">אם נרצה.</div>
+          </div>
+        </div>
+        <div class="city-label">עיריית הרצליה</div>
+        <div class="city-sub">HERZLIYA · אם נרצה.</div>
+      </article>
+
+      <article class="gov-card reveal reveal-delay-1">
+        <span class="badge-active">לקוח פעיל</span>
+        <div class="logo-frame">
+          <img src="assets/clients/ashdod.png" alt="עיריית אשדוד" data-fallback="ashdod" onerror="this.style.display='none';this.nextElementSibling.style.display='grid'" />
+          <div class="logo-fallback fb-ashdod" style="display:none">
+            <div class="name-he">אשדוד</div>
+            <div class="name-en">ASHDOD</div>
+          </div>
+        </div>
+        <div class="city-label">עיריית אשדוד</div>
+        <div class="city-sub">ASHDOD · עיר תיירות מובילה</div>
+      </article>
+
+      <article class="gov-card reveal reveal-delay-2">
+        <span class="badge-active">לקוח פעיל</span>
+        <div class="logo-frame">
+          <img src="assets/clients/petach-tikva.png" alt="עיריית פתח תקווה" data-fallback="petach-tikva" onerror="this.style.display='none';this.nextElementSibling.style.display='grid'" />
+          <div class="logo-fallback fb-petach" style="display:none">
+            <div class="name-he">פתח תקווה</div>
+            <div class="name-en">PETAH TIKVA</div>
+          </div>
+        </div>
+        <div class="city-label">עיריית פתח תקווה</div>
+        <div class="city-sub">PETAH TIKVA · אם המושבות</div>
+      </article>
+
+      <article class="gov-card reveal reveal-delay-3">
+        <span class="badge-active">לקוח פעיל</span>
+        <div class="logo-frame">
+          <img src="assets/clients/ramat-hadassah.png" alt="כפר הנוער רמת הדסה" data-fallback="ramat-hadassah" onerror="this.style.display='none';this.nextElementSibling.style.display='grid'" />
+          <div class="logo-fallback fb-ramat" style="display:none">
+            <div class="name-he">כפר הנוער<br/>רמת הדסה</div>
+            <div class="tagline">למדתי. הצלחתי. ניצחתי.</div>
+          </div>
+        </div>
+        <div class="city-label">כפר הנוער רמת הדסה</div>
+        <div class="city-sub">למדתי. הצלחתי. ניצחתי.</div>
+      </article>
     </div>
   </div>
 </section>
