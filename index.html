@@ -880,6 +880,17 @@ footer{
 .work .bg-img.contain{background-size:contain;background-repeat:no-repeat;background-color:#0a0e27}
 .work:hover .bg-img{transform:scale(1.08)}
 
+/* Real photo on top of fallback gradient — image fails gracefully */
+.work .bg-real{
+  position:absolute;inset:0;width:100%;height:100%;
+  object-fit:cover;
+  transition:transform .8s ease;
+  z-index:1;
+}
+.work:hover .bg-real{transform:scale(1.08)}
+.work .bg-real[data-broken]{display:none}
+.work .ovr{z-index:2}
+
 /* ===== AI SECTION ROBOT ===== */
 .tech-visual .robot-overlay{
   position:absolute;inset:0;display:grid;place-items:center;z-index:3;pointer-events:none;
@@ -1335,12 +1346,13 @@ footer{
     </div>
 
     <div class="gallery" id="gallery">
-      <div class="work w-l reveal" data-cat="campaigns events">
+      <div class="work w-l reveal" data-cat="campaigns instagram facebook">
         <div class="bg bg-img" style="background-image:url('https://www.webxp.co.il/wp-content/uploads/2025/08/1_2640277495_huge.png')"></div>
+        <img class="bg-real" src="assets/works/medical-shavuot.jpg" alt="Medical · ברכת חג שבועות" loading="lazy" onerror="this.setAttribute('data-broken','')" />
         <div class="ovr">
-          <div class="cat">קמפיין · אירוע</div>
-          <h4>פסטיבל הגליל — ליין־אפ מלא</h4>
-          <div class="meta"><span>⏱ 48ש׳</span><span>📍 רב־ערוצי</span><span>👁 2.3M</span></div>
+          <div class="cat">Medical · ברכת חג</div>
+          <h4>חג שבועות שמח — מרכז מומחים לרפואת עור</h4>
+          <div class="meta"><span>⏱ 8 שעות</span><span>📱 פיד · סטוריז</span><span>🎯 הסברה</span></div>
         </div>
       </div>
       <div class="work w-m reveal reveal-delay-1" data-cat="instagram municipalities">
@@ -1351,11 +1363,12 @@ footer{
           <div class="meta"><span>⏱ 24ש׳</span><span>📱 IG Stories</span></div>
         </div>
       </div>
-      <div class="work w-s reveal reveal-delay-2" data-cat="facebook">
+      <div class="work w-s reveal reveal-delay-2" data-cat="instagram facebook campaigns">
         <div class="bg bg-c"></div>
+        <img class="bg-real" src="assets/works/pizzaroma-cheese.jpg" alt="Pizza Roma · Extra Cheese" loading="lazy" onerror="this.setAttribute('data-broken','')" />
         <div class="ovr">
-          <div class="cat">פייסבוק</div>
-          <h4>פוסט שבועי קבוע</h4>
+          <div class="cat">Pizza Roma · F&amp;B</div>
+          <h4>EXTRA CHEESE</h4>
         </div>
       </div>
       <div class="work w-s reveal reveal-delay-3" data-cat="tiktok video">
@@ -1365,12 +1378,13 @@ footer{
           <h4>טרנד יומי</h4>
         </div>
       </div>
-      <div class="work w-w reveal" data-cat="billboards municipalities">
+      <div class="work w-w reveal" data-cat="campaigns municipalities instagram facebook">
         <div class="bg bg-img" style="background-image:url('https://www.webxp.co.il/wp-content/uploads/2025/08/BG2.png')"></div>
+        <img class="bg-real" src="assets/works/autodeal-emergency.jpg" alt="אוטודיל · עדכון מצב חירום" loading="lazy" onerror="this.setAttribute('data-broken','')" />
         <div class="ovr">
-          <div class="cat">שילוט חוצות</div>
-          <h4>קמפיין רחוב — אכפת לנו מהעיר</h4>
-          <div class="meta"><span>⏱ 5 ימי עבודה</span><span>🗺 24 לוחות</span></div>
+          <div class="cat">★ עדכון חירום · אוטודיל / Champion</div>
+          <h4>תקשורת חירום בזמן אמת — סגירת סניפים בעקבות פיקוד העורף</h4>
+          <div class="meta"><span>⏱ 25 דקות לאוויר</span><span>🚨 Emergency Mode</span><span>📱 רב־ערוצי</span></div>
         </div>
       </div>
       <div class="work w-t reveal reveal-delay-1" data-cat="animation video">
@@ -1388,20 +1402,22 @@ footer{
           <div class="meta"><span>⏱ 12ש׳</span><span>📍 קמפיין מלא</span></div>
         </div>
       </div>
-      <div class="work w-m reveal reveal-delay-1" data-cat="youtube video">
+      <div class="work w-m reveal reveal-delay-1" data-cat="campaigns instagram facebook">
         <div class="bg bg-img" style="background-image:url('https://www.webxp.co.il/wp-content/uploads/2025/08/3_2483984605.png')"></div>
+        <img class="bg-real" src="assets/works/hcg-womens-day.jpg" alt="HCG Group · Women's Day" loading="lazy" onerror="this.setAttribute('data-broken','')" />
         <div class="ovr">
-          <div class="cat">יוטיוב · וידאו</div>
-          <h4>סרט תדמית עירוני</h4>
-          <div class="meta"><span>⏱ 4 שבועות</span><span>🎬 3:42</span></div>
+          <div class="cat">HCG · קמפיין בינלאומי</div>
+          <h4>Women's Day — קמפיין גלובלי לקבוצת HCG</h4>
+          <div class="meta"><span>⏱ שבוע</span><span>🌐 3 חברות</span><span>📱 EN/HE</span></div>
         </div>
       </div>
-      <div class="work w-m reveal reveal-delay-2" data-cat="instagram facebook">
+      <div class="work w-m reveal reveal-delay-2" data-cat="instagram facebook campaigns">
         <div class="bg bg-img" style="background-image:url('https://www.webxp.co.il/wp-content/uploads/2025/08/1_2298372459.png')"></div>
+        <img class="bg-real" src="assets/works/samsara-birthday.jpg" alt="Samsara · פינוק יום הולדת" loading="lazy" onerror="this.setAttribute('data-broken','')" />
         <div class="ovr">
-          <div class="cat">סושיאל</div>
-          <h4>מארז ערוצי — חודש שלם</h4>
-          <div class="meta"><span>⏱ שגרה חודשית</span><span>📱 30 גרפיקות</span></div>
+          <div class="cat">Samsara · קידום מכירות</div>
+          <h4>פינוק יום הולדת ב־40₪ — מקדם מכירות</h4>
+          <div class="meta"><span>⏱ 24 שעות</span><span>📱 פיד · סטוריז</span><span>📈 +180% הזמנות</span></div>
         </div>
       </div>
     </div>
