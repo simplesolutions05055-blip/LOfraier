@@ -1049,6 +1049,301 @@ footer{
 }
 .gov-card .city-sub{font-size:12px;color:var(--text-mute);margin-top:3px;letter-spacing:.5px}
 
+/* ===== CINEMATIC GRAPHIC CAROUSEL ===== */
+.cinema{padding:120px 0 100px;position:relative;overflow:hidden}
+.cinema::before{
+  content:"";position:absolute;inset:0;z-index:-1;
+  background:radial-gradient(800px 500px at 50% 10%, rgba(123,76,255,.18), transparent 60%);
+}
+.cinema-stage{
+  position:relative;
+  padding:50px 0;
+  -webkit-mask-image:linear-gradient(90deg,transparent,#000 5%,#000 95%,transparent);
+  mask-image:linear-gradient(90deg,transparent,#000 5%,#000 95%,transparent);
+}
+.cinema-row{
+  display:flex;gap:22px;width:max-content;
+  animation:cinemaScroll 70s linear infinite;
+}
+.cinema-row.row-b{
+  animation:cinemaScrollRev 90s linear infinite;
+  margin-top:22px;
+}
+.cinema-stage:hover .cinema-row{animation-play-state:paused}
+@keyframes cinemaScroll{from{transform:translateX(0)}to{transform:translateX(-50%)}}
+@keyframes cinemaScrollRev{from{transform:translateX(-50%)}to{transform:translateX(0)}}
+
+.cine{
+  position:relative;flex:0 0 auto;
+  width:300px;aspect-ratio:1/1;
+  border-radius:var(--r);
+  overflow:hidden;
+  border:1px solid var(--glass-border);
+  background:var(--glass);
+  cursor:pointer;
+  transition:transform .5s cubic-bezier(.2,.8,.2,1), box-shadow .5s ease, border-color .5s ease;
+}
+.cine.tall{aspect-ratio:9/16;width:230px}
+.cine.wide{aspect-ratio:16/9;width:430px}
+.cine:hover{
+  transform:translateY(-10px) scale(1.02);
+  border-color:rgba(212,175,55,.5);
+  box-shadow:0 30px 60px rgba(0,0,0,.6), 0 0 60px rgba(212,175,55,.18);
+  z-index:5;
+}
+.cine .photo{
+  position:absolute;inset:0;
+  background-size:cover;background-position:center;
+  transition:transform .8s ease, filter .5s ease;
+}
+.cine:hover .photo{transform:scale(1.08);filter:brightness(1.1)}
+.cine .photo-real{
+  position:absolute;inset:0;width:100%;height:100%;
+  object-fit:cover;
+  transition:transform .8s ease, filter .5s ease;
+}
+.cine:hover .photo-real{transform:scale(1.08);filter:brightness(1.1)}
+.cine .photo-real[data-broken]{display:none}
+.cine .glow{
+  position:absolute;inset:0;border-radius:inherit;pointer-events:none;
+  background:linear-gradient(135deg, rgba(212,175,55,.25), transparent 40%, transparent 60%, rgba(123,76,255,.3));
+  opacity:0;transition:opacity .4s ease;
+  mix-blend-mode:overlay;
+}
+.cine:hover .glow{opacity:1}
+.cine .veil{
+  position:absolute;inset:0;
+  background:linear-gradient(180deg, transparent 55%, rgba(5,6,15,.92));
+  display:flex;flex-direction:column;justify-content:flex-end;
+  padding:18px;color:#fff;
+}
+.cine .cat{font-size:10px;letter-spacing:1.5px;color:var(--gold-bright);font-weight:700;text-transform:uppercase;margin-bottom:4px}
+.cine h5{font-size:15px;font-weight:700;line-height:1.2}
+
+/* ===== VIDEO PRODUCTION ===== */
+.vids-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:22px}
+@media (max-width:960px){.vids-grid{grid-template-columns:repeat(2,1fr)}}
+@media (max-width:560px){.vids-grid{grid-template-columns:1fr}}
+.vid-card{
+  position:relative;aspect-ratio:16/9;
+  border-radius:var(--r-lg);
+  overflow:hidden;
+  border:1px solid var(--glass-border);
+  background:#000;
+  cursor:pointer;
+  transition:transform .5s ease, box-shadow .5s ease, border-color .5s ease;
+}
+.vid-card:hover{
+  transform:translateY(-6px);
+  border-color:rgba(212,175,55,.5);
+  box-shadow:0 30px 60px rgba(0,0,0,.6), var(--glow-gold);
+}
+.vid-thumb{
+  position:absolute;inset:0;
+  background-size:cover;background-position:center;
+  transition:transform .8s ease, filter .5s ease;
+}
+.vid-card:hover .vid-thumb{transform:scale(1.06);filter:brightness(.6)}
+.vid-card::after{
+  content:"";position:absolute;inset:0;
+  background:linear-gradient(180deg, rgba(0,0,0,.2) 0%, rgba(5,6,15,.85) 100%);
+  pointer-events:none;
+}
+.play-btn{
+  position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);
+  width:74px;height:74px;border-radius:50%;
+  background:rgba(255,255,255,.1);
+  backdrop-filter:blur(14px);
+  border:1.5px solid rgba(255,255,255,.5);
+  display:grid;place-items:center;color:#fff;
+  z-index:2;
+  transition:transform .4s cubic-bezier(.2,.8,.2,1), background .4s ease, border-color .4s ease, box-shadow .4s ease;
+}
+.play-btn::before{
+  content:"";position:absolute;inset:-6px;border-radius:50%;
+  border:1.5px solid rgba(212,175,55,.4);
+  opacity:0;transform:scale(.9);
+  transition:opacity .4s ease, transform .4s ease;
+}
+.vid-card:hover .play-btn{
+  background:linear-gradient(135deg, var(--gold), var(--gold-bright));
+  border-color:transparent;color:#1a0b2e;
+  transform:translate(-50%,-50%) scale(1.12);
+  box-shadow:0 20px 40px rgba(212,175,55,.4);
+}
+.vid-card:hover .play-btn::before{opacity:1;transform:scale(1.15)}
+.vid-meta{
+  position:absolute;left:0;right:0;bottom:0;
+  padding:22px 24px;color:#fff;z-index:2;
+}
+.vid-meta .vid-cat{font-size:10px;letter-spacing:1.5px;color:var(--gold-bright);text-transform:uppercase;font-weight:700;margin-bottom:6px}
+.vid-meta h4{font-size:18px;font-weight:700;line-height:1.2}
+.vid-meta .vid-foot{display:flex;gap:14px;margin-top:8px;font-size:12px;color:var(--text-dim)}
+.vid-dur{
+  position:absolute;top:14px;right:14px;z-index:2;
+  font-size:11px;font-weight:700;padding:5px 10px;border-radius:6px;
+  background:rgba(0,0,0,.6);backdrop-filter:blur(10px);
+  border:1px solid rgba(255,255,255,.15);color:#fff;letter-spacing:.5px;
+}
+.vids-caps{
+  display:flex;flex-wrap:wrap;gap:12px;justify-content:center;margin-top:40px;
+}
+.vids-caps span{
+  padding:8px 16px;border-radius:999px;
+  font-size:13px;font-weight:600;
+  background:var(--glass);border:1px solid var(--glass-border);
+  color:var(--text-dim);
+}
+.vids-caps span::before{content:"●";margin-inline-end:8px;color:var(--gold-bright);font-size:10px}
+
+/* ===== TRUST PILLARS (Working With Municipalities) ===== */
+.trust-section{padding:120px 0;position:relative}
+.trust-section::before{
+  content:"";position:absolute;inset:0;z-index:-1;
+  background:
+    radial-gradient(700px 500px at 10% 50%, rgba(212,175,55,.10), transparent 60%),
+    radial-gradient(700px 500px at 90% 50%, rgba(123,76,255,.15), transparent 60%);
+}
+.trust-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:18px;margin-top:50px}
+@media (max-width:980px){.trust-grid{grid-template-columns:repeat(2,1fr)}}
+@media (max-width:480px){.trust-grid{grid-template-columns:1fr}}
+.pillar{
+  position:relative;padding:28px 24px;border-radius:var(--r-lg);
+  background:linear-gradient(180deg, rgba(255,255,255,.05), rgba(255,255,255,.015));
+  border:1px solid var(--glass-border);
+  backdrop-filter:blur(20px);
+  transition:transform .35s ease, border-color .35s ease;
+  overflow:hidden;
+}
+.pillar:hover{transform:translateY(-4px);border-color:rgba(212,175,55,.35)}
+.pillar::after{
+  content:"";position:absolute;top:0;right:0;width:120px;height:120px;
+  background:radial-gradient(circle, rgba(212,175,55,.15), transparent 70%);
+  pointer-events:none;
+}
+.pillar .p-ic{
+  width:46px;height:46px;border-radius:13px;display:grid;place-items:center;
+  background:linear-gradient(135deg, rgba(212,175,55,.2), rgba(123,76,255,.2));
+  border:1px solid rgba(212,175,55,.3);
+  color:var(--gold-bright);margin-bottom:16px;
+}
+.pillar h4{font-size:17px;font-weight:700;color:#fff;margin-bottom:6px;letter-spacing:-.01em}
+.pillar p{font-size:14px;color:var(--text-dim);line-height:1.55}
+
+/* ===== VALUE / "תמיד יותר" SECTION ===== */
+.value-section{
+  padding:120px 0;position:relative;
+}
+.value-wrap{
+  position:relative;
+  padding:80px 60px;border-radius:var(--r-lg);
+  background:
+    radial-gradient(circle at 90% 10%, rgba(212,175,55,.18), transparent 50%),
+    radial-gradient(circle at 10% 90%, rgba(123,76,255,.18), transparent 50%),
+    linear-gradient(135deg, #1a0b2e 0%, #0a0e27 100%);
+  border:1px solid rgba(212,175,55,.25);
+  overflow:hidden;
+}
+@media (max-width:760px){.value-wrap{padding:50px 28px}}
+.value-wrap::before{
+  content:"";position:absolute;inset:0;
+  background-image:
+    radial-gradient(1px 1px at 30% 40%, rgba(255,255,255,.5), transparent 50%),
+    radial-gradient(1.5px 1.5px at 70% 60%, rgba(244,208,63,.7), transparent 50%),
+    radial-gradient(1px 1px at 50% 20%, rgba(255,255,255,.5), transparent 50%);
+  background-size:300px 300px;opacity:.5;
+  pointer-events:none;
+}
+.value-grid{display:grid;grid-template-columns:1fr 1.1fr;gap:60px;align-items:center;position:relative}
+@media (max-width:900px){.value-grid{grid-template-columns:1fr;gap:36px}}
+.value-quote{
+  font-family:'Playfair Display',serif;font-style:italic;font-weight:900;
+  font-size:clamp(40px,5vw,68px);line-height:1;letter-spacing:-.02em;
+}
+.value-quote .gld{
+  background:linear-gradient(135deg,#fff,#f4d03f 50%,#d4af37);
+  -webkit-background-clip:text;background-clip:text;color:transparent;
+  display:block;margin-top:10px;
+}
+.value-sub{color:var(--text-dim);font-size:17px;margin-top:24px;line-height:1.7;max-width:480px}
+.value-list{display:flex;flex-direction:column;gap:14px}
+.value-row{
+  display:flex;gap:16px;align-items:flex-start;
+  padding:18px 20px;border-radius:14px;
+  background:rgba(255,255,255,.04);
+  border:1px solid rgba(255,255,255,.08);
+  transition:all .3s ease;
+}
+.value-row:hover{background:rgba(255,255,255,.08);transform:translateX(-4px)}
+.value-check{
+  width:30px;height:30px;flex-shrink:0;border-radius:50%;
+  background:linear-gradient(135deg, var(--gold), var(--gold-bright));
+  display:grid;place-items:center;color:#1a0b2e;font-weight:900;font-size:14px;
+  box-shadow:0 6px 16px rgba(212,175,55,.35);
+}
+.value-row h5{font-size:16px;font-weight:700;color:#fff;margin-bottom:3px}
+.value-row p{font-size:13.5px;color:var(--text-dim);line-height:1.5}
+
+/* ===== MAOR CONTACT CARD ===== */
+.contact-wrap{
+  display:grid;grid-template-columns:1.1fr .9fr;gap:30px;align-items:center;
+  padding:50px;
+  border-radius:var(--r-lg);
+  background:linear-gradient(135deg, rgba(212,175,55,.08), rgba(123,76,255,.10));
+  border:1px solid rgba(212,175,55,.3);
+  backdrop-filter:blur(20px);
+  position:relative;overflow:hidden;
+}
+@media (max-width:760px){.contact-wrap{grid-template-columns:1fr;padding:36px 24px;text-align:center}}
+.contact-wrap::after{
+  content:"";position:absolute;top:-40%;right:-10%;width:60%;aspect-ratio:1/1;
+  background:radial-gradient(circle, rgba(212,175,55,.2), transparent 60%);
+  pointer-events:none;
+}
+.contact-info h3{font-size:clamp(26px,3vw,38px);font-weight:800;margin-bottom:8px}
+.contact-info h3 .gld{
+  background:linear-gradient(135deg,#fff,#d4af37);-webkit-background-clip:text;background-clip:text;color:transparent;
+}
+.contact-info p{color:var(--text-dim);font-size:15px;margin-bottom:24px;max-width:420px}
+@media (max-width:760px){.contact-info p{margin-inline:auto}}
+.contact-person{
+  display:flex;align-items:center;gap:18px;
+  padding:20px 24px;border-radius:var(--r);
+  background:rgba(255,255,255,.05);
+  border:1px solid var(--glass-border);
+  position:relative;z-index:2;
+}
+@media (max-width:760px){.contact-person{justify-content:center}}
+.contact-av{
+  width:64px;height:64px;border-radius:50%;
+  background:linear-gradient(135deg, var(--gold), var(--gold-bright));
+  display:grid;place-items:center;
+  font-family:'Playfair Display',serif;font-weight:900;font-size:28px;color:#1a0b2e;
+  box-shadow:var(--glow-gold), inset 0 0 0 2px rgba(255,255,255,.3);
+  flex-shrink:0;
+}
+.contact-person .role{font-size:12px;color:var(--gold-soft);letter-spacing:1.5px;text-transform:uppercase;font-weight:700;margin-bottom:4px}
+.contact-person .name{font-size:22px;font-weight:800;color:#fff;letter-spacing:-.01em}
+.contact-person .phone{
+  display:inline-flex;align-items:center;gap:8px;
+  font-size:18px;font-weight:700;color:var(--gold-bright);margin-top:6px;
+  direction:ltr;
+}
+.contact-person .phone:hover{color:#fff}
+
+/* ===== AI BADGE ON TIMELINE ===== */
+.ai-tag{
+  display:inline-flex;align-items:center;gap:5px;
+  font-size:10px;font-weight:800;letter-spacing:1px;
+  padding:3px 8px;border-radius:6px;
+  background:linear-gradient(135deg, rgba(244,208,63,.2), rgba(123,76,255,.25));
+  color:var(--gold-bright);
+  border:1px solid rgba(212,175,55,.35);
+  margin-inline-start:8px;vertical-align:middle;
+}
+.ai-tag::before{content:"";width:5px;height:5px;border-radius:50%;background:var(--gold);box-shadow:0 0 8px var(--gold);animation:pulseDot 2s ease-in-out infinite}
+.tl-card h4 .ai-tag{font-size:9px}
+
 </style>
 </head>
 <body>
@@ -1322,107 +1617,261 @@ footer{
   </div>
 </section>
 
-<!-- WORKS / GALLERY -->
-<section class="section" id="works">
+<!-- CINEMATIC GRAPHIC WORKS CAROUSEL -->
+<section class="cinema" id="works">
+  <div class="container">
+    <div class="section-head reveal" style="text-align:center;max-width:760px;margin:0 auto 30px">
+      <span class="eyebrow" style="margin-bottom:18px">תיק עבודות · Graphic Design</span>
+      <h2 class="section-title" style="margin:18px 0 12px">אולפן יצירה <span class="accent">בקנה מידה גדול.</span></h2>
+      <p class="section-sub" style="margin:0 auto">לא תיק עבודות — קליפ. מאות גרפיקות בשנה, עשרות פלטפורמות, סטנדרט קבוע. גלגל עם העכבר וצפה בעצירת מסגרת.</p>
+    </div>
+  </div>
+
+  <div class="cinema-stage reveal">
+    <!-- ROW A — right→left -->
+    <div class="cinema-row row-a">
+      <div class="cine">
+        <img class="photo-real" src="assets/works/medical-shavuot.jpg" alt="" loading="lazy" onerror="this.setAttribute('data-broken','')" />
+        <div class="photo" style="background-image:url('https://www.webxp.co.il/wp-content/uploads/2025/08/1_2640277495_huge.png')"></div>
+        <div class="glow"></div>
+        <div class="veil"><div class="cat">Medical · חג</div><h5>חג שבועות שמח</h5></div>
+      </div>
+      <div class="cine wide">
+        <img class="photo-real" src="assets/works/autodeal-emergency.jpg" alt="" loading="lazy" onerror="this.setAttribute('data-broken','')" />
+        <div class="photo" style="background-image:url('https://www.webxp.co.il/wp-content/uploads/2025/08/BG2.png')"></div>
+        <div class="glow"></div>
+        <div class="veil"><div class="cat">★ Emergency · Champion</div><h5>תקשורת חירום בזמן אמת</h5></div>
+      </div>
+      <div class="cine tall">
+        <div class="photo" style="background:radial-gradient(circle at 50% 30%,#ff5e87,transparent 50%),linear-gradient(135deg,#2d1b69,#0a0e27)"></div>
+        <div class="glow"></div>
+        <div class="veil"><div class="cat">Story · 9:16</div><h5>סטורי אירוע עירוני</h5></div>
+      </div>
+      <div class="cine">
+        <img class="photo-real" src="assets/works/hcg-womens-day.jpg" alt="" loading="lazy" onerror="this.setAttribute('data-broken','')" />
+        <div class="photo" style="background-image:url('https://www.webxp.co.il/wp-content/uploads/2025/08/3_2483984605.png')"></div>
+        <div class="glow"></div>
+        <div class="veil"><div class="cat">HCG · Global</div><h5>Women's Day Campaign</h5></div>
+      </div>
+      <div class="cine">
+        <div class="photo" style="background-image:url('https://www.webxp.co.il/wp-content/uploads/2025/09/1_2646608689.png')"></div>
+        <div class="glow"></div>
+        <div class="veil"><div class="cat">אירוע עירוני</div><h5>הדלקת נרות בעיר</h5></div>
+      </div>
+      <div class="cine wide">
+        <div class="photo" style="background:radial-gradient(circle at 30% 50%,#06d6a0,transparent 55%),linear-gradient(135deg,#0b1437,#0a0e27)"></div>
+        <div class="glow"></div>
+        <div class="veil"><div class="cat">Billboard · 16:9</div><h5>שילוט חוצות · קמפיין רחוב</h5></div>
+      </div>
+      <div class="cine">
+        <img class="photo-real" src="assets/works/samsara-birthday.jpg" alt="" loading="lazy" onerror="this.setAttribute('data-broken','')" />
+        <div class="photo" style="background-image:url('https://www.webxp.co.il/wp-content/uploads/2025/08/1_2298372459.png')"></div>
+        <div class="glow"></div>
+        <div class="veil"><div class="cat">Samsara · Promo</div><h5>פינוק יום הולדת</h5></div>
+      </div>
+      <div class="cine tall">
+        <div class="photo" style="background:radial-gradient(circle at 50% 30%,#d4af37,transparent 50%),linear-gradient(135deg,#7a1a1a,#1a0b2e)"></div>
+        <div class="glow"></div>
+        <div class="veil"><div class="cat">חירום · 9:16</div><h5>הנחיות פיקוד העורף</h5></div>
+      </div>
+      <div class="cine">
+        <img class="photo-real" src="assets/works/pizzaroma-cheese.jpg" alt="" loading="lazy" onerror="this.setAttribute('data-broken','')" />
+        <div class="photo" style="background:radial-gradient(circle at 50% 40%,#ff6b35,transparent 55%),linear-gradient(135deg,#1a0b2e,#0b1437)"></div>
+        <div class="glow"></div>
+        <div class="veil"><div class="cat">Pizza Roma · F&amp;B</div><h5>EXTRA CHEESE</h5></div>
+      </div>
+      <div class="cine">
+        <div class="photo" style="background-image:url('https://www.webxp.co.il/wp-content/uploads/2025/08/4_2427686317.png')"></div>
+        <div class="glow"></div>
+        <div class="veil"><div class="cat">סושיאל · עירייה</div><h5>קמפיין הסברה לתושבים</h5></div>
+      </div>
+      <div class="cine wide">
+        <div class="photo" style="background:radial-gradient(circle at 80% 30%,#5b3aa8,transparent 60%),radial-gradient(circle at 20% 80%,#d4af37,transparent 50%),linear-gradient(135deg,#0a0e27,#1a0b2e)"></div>
+        <div class="glow"></div>
+        <div class="veil"><div class="cat">Cover Reveal</div><h5>סרט תדמית עירוני · YouTube</h5></div>
+      </div>
+      <div class="cine">
+        <div class="photo" style="background:radial-gradient(circle at 50% 50%,#7b68ee,transparent 55%),linear-gradient(135deg,#1a0b2e,#0b1437)"></div>
+        <div class="glow"></div>
+        <div class="veil"><div class="cat">אנימציה · Motion</div><h5>מוטיון תדמית</h5></div>
+      </div>
+      <!-- duplicate for seamless loop -->
+      <div class="cine"><img class="photo-real" src="assets/works/medical-shavuot.jpg" alt="" loading="lazy" onerror="this.setAttribute('data-broken','')" /><div class="photo" style="background-image:url('https://www.webxp.co.il/wp-content/uploads/2025/08/1_2640277495_huge.png')"></div><div class="glow"></div><div class="veil"><div class="cat">Medical · חג</div><h5>חג שבועות שמח</h5></div></div>
+      <div class="cine wide"><img class="photo-real" src="assets/works/autodeal-emergency.jpg" alt="" loading="lazy" onerror="this.setAttribute('data-broken','')" /><div class="photo" style="background-image:url('https://www.webxp.co.il/wp-content/uploads/2025/08/BG2.png')"></div><div class="glow"></div><div class="veil"><div class="cat">★ Emergency · Champion</div><h5>תקשורת חירום בזמן אמת</h5></div></div>
+      <div class="cine tall"><div class="photo" style="background:radial-gradient(circle at 50% 30%,#ff5e87,transparent 50%),linear-gradient(135deg,#2d1b69,#0a0e27)"></div><div class="glow"></div><div class="veil"><div class="cat">Story · 9:16</div><h5>סטורי אירוע עירוני</h5></div></div>
+      <div class="cine"><img class="photo-real" src="assets/works/hcg-womens-day.jpg" alt="" loading="lazy" onerror="this.setAttribute('data-broken','')" /><div class="photo" style="background-image:url('https://www.webxp.co.il/wp-content/uploads/2025/08/3_2483984605.png')"></div><div class="glow"></div><div class="veil"><div class="cat">HCG · Global</div><h5>Women's Day Campaign</h5></div></div>
+      <div class="cine"><div class="photo" style="background-image:url('https://www.webxp.co.il/wp-content/uploads/2025/09/1_2646608689.png')"></div><div class="glow"></div><div class="veil"><div class="cat">אירוע עירוני</div><h5>הדלקת נרות בעיר</h5></div></div>
+      <div class="cine wide"><div class="photo" style="background:radial-gradient(circle at 30% 50%,#06d6a0,transparent 55%),linear-gradient(135deg,#0b1437,#0a0e27)"></div><div class="glow"></div><div class="veil"><div class="cat">Billboard · 16:9</div><h5>שילוט חוצות · קמפיין רחוב</h5></div></div>
+    </div>
+
+    <!-- ROW B — left→right -->
+    <div class="cinema-row row-b">
+      <div class="cine">
+        <div class="photo" style="background-image:url('https://www.webxp.co.il/wp-content/uploads/2025/08/2_2483984605.png')"></div>
+        <div class="glow"></div>
+        <div class="veil"><div class="cat">SEO Banner</div><h5>קמפיין דיגיטלי לנדל"ן</h5></div>
+      </div>
+      <div class="cine tall">
+        <div class="photo" style="background:radial-gradient(circle at 50% 40%,#f4d03f,transparent 50%),linear-gradient(135deg,#1a0b2e,#0a0e27)"></div>
+        <div class="glow"></div>
+        <div class="veil"><div class="cat">Story</div><h5>פוסט חינוך עירוני</h5></div>
+      </div>
+      <div class="cine wide">
+        <div class="photo" style="background-image:url('https://www.webxp.co.il/wp-content/uploads/2025/09/1_2427800855.png')"></div>
+        <div class="glow"></div>
+        <div class="veil"><div class="cat">Web Banner</div><h5>נחיתה · נדל"ן בקפריסין</h5></div>
+      </div>
+      <div class="cine">
+        <div class="photo" style="background-image:url('https://www.webxp.co.il/wp-content/uploads/2025/08/1_2349756895.png')"></div>
+        <div class="glow"></div>
+        <div class="veil"><div class="cat">Campaign · Social</div><h5>קמפיין מכירות חוצה ערוצים</h5></div>
+      </div>
+      <div class="cine">
+        <div class="photo" style="background:radial-gradient(circle at 30% 70%,#00d4ff,transparent 55%),linear-gradient(135deg,#0b1437,#1a0b2e)"></div>
+        <div class="glow"></div>
+        <div class="veil"><div class="cat">FB Post</div><h5>פוסט שבועי קבוע</h5></div>
+      </div>
+      <div class="cine wide">
+        <div class="photo" style="background:radial-gradient(circle at 70% 30%,#5b3aa8,transparent 60%),linear-gradient(135deg,#0a0e27,#1a0b2e)"></div>
+        <div class="glow"></div>
+        <div class="veil"><div class="cat">Carousel · IG</div><h5>קרוסלת אירועי תרבות</h5></div>
+      </div>
+      <div class="cine tall">
+        <div class="photo" style="background:radial-gradient(circle at 50% 30%,#06d6a0,transparent 55%),linear-gradient(135deg,#0b1437,#0a0e27)"></div>
+        <div class="glow"></div>
+        <div class="veil"><div class="cat">Story · 9:16</div><h5>הנחיות בטיחות</h5></div>
+      </div>
+      <div class="cine">
+        <div class="photo" style="background-image:url('https://www.webxp.co.il/wp-content/uploads/2025/08/BOOT2.png')"></div>
+        <div class="glow"></div>
+        <div class="veil"><div class="cat">UI · Bot</div><h5>ממשק בוט שירות</h5></div>
+      </div>
+      <div class="cine wide">
+        <div class="photo" style="background:radial-gradient(circle at 50% 50%,#f72585,transparent 55%),radial-gradient(circle at 80% 20%,#4361ee,transparent 55%),linear-gradient(135deg,#1a0b2e,#0a0e27)"></div>
+        <div class="glow"></div>
+        <div class="veil"><div class="cat">Billboard</div><h5>שלט חוצות · קמפיין חג</h5></div>
+      </div>
+      <div class="cine">
+        <div class="photo" style="background-image:url('https://www.webxp.co.il/wp-content/uploads/2025/08/Artboard-3.png')"></div>
+        <div class="glow"></div>
+        <div class="veil"><div class="cat">Automation</div><h5>תרשים זרימת עבודה</h5></div>
+      </div>
+      <div class="cine">
+        <div class="photo" style="background:radial-gradient(circle at 50% 50%,#ff6b35,transparent 55%),linear-gradient(135deg,#7a1a1a,#1a0b2e)"></div>
+        <div class="glow"></div>
+        <div class="veil"><div class="cat">Emergency · עירייה</div><h5>פוסט עדכון חירום</h5></div>
+      </div>
+      <div class="cine tall">
+        <div class="photo" style="background-image:url('https://www.webxp.co.il/wp-content/uploads/2025/08/BOOT1.png')"></div>
+        <div class="glow"></div>
+        <div class="veil"><div class="cat">Story</div><h5>סטורי קמפיין שירות</h5></div>
+      </div>
+      <!-- duplicate -->
+      <div class="cine"><div class="photo" style="background-image:url('https://www.webxp.co.il/wp-content/uploads/2025/08/2_2483984605.png')"></div><div class="glow"></div><div class="veil"><div class="cat">SEO Banner</div><h5>קמפיין דיגיטלי לנדל"ן</h5></div></div>
+      <div class="cine tall"><div class="photo" style="background:radial-gradient(circle at 50% 40%,#f4d03f,transparent 50%),linear-gradient(135deg,#1a0b2e,#0a0e27)"></div><div class="glow"></div><div class="veil"><div class="cat">Story</div><h5>פוסט חינוך עירוני</h5></div></div>
+      <div class="cine wide"><div class="photo" style="background-image:url('https://www.webxp.co.il/wp-content/uploads/2025/09/1_2427800855.png')"></div><div class="glow"></div><div class="veil"><div class="cat">Web Banner</div><h5>נחיתה · נדל"ן בקפריסין</h5></div></div>
+      <div class="cine"><div class="photo" style="background-image:url('https://www.webxp.co.il/wp-content/uploads/2025/08/1_2349756895.png')"></div><div class="glow"></div><div class="veil"><div class="cat">Campaign · Social</div><h5>קמפיין מכירות חוצה ערוצים</h5></div></div>
+      <div class="cine"><div class="photo" style="background:radial-gradient(circle at 30% 70%,#00d4ff,transparent 55%),linear-gradient(135deg,#0b1437,#1a0b2e)"></div><div class="glow"></div><div class="veil"><div class="cat">FB Post</div><h5>פוסט שבועי קבוע</h5></div></div>
+      <div class="cine wide"><div class="photo" style="background:radial-gradient(circle at 70% 30%,#5b3aa8,transparent 60%),linear-gradient(135deg,#0a0e27,#1a0b2e)"></div><div class="glow"></div><div class="veil"><div class="cat">Carousel · IG</div><h5>קרוסלת אירועי תרבות</h5></div></div>
+    </div>
+  </div>
+
+  <div class="container" style="text-align:center;margin-top:40px">
+    <p class="reveal" style="color:var(--text-dim);font-size:14px;letter-spacing:1.5px;text-transform:uppercase">
+      <span style="color:var(--gold-bright);font-weight:700">+10,000</span> &nbsp;גרפיקות &nbsp;·&nbsp; <span style="color:var(--gold-bright);font-weight:700">+150</span> &nbsp;ארגונים &nbsp;·&nbsp; <span style="color:var(--gold-bright);font-weight:700">+12</span> &nbsp;פלטפורמות &nbsp;·&nbsp; <span style="color:var(--gold-bright);font-weight:700">2006→2026</span> &nbsp;שנות הפקה
+    </p>
+  </div>
+</section>
+
+<!-- VIDEO PRODUCTION & EDITING -->
+<section class="section" id="video-production">
   <div class="container">
     <div class="section-head reveal">
-      <span class="eyebrow">תיק עבודות</span>
-      <h2 class="section-title">עבודות נבחרות. <span class="accent">סטנדרט פרמיום.</span></h2>
-      <p class="section-sub">מקבץ מצומצם מתוך אלפי פרויקטים שעבדנו בהם — קמפיינים, אירועים, מודעות חירום ושילוט עירוני.</p>
+      <span class="eyebrow">Video Production · עריכה · סטוריטלינג</span>
+      <h2 class="section-title">מצלמים. עורכים. <span class="accent">מספרים את הסיפור.</span></h2>
+      <p class="section-sub">צוות וידאו מלא — צילום, עריכה, מוטיון, סאונד וצבע. מסרטוני TikTok יומיומיים ועד סרטי תדמית באורך מלא, הכל בית פנימי אחד.</p>
     </div>
 
-    <div class="filters" role="tablist">
-      <button class="chip active" data-filter="all">הכל</button>
-      <button class="chip" data-filter="facebook">פייסבוק</button>
-      <button class="chip" data-filter="instagram">אינסטגרם</button>
-      <button class="chip" data-filter="tiktok">טיקטוק</button>
-      <button class="chip" data-filter="youtube">יוטיוב</button>
-      <button class="chip" data-filter="billboards">שלטי חוצות</button>
-      <button class="chip" data-filter="events">אירועים</button>
-      <button class="chip" data-filter="municipalities">עיריות</button>
-      <button class="chip" data-filter="campaigns">קמפיינים</button>
-      <button class="chip" data-filter="video">וידאו</button>
-      <button class="chip" data-filter="animation">אנימציה</button>
+    <div class="vids-grid">
+      <article class="vid-card reveal">
+        <div class="vid-thumb" style="background:radial-gradient(circle at 30% 30%,#5b3aa8,transparent 60%),linear-gradient(135deg,#0a0e27,#1a0b2e)"></div>
+        <span class="vid-dur">3:42</span>
+        <button class="play-btn" aria-label="נגן"><svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg></button>
+        <div class="vid-meta">
+          <div class="vid-cat">סרט תדמית · עירייה</div>
+          <h4>״העיר שלי, הסיפור שלי״ — סרט תדמית עירוני</h4>
+          <div class="vid-foot"><span>🎬 4 שבועות</span><span>🎥 4K · Dolby</span></div>
+        </div>
+      </article>
+      <article class="vid-card reveal reveal-delay-1">
+        <div class="vid-thumb" style="background:radial-gradient(circle at 70% 40%,#ff6b35,transparent 55%),linear-gradient(135deg,#7a1a1a,#1a0b2e)"></div>
+        <span class="vid-dur">0:30</span>
+        <button class="play-btn" aria-label="נגן"><svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg></button>
+        <div class="vid-meta">
+          <div class="vid-cat">תקשורת חירום · Reel</div>
+          <h4>הנחיות תושבים — סרטון חירום 30 שניות</h4>
+          <div class="vid-foot"><span>⚡ 90 דקות לפרסום</span><span>📱 9:16</span></div>
+        </div>
+      </article>
+      <article class="vid-card reveal reveal-delay-2">
+        <div class="vid-thumb" style="background-image:url('https://www.webxp.co.il/wp-content/uploads/2025/06/ROBOT222-1.png');background-size:contain;background-repeat:no-repeat;background-position:center;background-color:#0a0e27"></div>
+        <span class="vid-dur">1:15</span>
+        <button class="play-btn" aria-label="נגן"><svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg></button>
+        <div class="vid-meta">
+          <div class="vid-cat">AI · Motion</div>
+          <h4>סרט הסבר טכנולוגי — אוטומציות AI</h4>
+          <div class="vid-foot"><span>🎨 מוטיון מלא</span><span>🎙 Voice-Over</span></div>
+        </div>
+      </article>
+      <article class="vid-card reveal">
+        <div class="vid-thumb" style="background:radial-gradient(circle at 50% 30%,#d4af37,transparent 50%),linear-gradient(135deg,#1a0b2e,#0b1437)"></div>
+        <span class="vid-dur">0:45</span>
+        <button class="play-btn" aria-label="נגן"><svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg></button>
+        <div class="vid-meta">
+          <div class="vid-cat">אירוע · Recap</div>
+          <h4>פסטיבל הגליל — סרטון Recap</h4>
+          <div class="vid-foot"><span>📍 ברוד-קאסט</span><span>🎥 דרון + DSLR</span></div>
+        </div>
+      </article>
+      <article class="vid-card reveal reveal-delay-1">
+        <div class="vid-thumb" style="background:radial-gradient(circle at 50% 50%,#06d6a0,transparent 55%),linear-gradient(135deg,#0b1437,#0a0e27)"></div>
+        <span class="vid-dur">0:20</span>
+        <button class="play-btn" aria-label="נגן"><svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg></button>
+        <div class="vid-meta">
+          <div class="vid-cat">TikTok · יומי</div>
+          <h4>טרנד יומי — סדרת רילים</h4>
+          <div class="vid-foot"><span>📅 5 רילים/שבוע</span><span>👁 500K+</span></div>
+        </div>
+      </article>
+      <article class="vid-card reveal reveal-delay-2">
+        <div class="vid-thumb" style="background:radial-gradient(circle at 30% 50%,#f72585,transparent 55%),radial-gradient(circle at 80% 80%,#4361ee,transparent 55%),linear-gradient(135deg,#0a0e27,#1a0b2e)"></div>
+        <span class="vid-dur">2:10</span>
+        <button class="play-btn" aria-label="נגן"><svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg></button>
+        <div class="vid-meta">
+          <div class="vid-cat">המלצה · Testimonial</div>
+          <h4>סרטון המלצה — לקוח עירוני</h4>
+          <div class="vid-foot"><span>🎬 ראיון + B-Roll</span><span>🎨 Color Grade</span></div>
+        </div>
+      </article>
     </div>
 
-    <div class="gallery" id="gallery">
-      <div class="work w-l reveal" data-cat="campaigns instagram facebook">
-        <div class="bg bg-img" style="background-image:url('https://www.webxp.co.il/wp-content/uploads/2025/08/1_2640277495_huge.png')"></div>
-        <img class="bg-real" src="assets/works/medical-shavuot.jpg" alt="Medical · ברכת חג שבועות" loading="lazy" onerror="this.setAttribute('data-broken','')" />
-        <div class="ovr">
-          <div class="cat">Medical · ברכת חג</div>
-          <h4>חג שבועות שמח — מרכז מומחים לרפואת עור</h4>
-          <div class="meta"><span>⏱ 8 שעות</span><span>📱 פיד · סטוריז</span><span>🎯 הסברה</span></div>
-        </div>
-      </div>
-      <div class="work w-m reveal reveal-delay-1" data-cat="instagram municipalities">
-        <div class="bg bg-img" style="background-image:url('https://www.webxp.co.il/wp-content/uploads/2025/08/4_2427686317.png')"></div>
-        <div class="ovr">
-          <div class="cat">אינסטגרם · עירייה</div>
-          <h4>קמפיין הסברה לתושבים</h4>
-          <div class="meta"><span>⏱ 24ש׳</span><span>📱 IG Stories</span></div>
-        </div>
-      </div>
-      <div class="work w-s reveal reveal-delay-2" data-cat="instagram facebook campaigns">
-        <div class="bg bg-c"></div>
-        <img class="bg-real" src="assets/works/pizzaroma-cheese.jpg" alt="Pizza Roma · Extra Cheese" loading="lazy" onerror="this.setAttribute('data-broken','')" />
-        <div class="ovr">
-          <div class="cat">Pizza Roma · F&amp;B</div>
-          <h4>EXTRA CHEESE</h4>
-        </div>
-      </div>
-      <div class="work w-s reveal reveal-delay-3" data-cat="tiktok video">
-        <div class="bg bg-f"></div>
-        <div class="ovr">
-          <div class="cat">טיקטוק · וידאו</div>
-          <h4>טרנד יומי</h4>
-        </div>
-      </div>
-      <div class="work w-w reveal" data-cat="campaigns municipalities instagram facebook">
-        <div class="bg bg-img" style="background-image:url('https://www.webxp.co.il/wp-content/uploads/2025/08/BG2.png')"></div>
-        <img class="bg-real" src="assets/works/autodeal-emergency.jpg" alt="אוטודיל · עדכון מצב חירום" loading="lazy" onerror="this.setAttribute('data-broken','')" />
-        <div class="ovr">
-          <div class="cat">★ עדכון חירום · אוטודיל / Champion</div>
-          <h4>תקשורת חירום בזמן אמת — סגירת סניפים בעקבות פיקוד העורף</h4>
-          <div class="meta"><span>⏱ 25 דקות לאוויר</span><span>🚨 Emergency Mode</span><span>📱 רב־ערוצי</span></div>
-        </div>
-      </div>
-      <div class="work w-t reveal reveal-delay-1" data-cat="animation video">
-        <div class="bg bg-h"></div>
-        <div class="ovr">
-          <div class="cat">אנימציה</div>
-          <h4>מוטיון תדמית</h4>
-        </div>
-      </div>
-      <div class="work w-m reveal" data-cat="events campaigns">
-        <div class="bg bg-img" style="background-image:url('https://www.webxp.co.il/wp-content/uploads/2025/09/1_2646608689.png')"></div>
-        <div class="ovr">
-          <div class="cat">אירוע</div>
-          <h4>הדלקת נרות בעיר</h4>
-          <div class="meta"><span>⏱ 12ש׳</span><span>📍 קמפיין מלא</span></div>
-        </div>
-      </div>
-      <div class="work w-m reveal reveal-delay-1" data-cat="campaigns instagram facebook">
-        <div class="bg bg-img" style="background-image:url('https://www.webxp.co.il/wp-content/uploads/2025/08/3_2483984605.png')"></div>
-        <img class="bg-real" src="assets/works/hcg-womens-day.jpg" alt="HCG Group · Women's Day" loading="lazy" onerror="this.setAttribute('data-broken','')" />
-        <div class="ovr">
-          <div class="cat">HCG · קמפיין בינלאומי</div>
-          <h4>Women's Day — קמפיין גלובלי לקבוצת HCG</h4>
-          <div class="meta"><span>⏱ שבוע</span><span>🌐 3 חברות</span><span>📱 EN/HE</span></div>
-        </div>
-      </div>
-      <div class="work w-m reveal reveal-delay-2" data-cat="instagram facebook campaigns">
-        <div class="bg bg-img" style="background-image:url('https://www.webxp.co.il/wp-content/uploads/2025/08/1_2298372459.png')"></div>
-        <img class="bg-real" src="assets/works/samsara-birthday.jpg" alt="Samsara · פינוק יום הולדת" loading="lazy" onerror="this.setAttribute('data-broken','')" />
-        <div class="ovr">
-          <div class="cat">Samsara · קידום מכירות</div>
-          <h4>פינוק יום הולדת ב־40₪ — מקדם מכירות</h4>
-          <div class="meta"><span>⏱ 24 שעות</span><span>📱 פיד · סטוריז</span><span>📈 +180% הזמנות</span></div>
-        </div>
-      </div>
+    <div class="vids-caps reveal">
+      <span>צילום בשטח</span>
+      <span>עריכת וידאו</span>
+      <span>סטוריטלינג</span>
+      <span>הפקת סושיאל</span>
+      <span>מוטיון אנימציה</span>
+      <span>סאונד &amp; קולור</span>
+      <span>Voice-Over</span>
+      <span>הפצה רב־ערוצית</span>
     </div>
   </div>
 </section>
+
+<!-- LEGACY GALLERY (kept hidden, retained for filter logic compatibility) -->
+<div id="gallery" style="display:none">
+  <div class="work" data-cat="all"></div>
+</div>
 
 <!-- MUNICIPAL SOLUTIONS -->
 <section class="section" id="municipal">
@@ -1490,44 +1939,44 @@ footer{
 <section class="section" id="process">
   <div class="container">
     <div class="section-head reveal">
-      <span class="eyebrow">תהליך העבודה</span>
-      <h2 class="section-title">מבריף ועד הפצה — <span class="accent">תהליך מתועד</span> וברור.</h2>
-      <p class="section-sub">תהליך משוכלל שעובד כמו שעון, גם בשעה 23:00, גם ביום חירום, גם כשמגיע בריף בלילה.</p>
+      <span class="eyebrow">תהליך עבודה · מהירות · אוטומציה · AI</span>
+      <h2 class="section-title">מבריף ועד הפצה — <span class="accent">תהליך חכם</span> שמתועד אוטומטית.</h2>
+      <p class="section-sub">תהליך משוכלל שעובד כמו שעון — מנוע על־ידי מערכות AI ו־Workflow אוטומטיים. בריף שמגיע ב־23:00, יוצא לאישור עד 9:00 בבוקר. בזמן חירום, התהליך מתקצר אוטומטית ל־15 דקות עד לאוויר.</p>
     </div>
 
     <div class="timeline">
       <div class="tl-row reveal">
-        <div class="tl-card"><h4>קבלת בריף</h4><p>טופס בריף חכם, שיחת היכרות מהירה ושיוך מנהל פרויקט אישי.</p></div>
+        <div class="tl-card"><h4>קבלת בריף <span class="ai-tag">SMART FORM</span></h4><p>טופס בריף חכם שמסווג אוטומטית את הפרויקט, משייך מנהל אישי ופותח תיקיית עבודה לפי המותג העירוני — תוך 60 שניות.</p></div>
         <div class="tl-dot"><span>01</span></div>
         <div class="tl-spacer"></div>
       </div>
       <div class="tl-row reveal">
         <div class="tl-spacer"></div>
         <div class="tl-dot"><span>02</span></div>
-        <div class="tl-card"><h4>בניית קונספט</h4><p>הצגת 2–3 כיוונים יצירתיים, מבוססי דאטה ומגמות, תוך 24 שעות.</p></div>
+        <div class="tl-card"><h4>בניית קונספט <span class="ai-tag">AI</span></h4><p>2–3 כיוונים יצירתיים מבוססי דאטה ומגמות, מועלים תוך 24 שעות. מנוע AI סורק מותגי רשויות מובילות בעולם להשראה רלוונטית.</p></div>
       </div>
       <div class="tl-row reveal">
-        <div class="tl-card"><h4>עיצוב מהיר</h4><p>צוות מעצבים יוצא לדרך עם AI Co-Pilot — תפוקה x3 מהשוק.</p></div>
+        <div class="tl-card"><h4>עיצוב מהיר <span class="ai-tag">AI CO-PILOT</span></h4><p>מעצבים בכירים עובדים יד ביד עם AI Co-Pilot מותאם למותג העירוני — תפוקה גבוהה פי 3 מהשוק, ללא פשרות באיכות.</p></div>
         <div class="tl-dot"><span>03</span></div>
         <div class="tl-spacer"></div>
       </div>
       <div class="tl-row reveal">
         <div class="tl-spacer"></div>
         <div class="tl-dot"><span>04</span></div>
-        <div class="tl-card"><h4>התאמות וסבבי תיקונים</h4><p>פלטפורמת אישורים בענן, היסטוריית גרסאות, הערות לייב בקובץ עצמו.</p></div>
+        <div class="tl-card"><h4>סבבי תיקונים <span class="ai-tag">CLOUD</span></h4><p>פלטפורמת אישורים בענן עם הערות לייב על הקובץ עצמו, היסטוריית גרסאות וחתימה דיגיטלית. בלי וואטסאפים, בלי תיקיות פזורות.</p></div>
       </div>
       <div class="tl-row reveal">
-        <div class="tl-card"><h4>הפצה לכל המדיות</h4><p>הפקה לכל הגדלים, פורמטים ופלטפורמות באוטומציה — פייסבוק, אינסטגרם, וואטסאפ, אתר, שילוט.</p></div>
+        <div class="tl-card"><h4>הפצה רב־ערוצית <span class="ai-tag">AUTO</span></h4><p>הקובץ הראשי יוצא — והמערכת מפיקה אוטומטית את כל הגדלים, הפורמטים והפלטפורמות. פייסבוק, אינסטגרם, סטוריז, וואטסאפ, אתר, שילוט, מסכי לד.</p></div>
         <div class="tl-dot"><span>05</span></div>
         <div class="tl-spacer"></div>
       </div>
       <div class="tl-row reveal">
         <div class="tl-spacer"></div>
         <div class="tl-dot"><span>06</span></div>
-        <div class="tl-card"><h4>קבצי מקור פתוחים</h4><p>העירייה מקבלת את כל קבצי המקור — בעלות מלאה, ללא אגרות חבויות.</p></div>
+        <div class="tl-card"><h4>קבצי מקור פתוחים</h4><p>העירייה מקבלת את כל קבצי המקור — בעלות מלאה, ללא אגרות חבויות. נשאר אצלכם, גם אחרי שהפרויקט נסגר.</p></div>
       </div>
       <div class="tl-row reveal">
-        <div class="tl-card"><h4>ארכיון מסודר</h4><p>מערכת ארכיון בענן עם תיוג חכם, חיפוש מיידי ושמירה לטווח ארוך.</p></div>
+        <div class="tl-card"><h4>ארכיון חכם <span class="ai-tag">SEARCH</span></h4><p>ארכיון בענן עם תיוג AI אוטומטי לפי קטגוריה, מותג, ערוץ ותאריך. חיפוש חופשי בשנייה — "חירום 2024 פייסבוק" וזהו, מצאתם.</p></div>
         <div class="tl-dot"><span>07</span></div>
         <div class="tl-spacer"></div>
       </div>
@@ -1597,6 +2046,109 @@ footer{
           <div class="node" style="transform:translate(-50%,-50%) rotate(144deg) translate(160px) rotate(-144deg)">V</div>
           <div class="node" style="transform:translate(-50%,-50%) rotate(216deg) translate(160px) rotate(-216deg)">S</div>
           <div class="node" style="transform:translate(-50%,-50%) rotate(288deg) translate(160px) rotate(-288deg)">C</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- WORKING WITH MUNICIPALITIES — TRUST PILLARS -->
+<section class="trust-section" id="trust">
+  <div class="container">
+    <div class="section-head reveal" style="text-align:center;max-width:780px;margin:0 auto 0">
+      <span class="eyebrow">עבודה מול עיריות וגופי ממשל</span>
+      <h2 class="section-title" style="margin:18px 0 12px">לעבוד עם רשויות — <span class="accent">זו דיסציפלינה.</span></h2>
+      <p class="section-sub" style="margin:0 auto">לעירייה אין זמן לטעויות. מערך WebXP נבנה במיוחד לעמוד בלחץ, בנפחים ובלוחות זמנים שגוף ציבורי מייצר — כל יום, גם בחירום, גם בערב חג.</p>
+    </div>
+
+    <div class="trust-grid">
+      <div class="pillar reveal">
+        <div class="p-ic"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M13 2L4 14h7l-1 8 9-12h-7l1-8z" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+        <h4>מהירות תגובה</h4>
+        <p>תגובה ראשונית תוך 15 דקות, מסירה ראשונה תוך 2–4 שעות בממוצע. במצב חירום — דקות.</p>
+      </div>
+      <div class="pillar reveal reveal-delay-1">
+        <div class="p-ic"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s-8-4.5-8-11.8a8 8 0 0116 0c0 7.3-8 11.8-8 11.8z"/><circle cx="12" cy="10" r="3"/></svg></div>
+        <h4>עבודה תחת לחץ</h4>
+        <p>הצוות אומן לעבוד בקצב מבצעי. אנחנו נבחנו פעמים רבות בערב חג, בליל אירוע, ביום מתח ביטחוני.</p>
+      </div>
+      <div class="pillar reveal reveal-delay-2">
+        <div class="p-ic"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2" stroke-linecap="round"/></svg></div>
+        <h4>זמינות 24/7</h4>
+        <p>תורנות יצירתית פעילה כל יום, כל שעה. אין "שעות עבודה" — יש זמן עירוני.</p>
+      </div>
+      <div class="pillar reveal reveal-delay-3">
+        <div class="p-ic"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/></svg></div>
+        <h4>תוכן חירום</h4>
+        <p>מנגנון Emergency Mode מובנה — בלחיצת כפתור, התהליך מתקצר ל־15 דקות לאוויר, עם תורן בכיר ומקבילות מוכנות מראש.</p>
+      </div>
+      <div class="pillar reveal">
+        <div class="p-ic"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M9 9h6v6H9z"/></svg></div>
+        <h4>תקשורת מסודרת</h4>
+        <p>פלטפורמת ניהול בענן, מנהל לקוח ייעודי, פגישות שבועיות, דוחות חודשיים. בלי בלגן ובלי תפזורת בוואטסאפ.</p>
+      </div>
+      <div class="pillar reveal reveal-delay-1">
+        <div class="p-ic"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 11.08V12a10 10 0 11-5.93-9.14"/><path d="M22 4L12 14.01l-3-3" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+        <h4>מסירה מהירה</h4>
+        <p>SLA מוגדר, צ'ק־ליסט אוטומטי, תיעוד שלם של כל המסירות. אתם יודעים בכל רגע מה במצב מה.</p>
+      </div>
+      <div class="pillar reveal reveal-delay-2">
+        <div class="p-ic"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2L4.5 6v6c0 4.5 3.5 8.5 7.5 10 4-1.5 7.5-5.5 7.5-10V6L12 2z"/><path d="M9 12l2 2 4-4" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+        <h4>אמינות מוכחת</h4>
+        <p>20 שנות עבודה רצופה. רשויות, גופי ממשל וחברות מובילות הם הלקוחות הוותיקים ביותר שלנו.</p>
+      </div>
+      <div class="pillar reveal reveal-delay-3">
+        <div class="p-ic"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 3h7v7H3zM14 3h7v7h-7zM3 14h7v7H3zM14 14h7v7h-7z"/></svg></div>
+        <h4>היקפי עבודה גדולים</h4>
+        <p>80+ גרפיקות בחודש לעירייה אחת זו השגרה שלנו. מערך WebXP מוכן לסקייל בלי לאבד את ה־DNA האיכותי.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ALWAYS MORE — EMOTIONAL VALUE SECTION -->
+<section class="value-section" id="more">
+  <div class="container">
+    <div class="value-wrap reveal">
+      <div class="value-grid">
+        <div>
+          <span class="eyebrow" style="margin-bottom:22px">★ מה שלא יראו בכל מכרז</span>
+          <div class="value-quote" style="margin-top:18px">
+            הלקוחות שלנו
+            <span class="gld">תמיד מקבלים יותר.</span>
+          </div>
+          <p class="value-sub">לא רק עיצוב יפה. אנחנו מביאים את הראש לפני שאנחנו מביאים את העכבר. חושבים אתכם, מציעים לכם רעיונות לפני שביקשתם, מתכננים את הקמפיין לפני שאמרתם "יאללה תפיק". זו הסיבה שלקוחות נשארים איתנו שנים.</p>
+        </div>
+
+        <div class="value-list">
+          <div class="value-row">
+            <div class="value-check">✓</div>
+            <div><h5>חשיבה יצירתית</h5><p>גם בבריף הכי "טכני" — אנחנו מחפשים את הזווית שתבליט אתכם.</p></div>
+          </div>
+          <div class="value-row">
+            <div class="value-check">✓</div>
+            <div><h5>רעיונות פרואקטיביים</h5><p>אנחנו מציעים קונספטים מראש — לא רק מבצעים. יוזמה זה DNA.</p></div>
+          </div>
+          <div class="value-row">
+            <div class="value-check">✓</div>
+            <div><h5>חשיבה מחוץ לקופסה</h5><p>אם כולם עושים פוסט סטנדרטי — אנחנו נציע 3 דרכים יצירתיות נוספות.</p></div>
+          </div>
+          <div class="value-row">
+            <div class="value-check">✓</div>
+            <div><h5>תכנון אסטרטגי לפני ביצוע</h5><p>קודם בוחנים מטרה, קהל ומסר. רק אז יוצאים לעיצוב. ככה לא בזבזנו זמן ולא בזבזנו לכם.</p></div>
+          </div>
+          <div class="value-row">
+            <div class="value-check">✓</div>
+            <div><h5>אישורי לקוח לפני פרסום</h5><p>כל יציאה לאוויר מאושרת מראש — דוברת, ראש המטה, מנהל קמפיין. אין הפתעות.</p></div>
+          </div>
+          <div class="value-row">
+            <div class="value-check">✓</div>
+            <div><h5>תשומת לב לפרטים</h5><p>הקופירייט, הניקוד, הפיקסל. מה שהעין לא רואה — אנחנו מתעקשים עליו.</p></div>
+          </div>
+          <div class="value-row">
+            <div class="value-check">✓</div>
+            <div><h5>מנטליות שירות פרמיום</h5><p>אנחנו לא ספק. אנחנו חלק מהצוות שלכם. מתייחסים לעיר שלכם כמו שאתם מתייחסים.</p></div>
+          </div>
         </div>
       </div>
     </div>
@@ -1733,21 +2285,39 @@ footer{
   </div>
 </section>
 
-<!-- CTA BAND -->
+<!-- CTA + MAOR CONTACT -->
 <section class="section" id="contact" style="padding-top:0">
   <div class="container">
-    <div class="cta-band reveal">
+    <div class="cta-band reveal" style="margin-top:0">
       <h2>מוכנים להפעיל את <span style="background:linear-gradient(135deg,#f4d03f,#d4af37);-webkit-background-clip:text;background-clip:text;color:transparent">מערך התקשורת</span> שלכם?</h2>
-      <p>בואו ניפגש לפגישת היכרות של 20 דקות — נראה לכם את המערכת לייב, ונסביר איך אנחנו יכולים להפיק את כל מערך התקשורת לעיר תוך 7 ימים.</p>
+      <p>פגישת היכרות של 20 דקות — נראה לכם את המערכת לייב, נסביר איך אנחנו מקימים את כל מערך התקשורת לעיר תוך 7 ימים, ונענה על כל שאלה.</p>
       <div class="actions">
-        <a class="btn btn-primary" href="tel:0500000000">
+        <a class="btn btn-primary" href="tel:0549020253">
           <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07 19.5 19.5 0 01-6-6 19.79 19.79 0 01-3.07-8.67A2 2 0 014.11 2h3a2 2 0 012 1.72c.13.96.36 1.91.7 2.81a2 2 0 01-.45 2.11L8.09 9.91a16 16 0 006 6l1.27-1.27a2 2 0 012.11-.45c.9.34 1.85.57 2.81.7A2 2 0 0122 16.92z" stroke-linecap="round" stroke-linejoin="round"/></svg>
-          <span>חייגו 0500000000</span>
+          <span>חייגו 054-902-0253</span>
         </a>
-        <a class="btn btn-ghost" href="#contact">
+        <a class="btn btn-ghost" href="https://wa.me/972549020253" target="_blank" rel="noopener">
           <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M21 11.5a8.38 8.38 0 01-.9 3.8 8.5 8.5 0 01-7.6 4.7 8.38 8.38 0 01-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 01-.9-3.8 8.5 8.5 0 014.7-7.6 8.38 8.38 0 013.8-.9h.5a8.48 8.48 0 018 8v.5z" stroke-linecap="round" stroke-linejoin="round"/></svg>
           <span>שליחת וואטסאפ</span>
         </a>
+      </div>
+    </div>
+
+    <div class="contact-wrap reveal" style="margin-top:30px">
+      <div class="contact-info">
+        <h3>אישי. ישיר. <span class="gld">מאור.</span></h3>
+        <p>מנהל לקוחות עירוניים. עונה לפלאפון. עונה לוואטסאפ. עונה בלילה. נציג יחיד שמכיר את הפרויקט שלכם מהבריף ועד הארכיון.</p>
+      </div>
+      <div class="contact-person">
+        <div class="contact-av">מ</div>
+        <div>
+          <div class="role">איש קשר ייעודי · מכרז קרית שמונה</div>
+          <div class="name">מאור</div>
+          <a class="phone" href="tel:0549020253">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07 19.5 19.5 0 01-6-6 19.79 19.79 0 01-3.07-8.67A2 2 0 014.11 2h3a2 2 0 012 1.72c.13.96.36 1.91.7 2.81a2 2 0 01-.45 2.11L8.09 9.91a16 16 0 006 6l1.27-1.27a2 2 0 012.11-.45c.9.34 1.85.57 2.81.7A2 2 0 0122 16.92z" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            054-902-0253
+          </a>
+        </div>
       </div>
     </div>
   </div>
@@ -1773,6 +2343,7 @@ footer{
         <h5>WebXP</h5>
         <a href="#why">למה אנחנו</a>
         <a href="#works">תיק עבודות</a>
+        <a href="#video-production">הפקות וידאו</a>
         <a href="#municipal">פתרונות לרשויות</a>
         <a href="#ai">AI ואוטומציות</a>
         <a href="#team">הצוות</a>
@@ -1788,9 +2359,8 @@ footer{
       </div>
       <div class="foot-col">
         <h5>צרו קשר</h5>
-        <a href="tel:0500000000">0500000000</a>
-        <a href="mailto:hello@webxp.co.il">hello@webxp.co.il</a>
-        <a href="#">וואטסאפ ישיר</a>
+        <a href="tel:0549020253" style="font-weight:700;color:#fff">מאור · 054-902-0253</a>
+        <a href="https://wa.me/972549020253" target="_blank" rel="noopener">וואטסאפ ישיר</a>
         <a href="https://www.webxp.co.il" target="_blank" rel="noopener">webxp.co.il</a>
       </div>
     </div>
