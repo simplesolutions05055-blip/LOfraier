@@ -1,29 +1,29 @@
-<title>LOfraier — Real Estate Deal Analyzer</title>
+<title>Fox real deals — Real Estate Deal Analyzer</title>
 <style>
   :root {
-    --ground: #F6F7F5;
+    --ground: #FDFBF5;
     --surface: #FFFFFF;
-    --surface-2: #F1F2EE;
-    --surface-3: #EAECE6;
-    --border: #E4E5E0;
-    --border-strong: #C8CAC1;
-    --text: #14161A;
-    --text-muted: #5C5E5A;
-    --text-subtle: #8A8C87;
-    --accent: #0F766E;
-    --accent-hover: #0E6863;
-    --accent-soft: rgba(15, 118, 110, 0.08);
+    --surface-2: #F7F4EA;
+    --surface-3: #EFEBD9;
+    --border: #EAE5D2;
+    --border-strong: #CFC7AC;
+    --text: #1A1815;
+    --text-muted: #5C5850;
+    --text-subtle: #8A857A;
+    --accent: #E89A0F;
+    --accent-hover: #CE850A;
+    --accent-soft: rgba(232, 154, 15, 0.10);
     --good: #059669;
     --good-bg: rgba(5, 150, 105, 0.09);
     --good-border: rgba(5, 150, 105, 0.25);
     --warn: #B45309;
-    --warn-bg: rgba(217, 119, 6, 0.10);
-    --warn-border: rgba(217, 119, 6, 0.28);
+    --warn-bg: rgba(180, 83, 9, 0.10);
+    --warn-border: rgba(180, 83, 9, 0.30);
     --bad: #B91C1C;
-    --bad-bg: rgba(220, 38, 38, 0.09);
-    --bad-border: rgba(220, 38, 38, 0.25);
-    --shadow-sm: 0 1px 2px rgba(20, 22, 26, 0.04);
-    --shadow-md: 0 4px 12px rgba(20, 22, 26, 0.06);
+    --bad-bg: rgba(185, 28, 28, 0.09);
+    --bad-border: rgba(185, 28, 28, 0.25);
+    --shadow-sm: 0 1px 2px rgba(26, 24, 21, 0.05);
+    --shadow-md: 0 4px 12px rgba(26, 24, 21, 0.07);
     --font-ui: system-ui, -apple-system, "Assistant", "Arial Hebrew", "Segoe UI", Roboto, sans-serif;
     --font-data: ui-monospace, "SF Mono", "JetBrains Mono", Menlo, Consolas, "Liberation Mono", monospace;
     --radius-sm: 4px;
@@ -32,74 +32,73 @@
   }
   @media (prefers-color-scheme: dark) {
     :root {
-      --ground: #0B0E0C;
-      --surface: #12161340;
-      --surface: #131714;
-      --surface-2: #1A1F1C;
-      --surface-3: #232823;
-      --border: #262A28;
-      --border-strong: #363A38;
-      --text: #ECEDE7;
-      --text-muted: #9A9C96;
-      --text-subtle: #6B6D68;
-      --accent: #2DD4BF;
-      --accent-hover: #5EEAD4;
-      --accent-soft: rgba(45, 212, 191, 0.10);
+      --ground: #14110C;
+      --surface: #1C1913;
+      --surface-2: #26221A;
+      --surface-3: #322D22;
+      --border: #302B21;
+      --border-strong: #423C2E;
+      --text: #F5F1E4;
+      --text-muted: #A8A296;
+      --text-subtle: #726D5F;
+      --accent: #F5B429;
+      --accent-hover: #FCD34D;
+      --accent-soft: rgba(245, 180, 41, 0.14);
       --good: #34D399;
       --good-bg: rgba(52, 211, 153, 0.12);
       --good-border: rgba(52, 211, 153, 0.30);
-      --warn: #FBBF24;
-      --warn-bg: rgba(251, 191, 36, 0.11);
-      --warn-border: rgba(251, 191, 36, 0.30);
+      --warn: #F59E0B;
+      --warn-bg: rgba(245, 158, 11, 0.13);
+      --warn-border: rgba(245, 158, 11, 0.32);
       --bad: #F87171;
       --bad-bg: rgba(248, 113, 113, 0.11);
       --bad-border: rgba(248, 113, 113, 0.30);
-      --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.3);
-      --shadow-md: 0 4px 12px rgba(0, 0, 0, 0.4);
+      --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.35);
+      --shadow-md: 0 4px 12px rgba(0, 0, 0, 0.45);
     }
   }
   :root[data-theme="light"] {
-    --ground: #F6F7F5;
+    --ground: #FDFBF5;
     --surface: #FFFFFF;
-    --surface-2: #F1F2EE;
-    --surface-3: #EAECE6;
-    --border: #E4E5E0;
-    --border-strong: #C8CAC1;
-    --text: #14161A;
-    --text-muted: #5C5E5A;
-    --text-subtle: #8A8C87;
-    --accent: #0F766E;
-    --accent-hover: #0E6863;
-    --accent-soft: rgba(15, 118, 110, 0.08);
+    --surface-2: #F7F4EA;
+    --surface-3: #EFEBD9;
+    --border: #EAE5D2;
+    --border-strong: #CFC7AC;
+    --text: #1A1815;
+    --text-muted: #5C5850;
+    --text-subtle: #8A857A;
+    --accent: #E89A0F;
+    --accent-hover: #CE850A;
+    --accent-soft: rgba(232, 154, 15, 0.10);
     --good: #059669;
     --good-bg: rgba(5, 150, 105, 0.09);
     --good-border: rgba(5, 150, 105, 0.25);
     --warn: #B45309;
-    --warn-bg: rgba(217, 119, 6, 0.10);
-    --warn-border: rgba(217, 119, 6, 0.28);
+    --warn-bg: rgba(180, 83, 9, 0.10);
+    --warn-border: rgba(180, 83, 9, 0.30);
     --bad: #B91C1C;
-    --bad-bg: rgba(220, 38, 38, 0.09);
-    --bad-border: rgba(220, 38, 38, 0.25);
+    --bad-bg: rgba(185, 28, 28, 0.09);
+    --bad-border: rgba(185, 28, 28, 0.25);
   }
   :root[data-theme="dark"] {
-    --ground: #0B0E0C;
-    --surface: #131714;
-    --surface-2: #1A1F1C;
-    --surface-3: #232823;
-    --border: #262A28;
-    --border-strong: #363A38;
-    --text: #ECEDE7;
-    --text-muted: #9A9C96;
-    --text-subtle: #6B6D68;
-    --accent: #2DD4BF;
-    --accent-hover: #5EEAD4;
-    --accent-soft: rgba(45, 212, 191, 0.10);
+    --ground: #14110C;
+    --surface: #1C1913;
+    --surface-2: #26221A;
+    --surface-3: #322D22;
+    --border: #302B21;
+    --border-strong: #423C2E;
+    --text: #F5F1E4;
+    --text-muted: #A8A296;
+    --text-subtle: #726D5F;
+    --accent: #F5B429;
+    --accent-hover: #FCD34D;
+    --accent-soft: rgba(245, 180, 41, 0.14);
     --good: #34D399;
     --good-bg: rgba(52, 211, 153, 0.12);
     --good-border: rgba(52, 211, 153, 0.30);
-    --warn: #FBBF24;
-    --warn-bg: rgba(251, 191, 36, 0.11);
-    --warn-border: rgba(251, 191, 36, 0.30);
+    --warn: #F59E0B;
+    --warn-bg: rgba(245, 158, 11, 0.13);
+    --warn-border: rgba(245, 158, 11, 0.32);
     --bad: #F87171;
     --bad-bg: rgba(248, 113, 113, 0.11);
     --bad-border: rgba(248, 113, 113, 0.30);
@@ -153,15 +152,25 @@
     border-bottom: 1px solid var(--border);
   }
   .brand-mark {
-    width: 32px; height: 32px;
+    width: 34px; height: 34px;
     border-radius: 8px;
-    background: linear-gradient(135deg, var(--accent), var(--accent-hover));
+    background: linear-gradient(135deg, #1F1A15 0%, #2E2820 100%);
     display: grid; place-items: center;
-    color: white;
-    font-weight: 700;
-    font-size: 15px;
-    letter-spacing: -0.02em;
-    box-shadow: var(--shadow-sm);
+    color: #F5B429;
+    font-weight: 800;
+    font-size: 17px;
+    letter-spacing: -0.03em;
+    box-shadow: var(--shadow-sm), inset 0 0 0 1px rgba(245, 180, 41, 0.15);
+    position: relative;
+  }
+  .brand-mark::after {
+    content: "";
+    position: absolute;
+    top: 3px; right: 3px;
+    width: 5px; height: 5px;
+    border-radius: 50%;
+    background: #F5B429;
+    box-shadow: 0 0 6px rgba(245, 180, 41, 0.6);
   }
   .brand-name {
     font-weight: 700;
@@ -559,9 +568,9 @@
   <!-- ============ SIDEBAR ============ -->
   <aside class="sidebar">
     <div class="brand">
-      <div class="brand-mark">L</div>
+      <div class="brand-mark">F</div>
       <div>
-        <div class="brand-name ltr" style="direction:rtl">LOfraier</div>
+        <div class="brand-name ltr" style="direction:ltr">Fox real deals</div>
         <div class="brand-tag">מנתח עסקאות נדל"ן</div>
       </div>
     </div>
@@ -2052,16 +2061,15 @@ Call/text 317-555-0187
   </main>
 </div>
 <script>
+  // Fox real deals — default to light (white leading), respect user toggle
+  if (!document.documentElement.hasAttribute('data-theme')) {
+    document.documentElement.setAttribute('data-theme', 'light');
+  }
   const themeToggle = document.getElementById('theme-toggle');
   themeToggle.addEventListener('click', () => {
     const root = document.documentElement;
     const current = root.getAttribute('data-theme');
-    if (current === 'dark') root.setAttribute('data-theme', 'light');
-    else if (current === 'light') root.setAttribute('data-theme', 'dark');
-    else {
-      const isDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
-      root.setAttribute('data-theme', isDark ? 'light' : 'dark');
-    }
+    root.setAttribute('data-theme', current === 'dark' ? 'light' : 'dark');
   });
 
   function showScreen(id) {
