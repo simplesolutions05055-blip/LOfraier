@@ -1,0 +1,2121 @@
+<title>LOfraier — Real Estate Deal Analyzer</title>
+<style>
+  :root {
+    --ground: #F6F7F5;
+    --surface: #FFFFFF;
+    --surface-2: #F1F2EE;
+    --surface-3: #EAECE6;
+    --border: #E4E5E0;
+    --border-strong: #C8CAC1;
+    --text: #14161A;
+    --text-muted: #5C5E5A;
+    --text-subtle: #8A8C87;
+    --accent: #0F766E;
+    --accent-hover: #0E6863;
+    --accent-soft: rgba(15, 118, 110, 0.08);
+    --good: #059669;
+    --good-bg: rgba(5, 150, 105, 0.09);
+    --good-border: rgba(5, 150, 105, 0.25);
+    --warn: #B45309;
+    --warn-bg: rgba(217, 119, 6, 0.10);
+    --warn-border: rgba(217, 119, 6, 0.28);
+    --bad: #B91C1C;
+    --bad-bg: rgba(220, 38, 38, 0.09);
+    --bad-border: rgba(220, 38, 38, 0.25);
+    --shadow-sm: 0 1px 2px rgba(20, 22, 26, 0.04);
+    --shadow-md: 0 4px 12px rgba(20, 22, 26, 0.06);
+    --font-ui: system-ui, -apple-system, "Assistant", "Arial Hebrew", "Segoe UI", Roboto, sans-serif;
+    --font-data: ui-monospace, "SF Mono", "JetBrains Mono", Menlo, Consolas, "Liberation Mono", monospace;
+    --radius-sm: 4px;
+    --radius: 6px;
+    --radius-lg: 10px;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --ground: #0B0E0C;
+      --surface: #12161340;
+      --surface: #131714;
+      --surface-2: #1A1F1C;
+      --surface-3: #232823;
+      --border: #262A28;
+      --border-strong: #363A38;
+      --text: #ECEDE7;
+      --text-muted: #9A9C96;
+      --text-subtle: #6B6D68;
+      --accent: #2DD4BF;
+      --accent-hover: #5EEAD4;
+      --accent-soft: rgba(45, 212, 191, 0.10);
+      --good: #34D399;
+      --good-bg: rgba(52, 211, 153, 0.12);
+      --good-border: rgba(52, 211, 153, 0.30);
+      --warn: #FBBF24;
+      --warn-bg: rgba(251, 191, 36, 0.11);
+      --warn-border: rgba(251, 191, 36, 0.30);
+      --bad: #F87171;
+      --bad-bg: rgba(248, 113, 113, 0.11);
+      --bad-border: rgba(248, 113, 113, 0.30);
+      --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.3);
+      --shadow-md: 0 4px 12px rgba(0, 0, 0, 0.4);
+    }
+  }
+  :root[data-theme="light"] {
+    --ground: #F6F7F5;
+    --surface: #FFFFFF;
+    --surface-2: #F1F2EE;
+    --surface-3: #EAECE6;
+    --border: #E4E5E0;
+    --border-strong: #C8CAC1;
+    --text: #14161A;
+    --text-muted: #5C5E5A;
+    --text-subtle: #8A8C87;
+    --accent: #0F766E;
+    --accent-hover: #0E6863;
+    --accent-soft: rgba(15, 118, 110, 0.08);
+    --good: #059669;
+    --good-bg: rgba(5, 150, 105, 0.09);
+    --good-border: rgba(5, 150, 105, 0.25);
+    --warn: #B45309;
+    --warn-bg: rgba(217, 119, 6, 0.10);
+    --warn-border: rgba(217, 119, 6, 0.28);
+    --bad: #B91C1C;
+    --bad-bg: rgba(220, 38, 38, 0.09);
+    --bad-border: rgba(220, 38, 38, 0.25);
+  }
+  :root[data-theme="dark"] {
+    --ground: #0B0E0C;
+    --surface: #131714;
+    --surface-2: #1A1F1C;
+    --surface-3: #232823;
+    --border: #262A28;
+    --border-strong: #363A38;
+    --text: #ECEDE7;
+    --text-muted: #9A9C96;
+    --text-subtle: #6B6D68;
+    --accent: #2DD4BF;
+    --accent-hover: #5EEAD4;
+    --accent-soft: rgba(45, 212, 191, 0.10);
+    --good: #34D399;
+    --good-bg: rgba(52, 211, 153, 0.12);
+    --good-border: rgba(52, 211, 153, 0.30);
+    --warn: #FBBF24;
+    --warn-bg: rgba(251, 191, 36, 0.11);
+    --warn-border: rgba(251, 191, 36, 0.30);
+    --bad: #F87171;
+    --bad-bg: rgba(248, 113, 113, 0.11);
+    --bad-border: rgba(248, 113, 113, 0.30);
+  }
+
+  * { box-sizing: border-box; }
+  html, body { margin: 0; padding: 0; }
+  body {
+    font-family: var(--font-ui);
+    background: var(--ground);
+    color: var(--text);
+    font-size: 14px;
+    line-height: 1.5;
+    direction: rtl;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+  .ltr { direction: ltr; unicode-bidi: isolate; }
+  .num { font-family: var(--font-data); font-variant-numeric: tabular-nums; }
+  a { color: var(--accent); text-decoration: none; }
+  a:hover { color: var(--accent-hover); text-decoration: underline; }
+  button { font-family: inherit; cursor: pointer; }
+
+  /* --- App Shell --- */
+  .app {
+    display: grid;
+    grid-template-columns: 240px 1fr;
+    min-height: 100vh;
+    max-width: 100%;
+  }
+
+  /* --- Sidebar --- */
+  .sidebar {
+    background: var(--surface);
+    border-inline-start: 1px solid var(--border);
+    padding: 20px 16px;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    position: sticky;
+    top: 0;
+    height: 100vh;
+    overflow-y: auto;
+  }
+  .brand {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 0 8px 20px;
+    margin-bottom: 8px;
+    border-bottom: 1px solid var(--border);
+  }
+  .brand-mark {
+    width: 32px; height: 32px;
+    border-radius: 8px;
+    background: linear-gradient(135deg, var(--accent), var(--accent-hover));
+    display: grid; place-items: center;
+    color: white;
+    font-weight: 700;
+    font-size: 15px;
+    letter-spacing: -0.02em;
+    box-shadow: var(--shadow-sm);
+  }
+  .brand-name {
+    font-weight: 700;
+    letter-spacing: -0.01em;
+    font-size: 16px;
+  }
+  .brand-tag {
+    color: var(--text-subtle);
+    font-size: 11px;
+    display: block;
+    line-height: 1.2;
+    margin-top: 1px;
+  }
+  .nav-label {
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: var(--text-subtle);
+    padding: 12px 8px 6px;
+    font-weight: 600;
+  }
+  .nav-item {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 8px 10px;
+    border-radius: var(--radius);
+    color: var(--text-muted);
+    font-weight: 500;
+    font-size: 13.5px;
+    background: none;
+    border: none;
+    width: 100%;
+    text-align: start;
+    transition: background 120ms ease, color 120ms ease;
+  }
+  .nav-item:hover { background: var(--surface-2); color: var(--text); }
+  .nav-item.active {
+    background: var(--accent-soft);
+    color: var(--accent);
+    font-weight: 600;
+  }
+  .nav-item .badge {
+    margin-inline-start: auto;
+    background: var(--surface-3);
+    color: var(--text-muted);
+    padding: 1px 7px;
+    border-radius: 999px;
+    font-size: 11px;
+    font-weight: 600;
+  }
+  .nav-item.active .badge { background: var(--accent); color: white; }
+  .nav-item svg { flex-shrink: 0; }
+
+  .sidebar-foot {
+    margin-top: auto;
+    padding-top: 12px;
+    border-top: 1px solid var(--border);
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  .user-chip {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    flex: 1;
+  }
+  .avatar {
+    width: 30px; height: 30px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, #B45309, #D97706);
+    color: white;
+    display: grid; place-items: center;
+    font-size: 12px;
+    font-weight: 700;
+  }
+  .user-name { font-size: 12.5px; font-weight: 600; line-height: 1.2; }
+  .user-plan { font-size: 11px; color: var(--text-subtle); }
+  .icon-btn {
+    background: none;
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 6px;
+    color: var(--text-muted);
+    display: grid; place-items: center;
+    transition: background 120ms ease, border-color 120ms ease;
+  }
+  .icon-btn:hover { background: var(--surface-2); border-color: var(--border-strong); color: var(--text); }
+
+  /* --- Main content --- */
+  main {
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    min-width: 0;
+  }
+  .page-head {
+    padding: 22px 32px 18px;
+    border-bottom: 1px solid var(--border);
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+    gap: 20px;
+    flex-wrap: wrap;
+  }
+  .page-head-l h1 {
+    margin: 0 0 4px;
+    font-size: 22px;
+    font-weight: 700;
+    letter-spacing: -0.02em;
+  }
+  .page-head-l p {
+    margin: 0;
+    color: var(--text-muted);
+    font-size: 13.5px;
+  }
+  .page-head-r {
+    display: flex;
+    gap: 8px;
+    align-items: center;
+  }
+  .btn {
+    padding: 7px 14px;
+    font-size: 13px;
+    font-weight: 600;
+    border-radius: var(--radius);
+    border: 1px solid var(--border-strong);
+    background: var(--surface);
+    color: var(--text);
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    transition: background 120ms ease, border-color 120ms ease;
+  }
+  .btn:hover { background: var(--surface-2); }
+  .btn-primary {
+    background: var(--accent);
+    color: white;
+    border-color: var(--accent);
+  }
+  .btn-primary:hover { background: var(--accent-hover); border-color: var(--accent-hover); color: white; }
+  .btn-good {
+    background: var(--good);
+    color: white;
+    border-color: var(--good);
+  }
+  .btn-ghost { background: transparent; }
+  .btn-sm { padding: 4px 10px; font-size: 12px; }
+
+  .page-body {
+    padding: 24px 32px 40px;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    max-width: 1400px;
+    width: 100%;
+  }
+  .screen { display: none; }
+  .screen.active { display: block; }
+
+  /* --- KPI Cards --- */
+  .kpi-row {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 14px;
+  }
+  .kpi {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-lg);
+    padding: 14px 16px;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    box-shadow: var(--shadow-sm);
+  }
+  .kpi-label {
+    font-size: 11.5px;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: var(--text-subtle);
+    font-weight: 600;
+  }
+  .kpi-value {
+    font-size: 24px;
+    font-weight: 700;
+    letter-spacing: -0.02em;
+    font-family: var(--font-data);
+    font-variant-numeric: tabular-nums;
+  }
+  .kpi-sub {
+    font-size: 11.5px;
+    color: var(--text-muted);
+    display: flex;
+    align-items: center;
+    gap: 4px;
+  }
+  .kpi-sub .up { color: var(--good); }
+  .kpi-sub .down { color: var(--bad); }
+
+  /* --- Cards / Panels --- */
+  .panel {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-lg);
+    box-shadow: var(--shadow-sm);
+  }
+  .panel-head {
+    padding: 14px 18px;
+    border-bottom: 1px solid var(--border);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+  }
+  .panel-title {
+    font-size: 14px;
+    font-weight: 700;
+    letter-spacing: -0.01em;
+  }
+  .panel-body { padding: 16px 18px; }
+
+  /* --- Verdict pill --- */
+  .verdict {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 3px 10px;
+    border-radius: 999px;
+    font-size: 11.5px;
+    font-weight: 700;
+    letter-spacing: 0.03em;
+    text-transform: uppercase;
+    border: 1px solid transparent;
+  }
+  .verdict-lg { padding: 6px 14px; font-size: 13px; }
+  .verdict-good { background: var(--good-bg); color: var(--good); border-color: var(--good-border); }
+  .verdict-warn { background: var(--warn-bg); color: var(--warn); border-color: var(--warn-border); }
+  .verdict-bad { background: var(--bad-bg); color: var(--bad); border-color: var(--bad-border); }
+  .verdict-dot {
+    width: 6px; height: 6px; border-radius: 50%; background: currentColor;
+  }
+
+  .type-tag {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    padding: 3px 8px;
+    border-radius: var(--radius-sm);
+    background: var(--surface-2);
+    border: 1px solid var(--border);
+    color: var(--text-muted);
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.02em;
+    text-transform: uppercase;
+  }
+  .type-flip { color: #B45309; border-color: rgba(180, 83, 9, 0.3); background: rgba(180, 83, 9, 0.08); }
+  .type-rental { color: #0F766E; border-color: rgba(15, 118, 110, 0.3); background: rgba(15, 118, 110, 0.08); }
+  .type-brrrr { color: #7C3AED; border-color: rgba(124, 58, 237, 0.3); background: rgba(124, 58, 237, 0.08); }
+  .type-wholesale { color: #6B7280; border-color: rgba(107, 114, 128, 0.3); background: rgba(107, 114, 128, 0.08); }
+  .type-creative { color: #DB2777; border-color: rgba(219, 39, 119, 0.3); background: rgba(219, 39, 119, 0.08); }
+
+  /* --- Deals feed table --- */
+  .deal-row {
+    display: grid;
+    grid-template-columns: 60px 2.2fr 1.4fr 1fr 1fr 1fr 1fr 100px;
+    gap: 12px;
+    padding: 12px 18px;
+    align-items: center;
+    border-bottom: 1px solid var(--border);
+    transition: background 100ms ease;
+    cursor: pointer;
+  }
+  .deal-row:hover { background: var(--accent-soft); }
+  .deal-row:last-child { border-bottom: none; }
+  .deal-row-head {
+    display: grid;
+    grid-template-columns: 60px 2.2fr 1.4fr 1fr 1fr 1fr 1fr 100px;
+    gap: 12px;
+    padding: 10px 18px;
+    background: var(--surface-2);
+    border-bottom: 1px solid var(--border);
+    font-size: 11px;
+    color: var(--text-subtle);
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    font-weight: 600;
+  }
+  .deal-score {
+    width: 42px; height: 42px;
+    border-radius: 50%;
+    display: grid; place-items: center;
+    background: var(--surface-2);
+    font-family: var(--font-data);
+    font-weight: 700;
+    font-size: 14px;
+    border: 2px solid var(--border);
+  }
+  .deal-score-good { color: var(--good); border-color: var(--good-border); background: var(--good-bg); }
+  .deal-score-warn { color: var(--warn); border-color: var(--warn-border); background: var(--warn-bg); }
+  .deal-score-bad { color: var(--bad); border-color: var(--bad-border); background: var(--bad-bg); }
+  .deal-addr {
+    display: flex;
+    flex-direction: column;
+    gap: 3px;
+  }
+  .deal-addr-line1 {
+    font-weight: 600;
+    font-size: 13.5px;
+    letter-spacing: -0.01em;
+  }
+  .deal-addr-line2 {
+    font-size: 12px;
+    color: var(--text-muted);
+    display: flex;
+    align-items: center;
+    gap: 4px;
+  }
+  .deal-cell {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+  }
+  .deal-cell-primary {
+    font-family: var(--font-data);
+    font-variant-numeric: tabular-nums;
+    font-weight: 600;
+    font-size: 13px;
+  }
+  .deal-cell-secondary {
+    font-size: 11px;
+    color: var(--text-subtle);
+  }
+  .deal-tags {
+    display: flex;
+    gap: 4px;
+    flex-wrap: wrap;
+  }
+
+  /* --- Filters bar --- */
+  .filter-bar {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 12px 18px;
+    background: var(--surface-2);
+    border-bottom: 1px solid var(--border);
+    flex-wrap: wrap;
+  }
+  .search {
+    flex: 1;
+    min-width: 200px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 6px 10px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+  }
+  .search input {
+    flex: 1;
+    background: none;
+    border: none;
+    outline: none;
+    color: var(--text);
+    font-size: 13px;
+    font-family: inherit;
+  }
+  .chip {
+    padding: 4px 10px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 999px;
+    font-size: 12px;
+    color: var(--text-muted);
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    font-weight: 500;
+  }
+  .chip:hover { border-color: var(--border-strong); }
+  .chip.active { background: var(--accent-soft); color: var(--accent); border-color: var(--accent); font-weight: 600; }
+
+  /* -------- Icons -------- */
+  .ic { width: 16px; height: 16px; stroke-width: 2; stroke: currentColor; fill: none; stroke-linecap: round; stroke-linejoin: round; flex-shrink: 0; }
+  .ic-sm { width: 12px; height: 12px; }
+  .ic-lg { width: 20px; height: 20px; }
+
+</style>
+<div class="app">
+
+  <!-- ============ SIDEBAR ============ -->
+  <aside class="sidebar">
+    <div class="brand">
+      <div class="brand-mark">L</div>
+      <div>
+        <div class="brand-name ltr" style="direction:rtl">LOfraier</div>
+        <div class="brand-tag">מנתח עסקאות נדל"ן</div>
+      </div>
+    </div>
+
+    <div class="nav-label">ניתוח</div>
+    <button class="nav-item active" data-screen="dashboard">
+      <svg class="ic" viewBox="0 0 24 24"><path d="M3 12l9-9 9 9"/><path d="M5 10v10h14V10"/></svg>
+      <span>לוח בקרה</span>
+    </button>
+    <button class="nav-item" data-screen="deals">
+      <svg class="ic" viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="16" rx="2"/><path d="M3 10h18"/><path d="M8 4v16"/></svg>
+      <span>עסקאות</span>
+      <span class="badge">47</span>
+    </button>
+    <button class="nav-item" data-screen="deal-detail">
+      <svg class="ic" viewBox="0 0 24 24"><path d="M4 20V10l8-6 8 6v10"/><path d="M9 20v-6h6v6"/></svg>
+      <span>ניתוח עסקה</span>
+    </button>
+    <button class="nav-item" data-screen="rehab">
+      <svg class="ic" viewBox="0 0 24 24"><path d="M14 4l6 6-9 9H5v-6z"/><path d="M13 5l6 6"/></svg>
+      <span>מחשבון שיפוץ</span>
+    </button>
+
+    <div class="nav-label">ניהול</div>
+    <button class="nav-item" data-screen="crm">
+      <svg class="ic" viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="16" rx="2"/><path d="M3 9h18"/><path d="M9 4v16"/></svg>
+      <span>CRM גיליון</span>
+    </button>
+    <button class="nav-item" data-screen="wholesalers">
+      <svg class="ic" viewBox="0 0 24 24"><circle cx="9" cy="8" r="4"/><path d="M2 21c0-4 3-7 7-7s7 3 7 7"/><path d="M17 11l2 2 4-4"/></svg>
+      <span>Wholesalers</span>
+    </button>
+    <button class="nav-item" data-screen="materials">
+      <svg class="ic" viewBox="0 0 24 24"><path d="M12 2l9 5v10l-9 5-9-5V7z"/><path d="M12 12l9-5"/><path d="M12 12v10"/><path d="M12 12L3 7"/></svg>
+      <span>מחירון שיפוץ</span>
+    </button>
+    <button class="nav-item" data-screen="neighborhoods">
+      <svg class="ic" viewBox="0 0 24 24"><path d="M12 21s-7-5-7-11a7 7 0 0114 0c0 6-7 11-7 11z"/><circle cx="12" cy="10" r="2.5"/></svg>
+      <span>שכונות ושווקים</span>
+    </button>
+
+    <div class="nav-label">חשבון</div>
+    <button class="nav-item" data-screen="settings">
+      <svg class="ic" viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.6 1.6 0 00.3 1.8l.1.1a2 2 0 11-2.8 2.8l-.1-.1a1.6 1.6 0 00-1.8-.3 1.6 1.6 0 00-1 1.5V21a2 2 0 11-4 0v-.1a1.6 1.6 0 00-1-1.5 1.6 1.6 0 00-1.8.3l-.1.1a2 2 0 11-2.8-2.8l.1-.1a1.6 1.6 0 00.3-1.8 1.6 1.6 0 00-1.5-1H3a2 2 0 110-4h.1a1.6 1.6 0 001.5-1 1.6 1.6 0 00-.3-1.8l-.1-.1a2 2 0 112.8-2.8l.1.1a1.6 1.6 0 001.8.3H9a1.6 1.6 0 001-1.5V3a2 2 0 114 0v.1a1.6 1.6 0 001 1.5 1.6 1.6 0 001.8-.3l.1-.1a2 2 0 112.8 2.8l-.1.1a1.6 1.6 0 00-.3 1.8V9a1.6 1.6 0 001.5 1H21a2 2 0 110 4h-.1a1.6 1.6 0 00-1.5 1z"/></svg>
+      <span>הגדרות / Buy Box</span>
+    </button>
+    <button class="nav-item" data-screen="onboarding">
+      <svg class="ic" viewBox="0 0 24 24"><path d="M18 8a6 6 0 10-12 0c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.7 21a2 2 0 01-3.4 0"/></svg>
+      <span>Onboarding</span>
+    </button>
+
+    <div class="sidebar-foot">
+      <div class="user-chip">
+        <div class="avatar">מ.ע</div>
+        <div>
+          <div class="user-name">מאור עטייה</div>
+          <div class="user-plan">Pro · Indianapolis</div>
+        </div>
+      </div>
+      <button class="icon-btn" id="theme-toggle" title="החלף מצב תצוגה">
+        <svg class="ic" viewBox="0 0 24 24"><path d="M21 12.8A9 9 0 1111.2 3a7 7 0 009.8 9.8z"/></svg>
+      </button>
+    </div>
+  </aside>
+
+  <main>
+    <!-- ============ DEAL DETAIL (HERO SCREEN) ============ -->
+    <section class="screen" id="s-deal-detail">
+      <div class="page-head">
+        <div class="page-head-l">
+          <div style="display:flex; align-items:center; gap:8px; margin-bottom:6px; color:var(--text-subtle); font-size:12px">
+            <button class="btn btn-ghost btn-sm" onclick="showScreen('dashboard')" style="padding:2px 6px; color:var(--text-muted)">
+              <svg class="ic ic-sm" viewBox="0 0 24 24"><path d="M15 18l-6-6 6-6"/></svg>
+              חזרה ללוח בקרה
+            </button>
+            <span>/</span>
+            <span class="ltr">Deal #DL-2026-0847</span>
+          </div>
+          <h1 class="ltr" style="direction:ltr; text-align:left">4823 Grand Ave, Indianapolis, IN 46228</h1>
+          <p>3 BR / 1 BA · 1,150 sqft · Built 1965 · Lot 6,098 sqft · Neighborhood <span style="color:var(--good);font-weight:600">B+</span></p>
+        </div>
+        <div class="page-head-r">
+          <button class="btn"><svg class="ic" viewBox="0 0 24 24"><path d="M17 8l4 4-4 4M3 12h18"/></svg>Reject</button>
+          <button class="btn"><svg class="ic" viewBox="0 0 24 24"><path d="M19 21l-7-5-7 5V5a2 2 0 012-2h10a2 2 0 012 2z"/></svg>Save</button>
+          <button class="btn btn-primary"><svg class="ic" viewBox="0 0 24 24"><path d="M22 2L11 13M22 2l-7 20-4-9-9-4z"/></svg>Send Offer</button>
+        </div>
+      </div>
+
+      <div class="page-body">
+        <!-- HERO Verdict card -->
+        <div class="panel" style="padding: 0; overflow:hidden">
+          <div style="display:grid; grid-template-columns: 1.6fr 1fr; gap:0; border-bottom:1px solid var(--border)">
+            <!-- LEFT: verdict + numbers -->
+            <div style="padding: 22px 26px; border-inline-end:1px solid var(--border)">
+              <div style="display:flex; align-items:center; gap:10px; margin-bottom:16px; flex-wrap:wrap">
+                <span class="verdict verdict-good verdict-lg"><span class="verdict-dot"></span>GREAT DEAL</span>
+                <span class="type-tag type-rental">🏷️ Rental</span>
+                <span style="color:var(--text-subtle); font-size:12.5px">·</span>
+                <span style="color:var(--text-muted); font-size:12.5px">Score <b class="ltr" style="color:var(--text)">82 / 100</b></span>
+                <span style="margin-inline-start:auto; color:var(--text-subtle); font-size:12px">
+                  התקבל <b style="color:var(--text-muted)">לפני 2 שעות</b> · נותח ב־12s
+                </span>
+              </div>
+
+              <div style="display:grid; grid-template-columns: repeat(4, 1fr); gap:14px; margin-bottom:18px">
+                <div>
+                  <div style="font-size:11px; text-transform:uppercase; letter-spacing:.05em; color:var(--text-subtle); font-weight:600; margin-bottom:3px">Asking</div>
+                  <div class="ltr num" style="font-size:24px; font-weight:700; letter-spacing:-.02em">$85,000</div>
+                </div>
+                <div>
+                  <div style="font-size:11px; text-transform:uppercase; letter-spacing:.05em; color:var(--text-subtle); font-weight:600; margin-bottom:3px">Our MAO</div>
+                  <div class="ltr num" style="font-size:24px; font-weight:700; letter-spacing:-.02em; color:var(--good)">$102,000</div>
+                </div>
+                <div>
+                  <div style="font-size:11px; text-transform:uppercase; letter-spacing:.05em; color:var(--text-subtle); font-weight:600; margin-bottom:3px">All In</div>
+                  <div class="ltr num" style="font-size:24px; font-weight:700; letter-spacing:-.02em">$128,500</div>
+                </div>
+                <div>
+                  <div style="font-size:11px; text-transform:uppercase; letter-spacing:.05em; color:var(--text-subtle); font-weight:600; margin-bottom:3px">Cash Flow /mo</div>
+                  <div class="ltr num" style="font-size:24px; font-weight:700; letter-spacing:-.02em; color:var(--good)">+$211</div>
+                </div>
+              </div>
+
+              <!-- Secondary metrics row -->
+              <div style="display:grid; grid-template-columns: repeat(6, 1fr); gap:12px; padding-top:14px; border-top:1px dashed var(--border)">
+                <div>
+                  <div style="font-size:10.5px; text-transform:uppercase; color:var(--text-subtle); font-weight:600">ARV</div>
+                  <div class="ltr num" style="font-weight:600; font-size:14px">$165,000</div>
+                </div>
+                <div>
+                  <div style="font-size:10.5px; text-transform:uppercase; color:var(--text-subtle); font-weight:600">Rehab</div>
+                  <div class="ltr num" style="font-weight:600; font-size:14px">$28,000</div>
+                </div>
+                <div>
+                  <div style="font-size:10.5px; text-transform:uppercase; color:var(--text-subtle); font-weight:600">Rent /mo</div>
+                  <div class="ltr num" style="font-weight:600; font-size:14px">$1,350</div>
+                </div>
+                <div>
+                  <div style="font-size:10.5px; text-transform:uppercase; color:var(--text-subtle); font-weight:600">Rent Rule</div>
+                  <div class="ltr num" style="font-weight:600; font-size:14px; color:var(--good)">1.15% <span style="color:var(--text-subtle); font-weight:400; font-size:11px">▲ 1.10</span></div>
+                </div>
+                <div>
+                  <div style="font-size:10.5px; text-transform:uppercase; color:var(--text-subtle); font-weight:600">ROI</div>
+                  <div class="ltr num" style="font-weight:600; font-size:14px; color:var(--good)">9.4%</div>
+                </div>
+                <div>
+                  <div style="font-size:10.5px; text-transform:uppercase; color:var(--text-subtle); font-weight:600">DSCR</div>
+                  <div class="ltr num" style="font-weight:600; font-size:14px; color:var(--good)">1.32</div>
+                </div>
+              </div>
+            </div>
+
+            <!-- RIGHT: photo placeholder + wholesaler + why -->
+            <div style="padding: 22px 26px; background:var(--surface-2)">
+              <div style="height:120px; border-radius: var(--radius); background: linear-gradient(135deg, #4A5D4E 0%, #6B7A6E 40%, #8A968D 100%); position:relative; overflow:hidden; margin-bottom:14px; border:1px solid var(--border)">
+                <svg viewBox="0 0 200 100" style="width:100%; height:100%; opacity:0.3" preserveAspectRatio="none">
+                  <path d="M20 80 L100 20 L180 80 Z" fill="rgba(255,255,255,0.4)"/>
+                  <rect x="60" y="55" width="80" height="30" fill="rgba(255,255,255,0.4)"/>
+                  <rect x="85" y="65" width="15" height="20" fill="rgba(255,255,255,0.6)"/>
+                </svg>
+                <div style="position:absolute; bottom:6px; right:8px; background:rgba(0,0,0,0.55); color:white; padding:2px 6px; border-radius:3px; font-size:10px; font-weight:600">
+                  6 תמונות
+                </div>
+              </div>
+              <div style="font-size:11px; color:var(--text-subtle); text-transform:uppercase; letter-spacing:.05em; font-weight:600; margin-bottom:4px">Wholesaler</div>
+              <div style="display:flex; align-items:center; gap:8px; margin-bottom:10px">
+                <div class="avatar" style="width:26px; height:26px; font-size:10px; background:linear-gradient(135deg,#0F766E,#14B8A6)">JT</div>
+                <div>
+                  <div style="font-size:13px; font-weight:600" class="ltr">John Thompson</div>
+                  <div style="font-size:11px; color:var(--text-muted)" class="ltr">Elite Deals LLC · Quality 9.2/10</div>
+                </div>
+              </div>
+              <div style="font-size:11px; color:var(--text-subtle); text-transform:uppercase; letter-spacing:.05em; font-weight:600; margin-bottom:4px; margin-top:12px">למה 🟢 GREAT?</div>
+              <ul style="margin:0; padding:0; list-style:none; font-size:12.5px; color:var(--text-muted); line-height:1.8">
+                <li>✓ Rent Rule <b class="ltr" style="color:var(--good)">1.15%</b> מעל היעד 1.10%</li>
+                <li>✓ DSCR <b class="ltr" style="color:var(--good)">1.32</b> מעל מינימום 1.25</li>
+                <li>✓ Buy Box תואם (SqFt, Beds, Year)</li>
+                <li>✓ שכונה <b class="ltr" style="color:var(--good)">B+</b> · Crime 22/100</li>
+              </ul>
+            </div>
+          </div>
+
+          <!-- TABS -->
+          <div style="display:flex; padding:0 22px; border-bottom:1px solid var(--border); gap:2px; background:var(--surface)">
+            <button class="tab active" data-tab="overview">Overview</button>
+            <button class="tab" data-tab="comps">Comps (6)</button>
+            <button class="tab" data-tab="market">Market</button>
+            <button class="tab" data-tab="rehab">Rehab</button>
+            <button class="tab" data-tab="calc">Calculations</button>
+            <button class="tab" data-tab="source">Source Email</button>
+          </div>
+
+          <!-- TAB CONTENT -->
+          <div class="tab-content active" data-tab-c="overview" style="padding: 20px 26px">
+            <div style="display:grid; grid-template-columns: 1.3fr 1fr; gap:24px">
+              <!-- LEFT: Property Q&A -->
+              <div>
+                <div style="font-size:12px; text-transform:uppercase; letter-spacing:.05em; color:var(--text-subtle); font-weight:700; margin-bottom:10px">Property Q&A · 12 שאלות</div>
+                <div style="display:grid; grid-template-columns: 1fr 1fr; gap:0; border:1px solid var(--border); border-radius:var(--radius); overflow:hidden">
+                  <div class="qa-cell">
+                    <span class="qa-l">גוף חימום</span>
+                    <span class="qa-r ltr">8 years <span class="qa-tag qa-tag-ok">OK</span></span>
+                  </div>
+                  <div class="qa-cell">
+                    <span class="qa-l">גוף קירור</span>
+                    <span class="qa-r ltr">4 years <span class="qa-tag qa-tag-good">GOOD</span></span>
+                  </div>
+                  <div class="qa-cell">
+                    <span class="qa-l">דוד מים</span>
+                    <span class="qa-r ltr">12 years <span class="qa-tag qa-tag-warn">SOON</span></span>
+                  </div>
+                  <div class="qa-cell">
+                    <span class="qa-l">גג</span>
+                    <span class="qa-r ltr">15 years <span class="qa-tag qa-tag-warn">CHECK</span></span>
+                  </div>
+                  <div class="qa-cell">
+                    <span class="qa-l">חשמל (Amps)</span>
+                    <span class="qa-r ltr">200A <span class="qa-tag qa-tag-good">GOOD</span></span>
+                  </div>
+                  <div class="qa-cell">
+                    <span class="qa-l">חוטי חשמל</span>
+                    <span class="qa-r ltr">Modern <span class="qa-tag qa-tag-good">GOOD</span></span>
+                  </div>
+                  <div class="qa-cell">
+                    <span class="qa-l">אינסטלציה</span>
+                    <span class="qa-r ltr">PEX <span class="qa-tag qa-tag-good">MODERN</span></span>
+                  </div>
+                  <div class="qa-cell">
+                    <span class="qa-l">חלונות</span>
+                    <span class="qa-r ltr">Renewed <span class="qa-tag qa-tag-good">GOOD</span></span>
+                  </div>
+                  <div class="qa-cell">
+                    <span class="qa-l">Sewer Line</span>
+                    <span class="qa-r ltr">Unknown <span class="qa-tag qa-tag-warn">SCOPE</span></span>
+                  </div>
+                  <div class="qa-cell">
+                    <span class="qa-l">HOA</span>
+                    <span class="qa-r ltr">None <span class="qa-tag qa-tag-good">CLEAR</span></span>
+                  </div>
+                  <div class="qa-cell">
+                    <span class="qa-l">Rented</span>
+                    <span class="qa-r ltr">Vacant</span>
+                  </div>
+                  <div class="qa-cell">
+                    <span class="qa-l">General Cond.</span>
+                    <span class="qa-r ltr">Medium Rehab</span>
+                  </div>
+                </div>
+
+                <div style="font-size:12px; text-transform:uppercase; letter-spacing:.05em; color:var(--text-subtle); font-weight:700; margin: 20px 0 10px">Buy Box Match</div>
+                <div style="display:flex; flex-direction:column; gap:6px; font-size:13px">
+                  <div class="bb-item bb-ok"><span>Max All In ≤ $130,000</span><span class="ltr num">$128,500 ✓</span></div>
+                  <div class="bb-item bb-ok"><span>ARV ≥ $120,000</span><span class="ltr num">$165,000 ✓</span></div>
+                  <div class="bb-item bb-ok"><span>Min 2 Beds</span><span class="ltr num">3 BR ✓</span></div>
+                  <div class="bb-item bb-ok"><span>Min 900 SqFt</span><span class="ltr num">1,150 ✓</span></div>
+                  <div class="bb-item bb-ok"><span>Year Built ≥ 1950</span><span class="ltr num">1965 ✓</span></div>
+                  <div class="bb-item bb-ok"><span>Rehab ≤ $45,000</span><span class="ltr num">$28,000 ✓</span></div>
+                  <div class="bb-item bb-ok"><span>Neighborhood ≥ C+</span><span class="ltr num">B+ ✓</span></div>
+                </div>
+              </div>
+
+              <!-- RIGHT: Map + Info -->
+              <div>
+                <div style="font-size:12px; text-transform:uppercase; letter-spacing:.05em; color:var(--text-subtle); font-weight:700; margin-bottom:10px">מיקום</div>
+                <div style="height:220px; border-radius:var(--radius); border:1px solid var(--border); background: var(--surface-2); position:relative; overflow:hidden">
+                  <svg viewBox="0 0 400 220" style="width:100%; height:100%">
+                    <defs>
+                      <pattern id="grid" width="20" height="20" patternUnits="userSpaceOnUse">
+                        <path d="M 20 0 L 0 0 0 20" fill="none" stroke="var(--border)" stroke-width="0.5"/>
+                      </pattern>
+                    </defs>
+                    <rect width="400" height="220" fill="url(#grid)"/>
+                    <!-- Streets -->
+                    <path d="M 0 80 L 400 80" stroke="var(--border-strong)" stroke-width="4" opacity="0.5"/>
+                    <path d="M 0 140 L 400 140" stroke="var(--border-strong)" stroke-width="3" opacity="0.5"/>
+                    <path d="M 120 0 L 120 220" stroke="var(--border-strong)" stroke-width="4" opacity="0.5"/>
+                    <path d="M 280 0 L 280 220" stroke="var(--border-strong)" stroke-width="3" opacity="0.5"/>
+                    <!-- Comp markers -->
+                    <circle cx="80" cy="60" r="6" fill="var(--text-subtle)" opacity="0.6"/>
+                    <circle cx="180" cy="180" r="6" fill="var(--text-subtle)" opacity="0.6"/>
+                    <circle cx="320" cy="90" r="6" fill="var(--text-subtle)" opacity="0.6"/>
+                    <circle cx="240" cy="60" r="6" fill="var(--text-subtle)" opacity="0.6"/>
+                    <circle cx="140" cy="120" r="6" fill="var(--text-subtle)" opacity="0.6"/>
+                    <!-- Subject property -->
+                    <circle cx="200" cy="110" r="14" fill="var(--good)" opacity="0.2"/>
+                    <circle cx="200" cy="110" r="8" fill="var(--good)"/>
+                    <circle cx="200" cy="110" r="4" fill="white"/>
+                  </svg>
+                  <div style="position:absolute; bottom:8px; left:8px; background:var(--surface); padding:4px 8px; border-radius:3px; font-size:11px; font-weight:600; border:1px solid var(--border)" class="ltr">
+                    <span style="color:var(--good)">●</span> Subject &nbsp; <span style="color:var(--text-muted)">●</span> Comps (5)
+                  </div>
+                </div>
+
+                <div style="font-size:12px; text-transform:uppercase; letter-spacing:.05em; color:var(--text-subtle); font-weight:700; margin: 20px 0 10px">שכונה</div>
+                <div class="stat-line"><span>Neighborhood Grade (Niche)</span><span class="ltr num" style="color:var(--good)"><b>B+</b> · 78/100</span></div>
+                <div class="stat-line"><span>Crime Score (SpotCrime)</span><span class="ltr num" style="color:var(--good)">22 /100 (Low)</span></div>
+                <div class="stat-line"><span>School Rating</span><span class="ltr num">6.4/10</span></div>
+                <div class="stat-line"><span>Median Household</span><span class="ltr num">$52,300</span></div>
+                <div class="stat-line"><span>Ownership %</span><span class="ltr num">61%</span></div>
+                <div class="stat-line"><span>5Y Appreciation</span><span class="ltr num" style="color:var(--good)">+43%</span></div>
+              </div>
+            </div>
+          </div>
+
+          <!-- COMPS TAB -->
+          <div class="tab-content" data-tab-c="comps" style="padding: 20px 26px">
+            <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:14px">
+              <div>
+                <div style="font-weight:700; font-size:14px">6 Sold Comps · רדיוס 1 מייל · 6 חודשים אחרונים</div>
+                <div style="color:var(--text-muted); font-size:12px; margin-top:2px">חציון מחיר למטר: <b class="ltr num" style="color:var(--text)">$143/sqft</b> → ARV מחושב: <b class="ltr num" style="color:var(--good)">$165,000</b></div>
+              </div>
+              <button class="btn btn-sm">התאם כללי סינון</button>
+            </div>
+            <div class="deal-row-head" style="grid-template-columns: 1.8fr 1fr .8fr .8fr .8fr .8fr .6fr">
+              <div>Address</div><div>Sold Price</div><div>Beds/Baths</div><div>SqFt</div><div>$/sqft</div><div>Sold Date</div><div>Distance</div>
+            </div>
+            <div class="comp-row"><div class="ltr">115 Grant Cir, Hamilton</div><div class="ltr num">$155,000</div><div class="ltr num">3/1</div><div class="ltr num">1,085</div><div class="ltr num">$143</div><div class="ltr num">04/12/26</div><div class="ltr num">0.4 mi</div></div>
+            <div class="comp-row"><div class="ltr">2107 N Emerson</div><div class="ltr num">$168,000</div><div class="ltr num">3/1</div><div class="ltr num">1,180</div><div class="ltr num">$142</div><div class="ltr num">03/28/26</div><div class="ltr num">0.7 mi</div></div>
+            <div class="comp-row"><div class="ltr">246 Hanover St</div><div class="ltr num">$147,500</div><div class="ltr num">2/1</div><div class="ltr num">1,030</div><div class="ltr num">$143</div><div class="ltr num">05/07/26</div><div class="ltr num">0.5 mi</div></div>
+            <div class="comp-row"><div class="ltr">123 Grant Cir</div><div class="ltr num">$172,000</div><div class="ltr num">3/2</div><div class="ltr num">1,200</div><div class="ltr num">$143</div><div class="ltr num">02/19/26</div><div class="ltr num">0.4 mi</div></div>
+            <div class="comp-row"><div class="ltr">1108 Garden Ave</div><div class="ltr num">$158,900</div><div class="ltr num">3/1</div><div class="ltr num">1,120</div><div class="ltr num">$142</div><div class="ltr num">06/01/26</div><div class="ltr num">0.9 mi</div></div>
+            <div class="comp-row"><div class="ltr">4801 Grand Ave</div><div class="ltr num">$175,000</div><div class="ltr num">3/2</div><div class="ltr num">1,240</div><div class="ltr num">$141</div><div class="ltr num">01/29/26</div><div class="ltr num">0.2 mi</div></div>
+          </div>
+
+          <!-- REHAB TAB -->
+          <div class="tab-content" data-tab-c="rehab" style="padding: 20px 26px">
+            <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:14px; flex-wrap:wrap; gap:12px">
+              <div>
+                <div style="font-weight:700; font-size:14px">הערכת שיפוץ · Medium Template</div>
+                <div style="color:var(--text-muted); font-size:12px; margin-top:2px">1,150 sqft · 1 bath · על בסיס המחירון האישי שלך</div>
+              </div>
+              <div style="display:flex; gap:6px">
+                <button class="btn btn-sm">🤖 נתח תמונות ב־AI</button>
+                <button class="btn btn-sm btn-primary" onclick="showScreen('rehab')">פתח מחשבון מלא</button>
+              </div>
+            </div>
+            <div style="display:grid; grid-template-columns: 1fr 260px; gap:20px">
+              <div>
+                <div class="rehab-line"><span>Paint & Drywall</span><span class="ltr num">1,150 sqft × $2.50</span><span class="ltr num">$2,875</span></div>
+                <div class="rehab-line"><span>Flooring (LVP)</span><span class="ltr num">1,150 sqft × $4.50</span><span class="ltr num">$5,175</span></div>
+                <div class="rehab-line"><span>Fix Kitchen Cabinets</span><span class="ltr num">1×</span><span class="ltr num">$600</span></div>
+                <div class="rehab-line"><span>Countertop — Formica</span><span class="ltr num">1×</span><span class="ltr num">$500</span></div>
+                <div class="rehab-line"><span>Backsplash</span><span class="ltr num">1×</span><span class="ltr num">$900</span></div>
+                <div class="rehab-line"><span>Appliances</span><span class="ltr num">1×</span><span class="ltr num">$2,000</span></div>
+                <div class="rehab-line"><span>Bath Cosmetics</span><span class="ltr num">1 bath</span><span class="ltr num">$1,500</span></div>
+                <div class="rehab-line"><span>Light Fixtures</span><span class="ltr num">1×</span><span class="ltr num">$800</span></div>
+                <div class="rehab-line"><span>Plugs & Switches</span><span class="ltr num">1×</span><span class="ltr num">$500</span></div>
+                <div class="rehab-line"><span>Door Handles</span><span class="ltr num">1×</span><span class="ltr num">$500</span></div>
+                <div class="rehab-line"><span>Water Heater</span><span class="ltr num">1×</span><span class="ltr num">$1,000</span></div>
+                <div class="rehab-line"><span>Demo, Trash out, Prep</span><span class="ltr num">0.5×</span><span class="ltr num">$750</span></div>
+                <div class="rehab-line" style="color:var(--text-muted)"><span>Interior Doors (fix)</span><span class="ltr num">0.5×</span><span class="ltr num">$550</span></div>
+              </div>
+              <div>
+                <div class="panel" style="background:var(--surface-2); box-shadow:none">
+                  <div style="padding: 14px 16px">
+                    <div style="font-size:11px; text-transform:uppercase; color:var(--text-subtle); font-weight:600; margin-bottom:4px">Subtotal</div>
+                    <div class="ltr num" style="font-size:20px; font-weight:700">$17,650</div>
+                    <div style="border-top:1px dashed var(--border); margin:12px 0"></div>
+                    <div style="display:flex; justify-content:space-between; font-size:12.5px; color:var(--text-muted); margin-bottom:4px">
+                      <span>+ Outdoor / Landscaping 10%</span>
+                      <span class="ltr num">$1,765</span>
+                    </div>
+                    <div style="display:flex; justify-content:space-between; font-size:12.5px; color:var(--text-muted); margin-bottom:12px">
+                      <span>+ Unexpected 7%</span>
+                      <span class="ltr num">$1,235</span>
+                    </div>
+                    <div style="border-top:1px solid var(--border); padding-top:12px">
+                      <div style="font-size:11px; text-transform:uppercase; color:var(--text-subtle); font-weight:600; margin-bottom:4px">Total Rehab</div>
+                      <div class="ltr num" style="font-size:26px; font-weight:700; color:var(--good)">$28,000</div>
+                    </div>
+                    <div style="margin-top:12px; padding-top:12px; border-top:1px solid var(--border); font-size:12px; color:var(--text-muted)">
+                      <b style="color:var(--text)">Wholesaler הצעה:</b> $22,000<br>
+                      <span style="color:var(--warn)">▲ שלנו גבוה ב־27% · שמרני</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- CALCULATIONS TAB -->
+          <div class="tab-content" data-tab-c="calc" style="padding: 20px 26px">
+            <div style="font-weight:700; font-size:14px; margin-bottom:14px">Rental Calculator (מלא מ־Excel)</div>
+            <div style="display:grid; grid-template-columns: 1fr 1fr; gap:20px">
+              <div>
+                <div style="font-size:11px; text-transform:uppercase; color:var(--text-subtle); font-weight:600; margin-bottom:6px">Purchase & All-In</div>
+                <div class="calc-row"><span>Purchase Price</span><span class="ltr num">$85,000</span></div>
+                <div class="calc-row"><span>Renovation</span><span class="ltr num">$28,000</span></div>
+                <div class="calc-row"><span>Title Closing</span><span class="ltr num">$2,200</span></div>
+                <div class="calc-row"><span>Inspection</span><span class="ltr num">$600</span></div>
+                <div class="calc-row" style="border-top:1px solid var(--border-strong); font-weight:700"><span>Buy & Rehab Cost</span><span class="ltr num">$115,800</span></div>
+
+                <div style="font-size:11px; text-transform:uppercase; color:var(--text-subtle); font-weight:600; margin: 18px 0 6px">Financing (Rental Loan)</div>
+                <div class="calc-row"><span>Purchase Loan 80%</span><span class="ltr num">$68,000</span></div>
+                <div class="calc-row"><span>Reno Loan 100%</span><span class="ltr num">$28,000</span></div>
+                <div class="calc-row"><span>Total Loan</span><span class="ltr num">$96,000</span></div>
+                <div class="calc-row"><span>Origination 3%</span><span class="ltr num">$2,880</span></div>
+                <div class="calc-row"><span>Title Financing</span><span class="ltr num">$1,500</span></div>
+                <div class="calc-row"><span>Appraisal</span><span class="ltr num">$800</span></div>
+                <div class="calc-row" style="font-weight:600"><span>Total Loan Cost</span><span class="ltr num">$5,180</span></div>
+
+                <div style="font-size:11px; text-transform:uppercase; color:var(--text-subtle); font-weight:600; margin: 18px 0 6px">Holding Cost (5 months)</div>
+                <div class="calc-row"><span>Interest 8.5% × 5mo</span><span class="ltr num">$3,400</span></div>
+                <div class="calc-row"><span>Insurance</span><span class="ltr num">$688</span></div>
+                <div class="calc-row"><span>Property Tax</span><span class="ltr num">$833</span></div>
+                <div class="calc-row"><span>Utilities</span><span class="ltr num">$600</span></div>
+                <div class="calc-row" style="font-weight:600"><span>Total Holding</span><span class="ltr num">$5,521</span></div>
+
+                <div class="calc-row" style="border-top:2px solid var(--border-strong); background:var(--surface-2); padding: 10px 12px; font-weight:700; font-size:14px; margin-top:8px; border-radius: var(--radius)">
+                  <span>ALL IN</span><span class="ltr num">$128,501</span>
+                </div>
+                <div class="calc-row" style="font-weight:600"><span>Cash In Deal</span><span class="ltr num">$36,881</span></div>
+              </div>
+
+              <div>
+                <div style="font-size:11px; text-transform:uppercase; color:var(--text-subtle); font-weight:600; margin-bottom:6px">Income (After Rehab)</div>
+                <div class="calc-row"><span>Monthly Rent</span><span class="ltr num">$1,350</span></div>
+                <div class="calc-row"><span>Yearly Rent</span><span class="ltr num">$16,200</span></div>
+
+                <div style="font-size:11px; text-transform:uppercase; color:var(--text-subtle); font-weight:600; margin: 18px 0 6px">Yearly Expenses</div>
+                <div class="calc-row"><span>Property Tax</span><span class="ltr num">$2,000</span></div>
+                <div class="calc-row"><span>Insurance</span><span class="ltr num">$1,100</span></div>
+                <div class="calc-row"><span>Repairs & Maint. ($120/mo)</span><span class="ltr num">$1,440</span></div>
+                <div class="calc-row"><span>Property Mgmt 8%</span><span class="ltr num">$1,296</span></div>
+                <div class="calc-row"><span>Vacancy 6%</span><span class="ltr num">$972</span></div>
+                <div class="calc-row"><span>New Tenants Fee</span><span class="ltr num">$675</span></div>
+                <div class="calc-row" style="font-weight:600"><span>Total Yearly Expenses</span><span class="ltr num">$7,483</span></div>
+                <div class="calc-row"><span>% of Income</span><span class="ltr num">46.2%</span></div>
+
+                <div style="font-size:11px; text-transform:uppercase; color:var(--text-subtle); font-weight:600; margin: 18px 0 6px">Key Metrics</div>
+                <div class="calc-row" style="background:var(--good-bg); padding: 8px 12px; border-radius: var(--radius); margin-bottom:4px"><span><b>NOI</b></span><span class="ltr num"><b>$8,717</b></span></div>
+                <div class="calc-row"><span>Rent Rule (target 1.10%)</span><span class="ltr num" style="color:var(--good); font-weight:600">1.15% ✓</span></div>
+                <div class="calc-row"><span>ROI on All In (target 9%)</span><span class="ltr num" style="color:var(--good); font-weight:600">9.4% ✓</span></div>
+                <div class="calc-row"><span>Cash-on-Cash (target 8%)</span><span class="ltr num" style="color:var(--good); font-weight:600">8.1% ✓</span></div>
+                <div class="calc-row"><span>ROE (target > ROI)</span><span class="ltr num" style="color:var(--good); font-weight:600">14.3% ✓</span></div>
+                <div class="calc-row"><span>DSCR (target 1.25)</span><span class="ltr num" style="color:var(--good); font-weight:600">1.32 ✓</span></div>
+                <div class="calc-row"><span>Monthly Cash Flow</span><span class="ltr num" style="color:var(--good); font-weight:600">+$211</span></div>
+
+                <div style="font-size:11px; text-transform:uppercase; color:var(--text-subtle); font-weight:600; margin: 18px 0 6px">BRRRR Refinance (אופציונלי)</div>
+                <div class="calc-row"><span>Refi Loan (70% ARV)</span><span class="ltr num">$115,500</span></div>
+                <div class="calc-row"><span>Cash Left In Deal</span><span class="ltr num">$13,001</span></div>
+                <div class="calc-row"><span>% Money In</span><span class="ltr num" style="color:var(--good)">10.1% ✓</span></div>
+                <div class="calc-row"><span>BRRRR Efficiency</span><span class="ltr num" style="color:var(--good)">89.9%</span></div>
+              </div>
+            </div>
+          </div>
+
+          <!-- MARKET TAB -->
+          <div class="tab-content" data-tab-c="market" style="padding: 20px 26px">
+            <div style="display:grid; grid-template-columns: 1fr 1fr 1fr; gap:16px">
+              <div class="panel" style="box-shadow:none">
+                <div class="panel-head" style="padding:12px 14px">
+                  <div>
+                    <div class="panel-title">Rent Estimate</div>
+                    <div style="font-size:11px; color:var(--text-subtle); margin-top:2px">Rentometer · רדיוס 3 מייל</div>
+                  </div>
+                </div>
+                <div style="padding:14px">
+                  <div class="ltr num" style="font-size:28px; font-weight:700">$1,285 <span style="font-size:14px; color:var(--text-muted); font-weight:500">/mo</span></div>
+                  <div style="color:var(--text-muted); font-size:12px; margin-top:4px">Range: <span class="ltr num">$1,150 – $1,485</span></div>
+                  <div style="margin-top:12px; padding-top:12px; border-top:1px solid var(--border); font-size:12px; color:var(--text-muted)">
+                    <div style="display:flex; justify-content:space-between; margin-bottom:4px"><span>Low</span><span class="ltr num">$1,150</span></div>
+                    <div style="display:flex; justify-content:space-between; margin-bottom:4px"><span>Median</span><span class="ltr num" style="color:var(--text); font-weight:600">$1,285</span></div>
+                    <div style="display:flex; justify-content:space-between"><span>High</span><span class="ltr num">$1,485</span></div>
+                  </div>
+                </div>
+              </div>
+
+              <div class="panel" style="box-shadow:none">
+                <div class="panel-head" style="padding:12px 14px">
+                  <div>
+                    <div class="panel-title">Crime Score</div>
+                    <div style="font-size:11px; color:var(--text-subtle); margin-top:2px">SpotCrime · 90 יום אחרונים</div>
+                  </div>
+                </div>
+                <div style="padding:14px">
+                  <div class="ltr num" style="font-size:28px; font-weight:700; color:var(--good)">22 <span style="font-size:14px; color:var(--text-muted); font-weight:500">/100</span></div>
+                  <div style="color:var(--text-muted); font-size:12px; margin-top:4px">Low Crime</div>
+                  <div style="margin-top:12px; padding-top:12px; border-top:1px solid var(--border); font-size:12px; color:var(--text-muted)">
+                    <div style="display:flex; justify-content:space-between; margin-bottom:4px"><span>Theft</span><span class="ltr num">3</span></div>
+                    <div style="display:flex; justify-content:space-between; margin-bottom:4px"><span>Vandalism</span><span class="ltr num">2</span></div>
+                    <div style="display:flex; justify-content:space-between; margin-bottom:4px"><span>Assault</span><span class="ltr num">0</span></div>
+                    <div style="display:flex; justify-content:space-between"><span>Total incidents</span><span class="ltr num" style="color:var(--text); font-weight:600">5</span></div>
+                  </div>
+                </div>
+              </div>
+
+              <div class="panel" style="box-shadow:none">
+                <div class="panel-head" style="padding:12px 14px">
+                  <div>
+                    <div class="panel-title">Neighborhood</div>
+                    <div style="font-size:11px; color:var(--text-subtle); margin-top:2px">Niche.com · Eagledale</div>
+                  </div>
+                </div>
+                <div style="padding:14px">
+                  <div class="ltr num" style="font-size:28px; font-weight:700; color:var(--good)">B+</div>
+                  <div style="color:var(--text-muted); font-size:12px; margin-top:4px">Grade 78/100</div>
+                  <div style="margin-top:12px; padding-top:12px; border-top:1px solid var(--border); font-size:12px; color:var(--text-muted)">
+                    <div style="display:flex; justify-content:space-between; margin-bottom:4px"><span>Public Schools</span><span class="ltr num">C+</span></div>
+                    <div style="display:flex; justify-content:space-between; margin-bottom:4px"><span>Housing</span><span class="ltr num">B</span></div>
+                    <div style="display:flex; justify-content:space-between; margin-bottom:4px"><span>Diversity</span><span class="ltr num">A-</span></div>
+                    <div style="display:flex; justify-content:space-between"><span>Nightlife</span><span class="ltr num">C</span></div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div style="margin-top:20px" class="panel">
+              <div class="panel-head">
+                <div class="panel-title">מגמת מחירים · Zillow · 5 שנים</div>
+              </div>
+              <div style="padding:20px 24px 16px">
+                <svg viewBox="0 0 700 180" style="width:100%; height:180px">
+                  <defs>
+                    <linearGradient id="g1" x1="0" y1="0" x2="0" y2="1">
+                      <stop offset="0%" stop-color="var(--accent)" stop-opacity="0.25"/>
+                      <stop offset="100%" stop-color="var(--accent)" stop-opacity="0"/>
+                    </linearGradient>
+                  </defs>
+                  <!-- grid -->
+                  <line x1="0" y1="40" x2="700" y2="40" stroke="var(--border)" stroke-dasharray="2,4"/>
+                  <line x1="0" y1="90" x2="700" y2="90" stroke="var(--border)" stroke-dasharray="2,4"/>
+                  <line x1="0" y1="140" x2="700" y2="140" stroke="var(--border)" stroke-dasharray="2,4"/>
+                  <!-- area -->
+                  <path d="M 0 140 L 100 130 L 200 115 L 300 100 L 400 80 L 500 65 L 600 55 L 700 45 L 700 180 L 0 180 Z" fill="url(#g1)"/>
+                  <path d="M 0 140 L 100 130 L 200 115 L 300 100 L 400 80 L 500 65 L 600 55 L 700 45" fill="none" stroke="var(--accent)" stroke-width="2.5"/>
+                  <circle cx="700" cy="45" r="5" fill="var(--accent)"/>
+                  <circle cx="700" cy="45" r="10" fill="var(--accent)" opacity="0.2"/>
+                  <text x="690" y="35" text-anchor="end" font-size="11" fill="var(--text)" font-weight="600" font-family="var(--font-data)">$165k</text>
+                  <text x="10" y="150" font-size="11" fill="var(--text-muted)" font-family="var(--font-data)">$115k</text>
+                  <text x="10" y="175" font-size="10" fill="var(--text-subtle)">2021</text>
+                  <text x="350" y="175" font-size="10" fill="var(--text-subtle)" text-anchor="middle">2023</text>
+                  <text x="690" y="175" font-size="10" fill="var(--text-subtle)" text-anchor="end">2026</text>
+                </svg>
+                <div style="display:flex; justify-content:space-around; margin-top:8px; font-size:12px; color:var(--text-muted)">
+                  <div>5Y appreciation: <b style="color:var(--good)" class="ltr num">+43%</b></div>
+                  <div>Days on Market: <b style="color:var(--text)" class="ltr num">14 days</b></div>
+                  <div>Hot Rate: <b style="color:var(--good)" class="ltr num">77</b></div>
+                  <div>Median $/sqft: <b style="color:var(--text)" class="ltr num">$143</b></div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- SOURCE EMAIL TAB -->
+          <div class="tab-content" data-tab-c="source" style="padding: 20px 26px">
+            <div class="panel" style="box-shadow:none; background:var(--surface-2)">
+              <div style="padding:14px 18px; border-bottom:1px solid var(--border); direction:ltr">
+                <div style="display:flex; justify-content:space-between; margin-bottom:6px">
+                  <span style="font-size:11px; color:var(--text-subtle); font-weight:600; text-transform:uppercase">From</span>
+                  <span style="font-size:11px; color:var(--text-subtle)">Jul 6, 2026 12:14 PM EST</span>
+                </div>
+                <div class="ltr" style="font-weight:600">John Thompson &lt;john@elitedealsindy.com&gt;</div>
+                <div class="ltr" style="font-size:12px; color:var(--text-muted); margin-top:2px">Subject: 🔥 New Rental Deal — 4823 Grand Ave Indy — $85K OBO</div>
+              </div>
+              <div style="padding:18px; direction:ltr; font-family:var(--font-data); font-size:12.5px; color:var(--text-muted); line-height:1.7; white-space:pre-wrap">Hi Buyers,
+
+Fresh off-market rental just hit my desk:
+
+📍 4823 Grand Ave, Indianapolis, IN 46228
+🏠 3 BR / 1 BA / 1,150 sqft / Built 1965
+💰 Asking: $85,000 (Motivated Seller)
+📈 ARV: $160,000 - $170,000
+🔨 Rehab Est: $22,000 - $25,000 (Medium)
+💵 Market Rent: $1,300 - $1,400/mo
+🏘️ Eagledale — B+ area, growing
+
+Vacant, ready for showings.
+6 photos + walkthrough video attached.
+Serious buyers only. Cash / Hard money preferred.
+Contract deadline: Wednesday EOD.
+
+Call/text 317-555-0187
+- John @ Elite Deals LLC</div>
+            </div>
+            <div style="margin-top:14px; display:flex; gap:8px; align-items:center; padding:12px 14px; background:var(--accent-soft); border-radius:var(--radius); font-size:12.5px; color:var(--accent)">
+              <svg class="ic" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M12 8v4M12 16h.01"/></svg>
+              <span>Claude חילץ 12 שדות אוטומטית · confidence 96%. סוג עסקה מזוהה: <b>Rental</b> · confidence 92%.</span>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </section>
+
+    <style>
+      .tab { background:none; border:none; padding: 12px 16px; font-size: 13px; font-weight: 600; color: var(--text-muted); border-bottom: 2px solid transparent; margin-bottom: -1px; font-family: inherit; }
+      .tab:hover { color: var(--text); }
+      .tab.active { color: var(--accent); border-bottom-color: var(--accent); }
+      .tab-content { display: none; }
+      .tab-content.active { display: block; }
+
+      .qa-cell { padding: 8px 12px; display:flex; justify-content:space-between; align-items:center; border-bottom:1px solid var(--border); border-inline-end:1px solid var(--border); font-size: 12.5px; }
+      .qa-cell:nth-child(2n) { border-inline-end: none; }
+      .qa-cell:nth-last-child(-n+2) { border-bottom: none; }
+      .qa-l { color:var(--text-muted); }
+      .qa-r { display:flex; gap:6px; align-items:center; font-weight:500; }
+      .qa-tag { font-size:10px; padding:1px 5px; border-radius:3px; font-weight:700; letter-spacing:.03em; }
+      .qa-tag-good { background:var(--good-bg); color:var(--good); }
+      .qa-tag-ok { background:var(--surface-3); color:var(--text-muted); }
+      .qa-tag-warn { background:var(--warn-bg); color:var(--warn); }
+
+      .bb-item { padding: 6px 10px; border-radius: var(--radius); display:flex; justify-content:space-between; font-size: 12.5px; }
+      .bb-ok { background: var(--good-bg); color:var(--text-muted); }
+      .bb-fail { background: var(--bad-bg); color: var(--bad); }
+
+      .stat-line { display:flex; justify-content:space-between; padding: 5px 0; font-size: 12.5px; color:var(--text-muted); border-bottom: 1px dashed var(--border); }
+      .stat-line:last-child { border-bottom:none; }
+
+      .comp-row { display:grid; grid-template-columns: 1.8fr 1fr .8fr .8fr .8fr .8fr .6fr; gap: 12px; padding: 10px 18px; border-bottom: 1px solid var(--border); font-size: 12.5px; align-items:center; }
+      .comp-row:last-child { border-bottom: none; }
+
+      .calc-row { display:flex; justify-content:space-between; padding: 5px 0; font-size: 12.5px; color: var(--text-muted); }
+
+      .rehab-line { display:grid; grid-template-columns: 1.4fr 1fr 100px; gap: 8px; padding: 6px 10px; font-size: 12.5px; border-bottom:1px dashed var(--border); align-items:center; }
+      .rehab-line span:nth-child(2) { color:var(--text-subtle); font-size:11.5px; }
+      .rehab-line span:last-child { font-weight:600; text-align:end; color: var(--text); }
+    </style>
+
+    <!-- ============ DASHBOARD ============ -->
+    <section class="screen active" id="s-dashboard">
+      <div class="page-head">
+        <div class="page-head-l">
+          <h1>לוח בקרה</h1>
+          <p>נכון להיום, יום שני · 6 ביולי 2026 · 14:32</p>
+        </div>
+        <div class="page-head-r">
+          <button class="btn">
+            <svg class="ic" viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></svg>
+            הוסף עסקה ידנית
+          </button>
+          <button class="btn btn-primary">
+            <svg class="ic" viewBox="0 0 24 24"><path d="M4 4h16v6l-8 8-8-8z"/></svg>
+            סנכרן מייל
+          </button>
+        </div>
+      </div>
+
+      <div class="page-body">
+        <!-- KPIs -->
+        <div class="kpi-row">
+          <div class="kpi">
+            <span class="kpi-label">עסקאות היום</span>
+            <span class="kpi-value">23</span>
+            <span class="kpi-sub"><span class="up">▲ 8</span> מהיום אתמול</span>
+          </div>
+          <div class="kpi">
+            <span class="kpi-label">🟢 ירוקות פתוחות</span>
+            <span class="kpi-value" style="color:var(--good)">4</span>
+            <span class="kpi-sub">מתוך 47 שבוע זה</span>
+          </div>
+          <div class="kpi">
+            <span class="kpi-label">ציון ממוצע</span>
+            <span class="kpi-value">62</span>
+            <span class="kpi-sub"><span class="up">▲ 3</span> משבוע שעבר</span>
+          </div>
+          <div class="kpi">
+            <span class="kpi-label">הצעות בהמתנה</span>
+            <span class="kpi-value">3</span>
+            <span class="kpi-sub">2 דורשות Follow Up</span>
+          </div>
+        </div>
+
+        <!-- Latest deals feed -->
+        <div class="panel">
+          <div class="panel-head">
+            <div>
+              <div class="panel-title">עסקאות אחרונות</div>
+              <div style="color:var(--text-subtle); font-size:12px; margin-top:2px">Feed חי מ־Gmail</div>
+            </div>
+            <div style="display:flex; gap:6px">
+              <span class="chip active">הכל · 47</span>
+              <span class="chip"><span class="verdict-dot" style="color:var(--good)"></span> ירוקות · 4</span>
+              <span class="chip"><span class="verdict-dot" style="color:var(--warn)"></span> כתומות · 12</span>
+              <span class="chip"><span class="verdict-dot" style="color:var(--bad)"></span> אדומות · 31</span>
+            </div>
+          </div>
+          <div class="deal-row-head">
+            <div>ציון</div>
+            <div>כתובת · Wholesaler</div>
+            <div>סוג / Verdict</div>
+            <div>מחיר מבוקש</div>
+            <div>MAO שלנו</div>
+            <div>ARV</div>
+            <div>Rent / ROI</div>
+            <div>התקבל</div>
+          </div>
+          <div class="deal-row" onclick="showScreen('deal-detail')">
+            <div class="deal-score deal-score-good">82</div>
+            <div class="deal-addr">
+              <div class="deal-addr-line1 ltr">4823 Grand Ave, Indianapolis, IN 46228</div>
+              <div class="deal-addr-line2 ltr">John @ Elite Deals LLC</div>
+            </div>
+            <div class="deal-tags">
+              <span class="type-tag type-rental">Rental</span>
+              <span class="verdict verdict-good"><span class="verdict-dot"></span>GREAT</span>
+            </div>
+            <div class="deal-cell">
+              <div class="deal-cell-primary ltr">$85,000</div>
+              <div class="deal-cell-secondary">אסקינג</div>
+            </div>
+            <div class="deal-cell">
+              <div class="deal-cell-primary ltr" style="color:var(--good)">$102,000</div>
+              <div class="deal-cell-secondary">+20% margin</div>
+            </div>
+            <div class="deal-cell">
+              <div class="deal-cell-primary ltr">$165,000</div>
+              <div class="deal-cell-secondary">Comps × 6</div>
+            </div>
+            <div class="deal-cell">
+              <div class="deal-cell-primary ltr">$1,350 · 9.4%</div>
+              <div class="deal-cell-secondary">Rule 1.15%</div>
+            </div>
+            <div class="deal-cell-secondary">לפני 2 שעות</div>
+          </div>
+
+          <div class="deal-row">
+            <div class="deal-score deal-score-good">78</div>
+            <div class="deal-addr">
+              <div class="deal-addr-line1 ltr">2915 N Riley Ave, Indianapolis, IN 46218</div>
+              <div class="deal-addr-line2 ltr">Sarah @ Buyfast Wholesale</div>
+            </div>
+            <div class="deal-tags">
+              <span class="type-tag type-flip">Flip</span>
+              <span class="verdict verdict-good"><span class="verdict-dot"></span>GREAT</span>
+            </div>
+            <div class="deal-cell">
+              <div class="deal-cell-primary ltr">$72,000</div>
+              <div class="deal-cell-secondary">אסקינג</div>
+            </div>
+            <div class="deal-cell">
+              <div class="deal-cell-primary ltr" style="color:var(--good)">$95,500</div>
+              <div class="deal-cell-secondary">+24% margin</div>
+            </div>
+            <div class="deal-cell">
+              <div class="deal-cell-primary ltr">$185,000</div>
+              <div class="deal-cell-secondary">Comps × 4</div>
+            </div>
+            <div class="deal-cell">
+              <div class="deal-cell-primary ltr">$34,200 profit</div>
+              <div class="deal-cell-secondary">ROI 19.8%</div>
+            </div>
+            <div class="deal-cell-secondary">לפני 4 שעות</div>
+          </div>
+
+          <div class="deal-row">
+            <div class="deal-score deal-score-warn">64</div>
+            <div class="deal-addr">
+              <div class="deal-addr-line1 ltr">1108 Garden Ave, Hamilton, OH 45011</div>
+              <div class="deal-addr-line2 ltr">Mike @ Ohio Off-Market</div>
+            </div>
+            <div class="deal-tags">
+              <span class="type-tag type-brrrr">BRRRR</span>
+              <span class="verdict verdict-warn"><span class="verdict-dot"></span>MARGINAL</span>
+            </div>
+            <div class="deal-cell">
+              <div class="deal-cell-primary ltr">$65,000</div>
+              <div class="deal-cell-secondary">אסקינג</div>
+            </div>
+            <div class="deal-cell">
+              <div class="deal-cell-primary ltr">$67,500</div>
+              <div class="deal-cell-secondary">+4% margin</div>
+            </div>
+            <div class="deal-cell">
+              <div class="deal-cell-primary ltr">$118,000</div>
+              <div class="deal-cell-secondary">Comps × 3</div>
+            </div>
+            <div class="deal-cell">
+              <div class="deal-cell-primary ltr">$1,100 · 7.8%</div>
+              <div class="deal-cell-secondary">Rule 0.95%</div>
+            </div>
+            <div class="deal-cell-secondary">לפני 6 שעות</div>
+          </div>
+
+          <div class="deal-row">
+            <div class="deal-score deal-score-warn">58</div>
+            <div class="deal-addr">
+              <div class="deal-addr-line1 ltr">246 Hanover St, Hamilton, OH 45011</div>
+              <div class="deal-addr-line2 ltr">Josh @ MidwestFlip</div>
+            </div>
+            <div class="deal-tags">
+              <span class="type-tag type-rental">Rental</span>
+              <span class="verdict verdict-warn"><span class="verdict-dot"></span>NEEDS REVIEW</span>
+            </div>
+            <div class="deal-cell">
+              <div class="deal-cell-primary ltr">$78,000</div>
+              <div class="deal-cell-secondary">אסקינג</div>
+            </div>
+            <div class="deal-cell">
+              <div class="deal-cell-primary ltr">$79,200</div>
+              <div class="deal-cell-secondary">+1.5% margin</div>
+            </div>
+            <div class="deal-cell">
+              <div class="deal-cell-primary ltr">$132,000</div>
+              <div class="deal-cell-secondary">Comps × 5</div>
+            </div>
+            <div class="deal-cell">
+              <div class="deal-cell-primary ltr">$1,175 · 7.1%</div>
+              <div class="deal-cell-secondary">Rule 0.98%</div>
+            </div>
+            <div class="deal-cell-secondary">לפני 8 שעות</div>
+          </div>
+
+          <div class="deal-row">
+            <div class="deal-score deal-score-bad">32</div>
+            <div class="deal-addr">
+              <div class="deal-addr-line1 ltr">1922 Ludlow Ave, Cincinnati, OH 45214</div>
+              <div class="deal-addr-line2 ltr">Alex @ CincyDeals</div>
+            </div>
+            <div class="deal-tags">
+              <span class="type-tag type-flip">Flip</span>
+              <span class="verdict verdict-bad"><span class="verdict-dot"></span>BAD</span>
+            </div>
+            <div class="deal-cell">
+              <div class="deal-cell-primary ltr">$92,000</div>
+              <div class="deal-cell-secondary">אסקינג</div>
+            </div>
+            <div class="deal-cell">
+              <div class="deal-cell-primary ltr" style="color:var(--bad)">$68,000</div>
+              <div class="deal-cell-secondary">-26% margin</div>
+            </div>
+            <div class="deal-cell">
+              <div class="deal-cell-primary ltr">$125,000</div>
+              <div class="deal-cell-secondary">Comps × 4</div>
+            </div>
+            <div class="deal-cell">
+              <div class="deal-cell-primary ltr" style="color:var(--bad)">$8,500 profit</div>
+              <div class="deal-cell-secondary">ROI 5.1%</div>
+            </div>
+            <div class="deal-cell-secondary">לפני יום</div>
+          </div>
+
+          <div class="deal-row">
+            <div class="deal-score deal-score-bad">28</div>
+            <div class="deal-addr">
+              <div class="deal-addr-line1 ltr">3401 E 34th St, Indianapolis, IN 46218</div>
+              <div class="deal-addr-line2 ltr">Robert @ QuickCash Deals</div>
+            </div>
+            <div class="deal-tags">
+              <span class="type-tag type-wholesale">Wholesale</span>
+              <span class="verdict verdict-bad"><span class="verdict-dot"></span>NOT RELEVANT</span>
+            </div>
+            <div class="deal-cell">
+              <div class="deal-cell-primary ltr">$45,000</div>
+              <div class="deal-cell-secondary">אסקינג</div>
+            </div>
+            <div class="deal-cell">
+              <div class="deal-cell-primary ltr" style="color:var(--bad)">$38,000</div>
+              <div class="deal-cell-secondary">Grade D area</div>
+            </div>
+            <div class="deal-cell">
+              <div class="deal-cell-primary ltr">$62,000</div>
+              <div class="deal-cell-secondary">Comps × 2</div>
+            </div>
+            <div class="deal-cell">
+              <div class="deal-cell-primary ltr">$650 · 4.2%</div>
+              <div class="deal-cell-secondary">Rule 0.72%</div>
+            </div>
+            <div class="deal-cell-secondary">לפני יום</div>
+          </div>
+        </div>
+      </div>
+    </section>
+    <!-- ============ REHAB CALCULATOR ============ -->
+    <section class="screen" id="s-rehab">
+      <div class="page-head">
+        <div class="page-head-l">
+          <h1>מחשבון שיפוץ</h1>
+          <p>4823 Grand Ave, Indianapolis · 1,150 sqft · 3/1</p>
+        </div>
+        <div class="page-head-r">
+          <button class="btn btn-sm">Small ($15k)</button>
+          <button class="btn btn-sm btn-primary">Medium ($30k)</button>
+          <button class="btn btn-sm">Large ($65k)</button>
+          <button class="btn"><svg class="ic" viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></svg>נתח תמונות ב־AI</button>
+        </div>
+      </div>
+
+      <div class="page-body">
+        <div style="display:grid; grid-template-columns: 1fr 320px; gap: 20px">
+          <div class="panel">
+            <div class="panel-head">
+              <div class="panel-title">פריטי השיפוץ · 28 קטגוריות</div>
+              <div style="display:flex; gap:4px">
+                <span class="chip active">All</span>
+                <span class="chip">Kitchen</span>
+                <span class="chip">Bath</span>
+                <span class="chip">HVAC</span>
+                <span class="chip">Roof</span>
+                <span class="chip">Electrical</span>
+              </div>
+            </div>
+            <div style="padding: 6px 0">
+              <div class="reh-hdr">
+                <div>פריט</div>
+                <div>Unit Price</div>
+                <div style="text-align:center">Qty</div>
+                <div style="text-align:end">Total</div>
+              </div>
+              <div class="reh-item"><span class="reh-cat">Demo</span><div><b>Demo, Trash out, Prep</b><small>לבית · Flat</small></div><div class="ltr num">$1,500</div><div class="qty"><button>−</button><input type="text" value="0.5"><button>+</button></div><div class="ltr num" style="text-align:end;font-weight:600">$750</div></div>
+              <div class="reh-item"><span class="reh-cat">Paint</span><div><b>Paint & Drywall</b><small>per sqft</small></div><div class="ltr num">$2.50</div><div class="qty"><button>−</button><input type="text" value="1,150"><button>+</button></div><div class="ltr num" style="text-align:end;font-weight:600">$2,875</div></div>
+              <div class="reh-item"><span class="reh-cat">Floor</span><div><b>Flooring (LVP)</b><small>per sqft</small></div><div class="ltr num">$4.50</div><div class="qty"><button>−</button><input type="text" value="1,150"><button>+</button></div><div class="ltr num" style="text-align:end;font-weight:600">$5,175</div></div>
+              <div class="reh-item"><span class="reh-cat">Elec</span><div><b>Light Fixtures</b><small>לבית · Flat</small></div><div class="ltr num">$800</div><div class="qty"><button>−</button><input type="text" value="1"><button>+</button></div><div class="ltr num" style="text-align:end;font-weight:600">$800</div></div>
+              <div class="reh-item"><span class="reh-cat">Elec</span><div><b>Plugs & Switches</b><small>לבית</small></div><div class="ltr num">$500</div><div class="qty"><button>−</button><input type="text" value="1"><button>+</button></div><div class="ltr num" style="text-align:end;font-weight:600">$500</div></div>
+              <div class="reh-item"><span class="reh-cat">Doors</span><div><b>Door Handles</b><small>לבית</small></div><div class="ltr num">$500</div><div class="qty"><button>−</button><input type="text" value="1"><button>+</button></div><div class="ltr num" style="text-align:end;font-weight:600">$500</div></div>
+              <div class="reh-item off"><span class="reh-cat">Kitchen</span><div><b>New Kitchen Cabinets</b><small>לבית</small></div><div class="ltr num">$4,000</div><div class="qty"><button>−</button><input type="text" value="0"><button>+</button></div><div class="ltr num" style="text-align:end;color:var(--text-subtle)">$0</div></div>
+              <div class="reh-item"><span class="reh-cat">Kitchen</span><div><b>Fix Kitchen Cabinets</b><small>לבית</small></div><div class="ltr num">$600</div><div class="qty"><button>−</button><input type="text" value="1"><button>+</button></div><div class="ltr num" style="text-align:end;font-weight:600">$600</div></div>
+              <div class="reh-item"><span class="reh-cat">Kitchen</span><div><b>Countertop — Formica / Butcher</b><small>לבית · <span style="color:var(--accent)">מחיר שלך: $475</span></small></div><div class="ltr num">$475</div><div class="qty"><button>−</button><input type="text" value="1"><button>+</button></div><div class="ltr num" style="text-align:end;font-weight:600">$475</div></div>
+              <div class="reh-item off"><span class="reh-cat">Kitchen</span><div><b>Countertop — Quartz</b><small>לבית · Default $2,000</small></div><div class="ltr num">$2,000</div><div class="qty"><button>−</button><input type="text" value="0"><button>+</button></div><div class="ltr num" style="text-align:end;color:var(--text-subtle)">$0</div></div>
+              <div class="reh-item"><span class="reh-cat">Kitchen</span><div><b>Backsplash</b><small>לבית</small></div><div class="ltr num">$900</div><div class="qty"><button>−</button><input type="text" value="1"><button>+</button></div><div class="ltr num" style="text-align:end;font-weight:600">$900</div></div>
+              <div class="reh-item"><span class="reh-cat">Kitchen</span><div><b>Appliances</b><small>Fridge, Stove, Dishwasher</small></div><div class="ltr num">$2,000</div><div class="qty"><button>−</button><input type="text" value="1"><button>+</button></div><div class="ltr num" style="text-align:end;font-weight:600">$2,000</div></div>
+              <div class="reh-item"><span class="reh-cat">Bath</span><div><b>Bath — Cosmetics</b><small>per bath</small></div><div class="ltr num">$1,500</div><div class="qty"><button>−</button><input type="text" value="1"><button>+</button></div><div class="ltr num" style="text-align:end;font-weight:600">$1,500</div></div>
+              <div class="reh-item off"><span class="reh-cat">Bath</span><div><b>Bath — Full Remodel</b><small>per bath</small></div><div class="ltr num">$3,000</div><div class="qty"><button>−</button><input type="text" value="0"><button>+</button></div><div class="ltr num" style="text-align:end;color:var(--text-subtle)">$0</div></div>
+              <div class="reh-item"><span class="reh-cat">Doors</span><div><b>Interior Doors</b><small>0.5 = fix · 1 = replace</small></div><div class="ltr num">$1,100</div><div class="qty"><button>−</button><input type="text" value="0.5"><button>+</button></div><div class="ltr num" style="text-align:end;font-weight:600">$550</div></div>
+              <div class="reh-item"><span class="reh-cat">HVAC</span><div><b>New Water Heater</b><small>לבית</small></div><div class="ltr num">$1,000</div><div class="qty"><button>−</button><input type="text" value="1"><button>+</button></div><div class="ltr num" style="text-align:end;font-weight:600">$1,000</div></div>
+              <div class="reh-item off"><span class="reh-cat">Roof</span><div><b>New Roof</b><small>לבית</small></div><div class="ltr num">$6,000</div><div class="qty"><button>−</button><input type="text" value="0"><button>+</button></div><div class="ltr num" style="text-align:end;color:var(--text-subtle)">$0</div></div>
+              <div class="reh-item off"><span class="reh-cat">Ext</span><div><b>New Windows</b><small>לבית</small></div><div class="ltr num">$6,000</div><div class="qty"><button>−</button><input type="text" value="0"><button>+</button></div><div class="ltr num" style="text-align:end;color:var(--text-subtle)">$0</div></div>
+            </div>
+            <div style="padding: 12px 18px; border-top:1px solid var(--border); text-align:center">
+              <button class="btn btn-ghost btn-sm" style="color:var(--accent)">+ הוסף פריט מותאם</button>
+              <button class="btn btn-ghost btn-sm" style="color:var(--accent)">הצג 10 פריטים נוספים ↓</button>
+            </div>
+          </div>
+
+          <div>
+            <div class="panel" style="position:sticky; top:20px">
+              <div class="panel-head">
+                <div class="panel-title">סה"כ שיפוץ</div>
+              </div>
+              <div style="padding: 18px">
+                <div style="font-size:11px; text-transform:uppercase; color:var(--text-subtle); font-weight:600; margin-bottom:4px">Subtotal</div>
+                <div class="ltr num" style="font-size:22px; font-weight:700; margin-bottom:14px">$17,625</div>
+
+                <div style="display:flex; justify-content:space-between; font-size:12.5px; color:var(--text-muted); margin-bottom:6px; padding: 4px 0">
+                  <span>+ Outdoor / Landscaping</span>
+                  <span><span style="color:var(--text-subtle)">10%</span> <b class="ltr num" style="margin-inline-start:6px; color:var(--text)">$1,763</b></span>
+                </div>
+                <div style="display:flex; justify-content:space-between; font-size:12.5px; color:var(--text-muted); margin-bottom:12px; padding: 4px 0">
+                  <span>+ Unexpected</span>
+                  <span><span style="color:var(--text-subtle)">7%</span> <b class="ltr num" style="margin-inline-start:6px; color:var(--text)">$1,234</b></span>
+                </div>
+
+                <div style="padding-top:12px; border-top:2px solid var(--border-strong)">
+                  <div style="font-size:11px; text-transform:uppercase; color:var(--text-subtle); font-weight:700; margin-bottom:4px">Total Rehab Cost</div>
+                  <div class="ltr num" style="font-size:32px; font-weight:700; color:var(--good); letter-spacing:-0.02em">$20,622</div>
+                </div>
+
+                <div style="margin-top:16px; padding: 12px; background: var(--surface-2); border-radius: var(--radius); font-size:12px; color:var(--text-muted)">
+                  <div style="display:flex; justify-content:space-between; margin-bottom:4px"><span>הצעת ה־Wholesaler</span><span class="ltr num">$22,000</span></div>
+                  <div style="display:flex; justify-content:space-between; margin-bottom:4px"><span>הערכה קודמת</span><span class="ltr num">$28,000</span></div>
+                  <div style="display:flex; justify-content:space-between"><span>גודל בית</span><span class="ltr num">1,150 sqft</span></div>
+                </div>
+
+                <div style="margin-top:14px; display:flex; flex-direction:column; gap:6px">
+                  <button class="btn btn-primary" style="width:100%">שמור כהערכה פעילה</button>
+                  <button class="btn" style="width:100%">Export PDF</button>
+                </div>
+              </div>
+            </div>
+
+            <div class="panel" style="margin-top:14px; background:var(--accent-soft); border-color:var(--accent-soft)">
+              <div style="padding: 14px 16px">
+                <div style="display:flex; align-items:center; gap:8px; margin-bottom:8px">
+                  <svg class="ic" viewBox="0 0 24 24" style="color:var(--accent)"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 01-2 2H5a2 2 0 01-2-2V5a2 2 0 012-2h11"/></svg>
+                  <b style="color:var(--accent)">Tip</b>
+                </div>
+                <p style="margin:0; font-size:12.5px; color:var(--text-muted); line-height:1.6">
+                  לחץ פעמיים על מחיר יחידה כדי לשמור מחיר אישי לפריט. המחיר יישמר לכל העסקאות העתידיות שלך.
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============ DEALS LIST ============ -->
+    <section class="screen" id="s-deals">
+      <div class="page-head">
+        <div class="page-head-l">
+          <h1>עסקאות</h1>
+          <p>47 עסקאות ב־30 יום אחרונים · 12 הצעות שנשלחו · 2 בחוזה</p>
+        </div>
+        <div class="page-head-r">
+          <button class="btn"><svg class="ic" viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></svg>הוסף עסקה</button>
+          <button class="btn"><svg class="ic" viewBox="0 0 24 24"><path d="M4 4h16v6l-8 8-8-8z"/></svg>ייצוא CSV</button>
+        </div>
+      </div>
+
+      <div class="page-body">
+        <div class="panel" style="padding:0; overflow:hidden">
+          <div class="filter-bar">
+            <div class="search">
+              <svg class="ic" viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3"/></svg>
+              <input type="text" placeholder="חפש לפי כתובת, wholesaler, עיר..." />
+            </div>
+            <span class="chip active">Verdict: All</span>
+            <span class="chip">Type: All</span>
+            <span class="chip">Indianapolis, IN</span>
+            <span class="chip">מחיר: $50k – $150k</span>
+            <span class="chip">Status: Open</span>
+            <button class="btn btn-sm btn-ghost" style="color:var(--accent)">+ Filter</button>
+          </div>
+
+          <div class="deal-row-head">
+            <div>ציון</div><div>כתובת · Wholesaler</div><div>סוג / Verdict</div><div>Asking</div><div>MAO</div><div>ARV</div><div>Rent / ROI</div><div>התקבל</div>
+          </div>
+          <div class="deal-row" onclick="showScreen('deal-detail')"><div class="deal-score deal-score-good">82</div><div class="deal-addr"><div class="deal-addr-line1 ltr">4823 Grand Ave, Indianapolis, IN</div><div class="deal-addr-line2 ltr">John @ Elite Deals</div></div><div class="deal-tags"><span class="type-tag type-rental">Rental</span><span class="verdict verdict-good"><span class="verdict-dot"></span>GREAT</span></div><div class="deal-cell"><div class="deal-cell-primary ltr">$85,000</div></div><div class="deal-cell"><div class="deal-cell-primary ltr" style="color:var(--good)">$102,000</div></div><div class="deal-cell"><div class="deal-cell-primary ltr">$165,000</div></div><div class="deal-cell"><div class="deal-cell-primary ltr">$1,350 · 9.4%</div></div><div class="deal-cell-secondary">לפני 2 שעות</div></div>
+          <div class="deal-row"><div class="deal-score deal-score-good">78</div><div class="deal-addr"><div class="deal-addr-line1 ltr">2915 N Riley Ave, Indianapolis, IN</div><div class="deal-addr-line2 ltr">Sarah @ Buyfast</div></div><div class="deal-tags"><span class="type-tag type-flip">Flip</span><span class="verdict verdict-good"><span class="verdict-dot"></span>GREAT</span></div><div class="deal-cell"><div class="deal-cell-primary ltr">$72,000</div></div><div class="deal-cell"><div class="deal-cell-primary ltr" style="color:var(--good)">$95,500</div></div><div class="deal-cell"><div class="deal-cell-primary ltr">$185,000</div></div><div class="deal-cell"><div class="deal-cell-primary ltr">$34,200 · 19.8%</div></div><div class="deal-cell-secondary">לפני 4 שעות</div></div>
+          <div class="deal-row"><div class="deal-score deal-score-good">76</div><div class="deal-addr"><div class="deal-addr-line1 ltr">4712 Boulevard Pl, Indianapolis, IN</div><div class="deal-addr-line2 ltr">Josh @ MidwestFlip</div></div><div class="deal-tags"><span class="type-tag type-rental">Rental</span><span class="verdict verdict-good"><span class="verdict-dot"></span>GREAT</span></div><div class="deal-cell"><div class="deal-cell-primary ltr">$92,000</div></div><div class="deal-cell"><div class="deal-cell-primary ltr" style="color:var(--good)">$108,500</div></div><div class="deal-cell"><div class="deal-cell-primary ltr">$172,000</div></div><div class="deal-cell"><div class="deal-cell-primary ltr">$1,450 · 9.1%</div></div><div class="deal-cell-secondary">אתמול</div></div>
+          <div class="deal-row"><div class="deal-score deal-score-good">75</div><div class="deal-addr"><div class="deal-addr-line1 ltr">1203 Woodruff Pl, Indianapolis, IN</div><div class="deal-addr-line2 ltr">Mike @ Ohio Off-Market</div></div><div class="deal-tags"><span class="type-tag type-brrrr">BRRRR</span><span class="verdict verdict-good"><span class="verdict-dot"></span>GREAT</span></div><div class="deal-cell"><div class="deal-cell-primary ltr">$88,000</div></div><div class="deal-cell"><div class="deal-cell-primary ltr" style="color:var(--good)">$99,000</div></div><div class="deal-cell"><div class="deal-cell-primary ltr">$148,000</div></div><div class="deal-cell"><div class="deal-cell-primary ltr">$1,275 · 9.6%</div></div><div class="deal-cell-secondary">אתמול</div></div>
+          <div class="deal-row"><div class="deal-score deal-score-warn">67</div><div class="deal-addr"><div class="deal-addr-line1 ltr">1108 Garden Ave, Hamilton, OH</div><div class="deal-addr-line2 ltr">Mike @ Ohio Off-Market</div></div><div class="deal-tags"><span class="type-tag type-brrrr">BRRRR</span><span class="verdict verdict-warn"><span class="verdict-dot"></span>MARGINAL</span></div><div class="deal-cell"><div class="deal-cell-primary ltr">$65,000</div></div><div class="deal-cell"><div class="deal-cell-primary ltr">$67,500</div></div><div class="deal-cell"><div class="deal-cell-primary ltr">$118,000</div></div><div class="deal-cell"><div class="deal-cell-primary ltr">$1,100 · 7.8%</div></div><div class="deal-cell-secondary">לפני 6 שעות</div></div>
+          <div class="deal-row"><div class="deal-score deal-score-warn">64</div><div class="deal-addr"><div class="deal-addr-line1 ltr">2107 N Emerson Ave, Indy, IN</div><div class="deal-addr-line2 ltr">David @ HeartlandDeals</div></div><div class="deal-tags"><span class="type-tag type-rental">Rental</span><span class="verdict verdict-warn"><span class="verdict-dot"></span>MARGINAL</span></div><div class="deal-cell"><div class="deal-cell-primary ltr">$65,000</div></div><div class="deal-cell"><div class="deal-cell-primary ltr">$68,000</div></div><div class="deal-cell"><div class="deal-cell-primary ltr">$110,000</div></div><div class="deal-cell"><div class="deal-cell-primary ltr">$1,050 · 7.2%</div></div><div class="deal-cell-secondary">אתמול</div></div>
+          <div class="deal-row"><div class="deal-score deal-score-warn">58</div><div class="deal-addr"><div class="deal-addr-line1 ltr">246 Hanover St, Hamilton, OH</div><div class="deal-addr-line2 ltr">Josh @ MidwestFlip</div></div><div class="deal-tags"><span class="type-tag type-rental">Rental</span><span class="verdict verdict-warn"><span class="verdict-dot"></span>NEEDS REVIEW</span></div><div class="deal-cell"><div class="deal-cell-primary ltr">$78,000</div></div><div class="deal-cell"><div class="deal-cell-primary ltr">$79,200</div></div><div class="deal-cell"><div class="deal-cell-primary ltr">$132,000</div></div><div class="deal-cell"><div class="deal-cell-primary ltr">$1,175 · 7.1%</div></div><div class="deal-cell-secondary">אתמול</div></div>
+          <div class="deal-row"><div class="deal-score deal-score-bad">32</div><div class="deal-addr"><div class="deal-addr-line1 ltr">1922 Ludlow Ave, Cincinnati, OH</div><div class="deal-addr-line2 ltr">Alex @ CincyDeals</div></div><div class="deal-tags"><span class="type-tag type-flip">Flip</span><span class="verdict verdict-bad"><span class="verdict-dot"></span>BAD</span></div><div class="deal-cell"><div class="deal-cell-primary ltr">$92,000</div></div><div class="deal-cell"><div class="deal-cell-primary ltr" style="color:var(--bad)">$68,000</div></div><div class="deal-cell"><div class="deal-cell-primary ltr">$125,000</div></div><div class="deal-cell"><div class="deal-cell-primary ltr">$8,500 · 5.1%</div></div><div class="deal-cell-secondary">לפני יום</div></div>
+          <div class="deal-row"><div class="deal-score deal-score-bad">28</div><div class="deal-addr"><div class="deal-addr-line1 ltr">3401 E 34th St, Indianapolis, IN</div><div class="deal-addr-line2 ltr">Robert @ QuickCash</div></div><div class="deal-tags"><span class="type-tag type-wholesale">Wholesale</span><span class="verdict verdict-bad"><span class="verdict-dot"></span>NOT RELEVANT</span></div><div class="deal-cell"><div class="deal-cell-primary ltr">$45,000</div></div><div class="deal-cell"><div class="deal-cell-primary ltr" style="color:var(--bad)">$38,000</div></div><div class="deal-cell"><div class="deal-cell-primary ltr">$62,000</div></div><div class="deal-cell"><div class="deal-cell-primary ltr">$650 · 4.2%</div></div><div class="deal-cell-secondary">לפני יום</div></div>
+          <div class="deal-row"><div class="deal-score deal-score-bad">22</div><div class="deal-addr"><div class="deal-addr-line1 ltr">402 W 22nd St, Indianapolis, IN</div><div class="deal-addr-line2 ltr">Emma @ RapidHomes</div></div><div class="deal-tags"><span class="type-tag type-rental">Rental</span><span class="verdict verdict-bad"><span class="verdict-dot"></span>BAD</span></div><div class="deal-cell"><div class="deal-cell-primary ltr">$110,000</div></div><div class="deal-cell"><div class="deal-cell-primary ltr" style="color:var(--bad)">$78,000</div></div><div class="deal-cell"><div class="deal-cell-primary ltr">$135,000</div></div><div class="deal-cell"><div class="deal-cell-primary ltr">$1,000 · 5.8%</div></div><div class="deal-cell-secondary">2 ימים</div></div>
+        </div>
+      </div>
+
+      <style>
+        .reh-hdr { display:grid; grid-template-columns: 80px 1.6fr .6fr .8fr .6fr; gap: 10px; padding: 10px 18px; background: var(--surface-2); font-size: 11px; color: var(--text-subtle); text-transform: uppercase; letter-spacing: .04em; font-weight: 600; border-bottom: 1px solid var(--border); }
+        .reh-item { display:grid; grid-template-columns: 80px 1.6fr .6fr .8fr .6fr; gap: 10px; padding: 10px 18px; border-bottom: 1px solid var(--border); align-items:center; font-size: 13px; }
+        .reh-item.off { opacity: 0.55; }
+        .reh-item small { color: var(--text-subtle); font-size: 11px; display:block; margin-top:2px; }
+        .reh-item b { font-weight: 600; }
+        .reh-cat { font-size: 10.5px; font-weight: 700; text-transform: uppercase; letter-spacing: .05em; padding: 3px 8px; border-radius: 3px; background: var(--surface-2); color: var(--text-muted); border: 1px solid var(--border); text-align:center; }
+        .qty { display:flex; align-items:center; gap:2px; background: var(--surface-2); border-radius: var(--radius); overflow:hidden; border:1px solid var(--border); }
+        .qty button { background: none; border: none; padding: 4px 8px; color: var(--text-muted); font-size: 14px; cursor:pointer; }
+        .qty button:hover { background: var(--surface-3); color: var(--text); }
+        .qty input { width: 48px; text-align:center; background: none; border: none; color: var(--text); font-family: var(--font-data); font-size: 12.5px; padding: 4px 0; outline: none; }
+      </style>
+    </section>
+
+    <!-- ============ CRM SHEET (Excel-like) ============ -->
+    <section class="screen" id="s-crm">
+      <div class="page-head">
+        <div class="page-head-l">
+          <h1>CRM Sheet</h1>
+          <p>תצוגת גיליון בסגנון ה־Excel המקורי שלך · כל שדות ה־CRM · מסונכרן בזמן אמת</p>
+        </div>
+        <div class="page-head-r">
+          <button class="btn"><svg class="ic" viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></svg>עמודה חדשה</button>
+          <button class="btn"><svg class="ic" viewBox="0 0 24 24"><path d="M4 4h16v6l-8 8-8-8z"/></svg>ייצוא ל־Google Sheets</button>
+        </div>
+      </div>
+
+      <div class="page-body">
+        <div class="panel" style="padding:0; overflow:hidden">
+          <div class="filter-bar">
+            <div class="search">
+              <svg class="ic" viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3"/></svg>
+              <input type="text" placeholder="חפש בגיליון..." />
+            </div>
+            <span class="chip active">All Status</span>
+            <span class="chip">Under Contract</span>
+            <span class="chip">Offer Sent</span>
+            <span class="chip">Won</span>
+          </div>
+          <div style="overflow-x:auto">
+            <table style="width:100%; min-width:1600px; border-collapse:collapse; font-size:12.5px">
+              <thead>
+                <tr style="background:var(--surface-2); position:sticky; top:0">
+                  <th style="padding:10px 12px; text-align:start; font-weight:600; font-size:11px; text-transform:uppercase; letter-spacing:.04em; color:var(--text-subtle); border-bottom:1px solid var(--border); white-space:nowrap">Address</th>
+                  <th style="padding:10px 12px; text-align:start; font-weight:600; font-size:11px; text-transform:uppercase; letter-spacing:.04em; color:var(--text-subtle); border-bottom:1px solid var(--border); white-space:nowrap">Status</th>
+                  <th style="padding:10px 12px; text-align:start; font-weight:600; font-size:11px; text-transform:uppercase; letter-spacing:.04em; color:var(--text-subtle); border-bottom:1px solid var(--border); white-space:nowrap">Category</th>
+                  <th style="padding:10px 12px; text-align:start; font-weight:600; font-size:11px; text-transform:uppercase; letter-spacing:.04em; color:var(--text-subtle); border-bottom:1px solid var(--border); white-space:nowrap">Strategy</th>
+                  <th style="padding:10px 12px; text-align:end; font-weight:600; font-size:11px; text-transform:uppercase; letter-spacing:.04em; color:var(--text-subtle); border-bottom:1px solid var(--border); white-space:nowrap">Asking</th>
+                  <th style="padding:10px 12px; text-align:end; font-weight:600; font-size:11px; text-transform:uppercase; letter-spacing:.04em; color:var(--text-subtle); border-bottom:1px solid var(--border); white-space:nowrap">Rehab</th>
+                  <th style="padding:10px 12px; text-align:end; font-weight:600; font-size:11px; text-transform:uppercase; letter-spacing:.04em; color:var(--text-subtle); border-bottom:1px solid var(--border); white-space:nowrap">ARV</th>
+                  <th style="padding:10px 12px; text-align:end; font-weight:600; font-size:11px; text-transform:uppercase; letter-spacing:.04em; color:var(--text-subtle); border-bottom:1px solid var(--border); white-space:nowrap">Rent</th>
+                  <th style="padding:10px 12px; text-align:end; font-weight:600; font-size:11px; text-transform:uppercase; letter-spacing:.04em; color:var(--text-subtle); border-bottom:1px solid var(--border); white-space:nowrap">MAO</th>
+                  <th style="padding:10px 12px; text-align:end; font-weight:600; font-size:11px; text-transform:uppercase; letter-spacing:.04em; color:var(--text-subtle); border-bottom:1px solid var(--border); white-space:nowrap">Offer Sent</th>
+                  <th style="padding:10px 12px; text-align:end; font-weight:600; font-size:11px; text-transform:uppercase; letter-spacing:.04em; color:var(--text-subtle); border-bottom:1px solid var(--border); white-space:nowrap">All In</th>
+                  <th style="padding:10px 12px; text-align:end; font-weight:600; font-size:11px; text-transform:uppercase; letter-spacing:.04em; color:var(--text-subtle); border-bottom:1px solid var(--border); white-space:nowrap">Rule</th>
+                  <th style="padding:10px 12px; text-align:end; font-weight:600; font-size:11px; text-transform:uppercase; letter-spacing:.04em; color:var(--text-subtle); border-bottom:1px solid var(--border); white-space:nowrap">Flip %</th>
+                  <th style="padding:10px 12px; text-align:start; font-weight:600; font-size:11px; text-transform:uppercase; letter-spacing:.04em; color:var(--text-subtle); border-bottom:1px solid var(--border); white-space:nowrap">Beds/Baths</th>
+                  <th style="padding:10px 12px; text-align:end; font-weight:600; font-size:11px; text-transform:uppercase; letter-spacing:.04em; color:var(--text-subtle); border-bottom:1px solid var(--border); white-space:nowrap">SqFt</th>
+                  <th style="padding:10px 12px; text-align:start; font-weight:600; font-size:11px; text-transform:uppercase; letter-spacing:.04em; color:var(--text-subtle); border-bottom:1px solid var(--border); white-space:nowrap">Contact</th>
+                  <th style="padding:10px 12px; text-align:start; font-weight:600; font-size:11px; text-transform:uppercase; letter-spacing:.04em; color:var(--text-subtle); border-bottom:1px solid var(--border); white-space:nowrap">Follow Up</th>
+                </tr>
+              </thead>
+              <tbody style="font-family:var(--font-data); font-variant-numeric:tabular-nums">
+                <tr class="crm-row"><td class="ltr">4823 Grand Ave, Indy, IN</td><td><span class="pill pill-open">Analyzing</span></td><td><span style="color:var(--good);font-weight:700">Super Deal</span></td><td>BRRRR</td><td class="ltr" style="text-align:end">$85,000</td><td class="ltr" style="text-align:end">$28,000</td><td class="ltr" style="text-align:end">$165,000</td><td class="ltr" style="text-align:end">$1,350</td><td class="ltr" style="text-align:end">$102,000</td><td class="ltr" style="text-align:end;color:var(--text-subtle)">—</td><td class="ltr" style="text-align:end">$128,500</td><td class="ltr" style="text-align:end;color:var(--good)">1.15%</td><td class="ltr" style="text-align:end;color:var(--good)">21.4%</td><td class="ltr">3/1</td><td class="ltr" style="text-align:end">1,150</td><td class="ltr">John Thompson</td><td class="ltr">Jul 8, 2026</td></tr>
+                <tr class="crm-row"><td class="ltr">111 AB Str, City, State 11002</td><td><span class="pill pill-contract">Under Contract</span></td><td><span style="color:var(--good);font-weight:700">Super Deal</span></td><td>BRRRR</td><td class="ltr" style="text-align:end">$70,000</td><td class="ltr" style="text-align:end">$30,000</td><td class="ltr" style="text-align:end">$150,000</td><td class="ltr" style="text-align:end">$1,400</td><td class="ltr" style="text-align:end">$70,000</td><td class="ltr" style="text-align:end">$65,000</td><td class="ltr" style="text-align:end">$112,000</td><td class="ltr" style="text-align:end;color:var(--good)">1.25%</td><td class="ltr" style="text-align:end;color:var(--good)">25.9%</td><td class="ltr">6/1.5</td><td class="ltr" style="text-align:end">1,150</td><td class="ltr">Josh Jonny</td><td class="ltr">Feb 20, 2025</td></tr>
+                <tr class="crm-row"><td class="ltr">2915 N Riley Ave, Indy, IN</td><td><span class="pill pill-sent">Offer Sent</span></td><td><span style="color:var(--good);font-weight:700">Good Deal</span></td><td>Flip</td><td class="ltr" style="text-align:end">$72,000</td><td class="ltr" style="text-align:end">$32,000</td><td class="ltr" style="text-align:end">$185,000</td><td class="ltr" style="text-align:end;color:var(--text-subtle)">—</td><td class="ltr" style="text-align:end">$95,500</td><td class="ltr" style="text-align:end">$78,000</td><td class="ltr" style="text-align:end">$132,000</td><td class="ltr" style="text-align:end;color:var(--text-subtle)">—</td><td class="ltr" style="text-align:end;color:var(--good)">19.8%</td><td class="ltr">3/1</td><td class="ltr" style="text-align:end">1,280</td><td class="ltr">Sarah M.</td><td class="ltr">Jul 9, 2026</td></tr>
+                <tr class="crm-row"><td class="ltr">4712 Boulevard Pl, Indy, IN</td><td><span class="pill pill-open">Ready</span></td><td><span style="color:var(--good);font-weight:700">Good Deal</span></td><td>Rental</td><td class="ltr" style="text-align:end">$92,000</td><td class="ltr" style="text-align:end">$25,000</td><td class="ltr" style="text-align:end">$172,000</td><td class="ltr" style="text-align:end">$1,450</td><td class="ltr" style="text-align:end">$108,500</td><td class="ltr" style="text-align:end;color:var(--text-subtle)">—</td><td class="ltr" style="text-align:end">$126,000</td><td class="ltr" style="text-align:end;color:var(--good)">1.15%</td><td class="ltr" style="text-align:end;color:var(--good)">18.5%</td><td class="ltr">3/2</td><td class="ltr" style="text-align:end">1,200</td><td class="ltr">Josh @ MidwestFlip</td><td class="ltr">Jul 10, 2026</td></tr>
+                <tr class="crm-row"><td class="ltr">1108 Garden Ave, Hamilton, OH</td><td><span class="pill pill-open">Review</span></td><td><span style="color:var(--warn);font-weight:700">Marginal</span></td><td>BRRRR</td><td class="ltr" style="text-align:end">$65,000</td><td class="ltr" style="text-align:end">$35,000</td><td class="ltr" style="text-align:end">$118,000</td><td class="ltr" style="text-align:end">$1,100</td><td class="ltr" style="text-align:end">$67,500</td><td class="ltr" style="text-align:end;color:var(--text-subtle)">—</td><td class="ltr" style="text-align:end">$112,000</td><td class="ltr" style="text-align:end;color:var(--warn)">0.98%</td><td class="ltr" style="text-align:end;color:var(--warn)">11.2%</td><td class="ltr">2/1</td><td class="ltr" style="text-align:end">941</td><td class="ltr">Mike @ OhioOM</td><td class="ltr">Jul 11, 2026</td></tr>
+                <tr class="crm-row"><td class="ltr">1922 Ludlow Ave, Cinci, OH</td><td><span class="pill pill-reject">Not Relevant</span></td><td><span style="color:var(--bad);font-weight:700">Bad Deal</span></td><td>Flip</td><td class="ltr" style="text-align:end">$92,000</td><td class="ltr" style="text-align:end">$42,000</td><td class="ltr" style="text-align:end">$125,000</td><td class="ltr" style="text-align:end;color:var(--text-subtle)">—</td><td class="ltr" style="text-align:end;color:var(--bad)">$68,000</td><td class="ltr" style="text-align:end;color:var(--text-subtle)">—</td><td class="ltr" style="text-align:end">$148,000</td><td class="ltr" style="text-align:end;color:var(--text-subtle)">—</td><td class="ltr" style="text-align:end;color:var(--bad)">5.1%</td><td class="ltr">3/1</td><td class="ltr">1,080</td><td class="ltr">Alex @ CincyDeals</td><td class="ltr" style="color:var(--text-subtle)">—</td></tr>
+                <tr class="crm-row"><td class="ltr">3401 E 34th St, Indy, IN</td><td><span class="pill pill-reject">Rejected</span></td><td><span style="color:var(--bad);font-weight:700">Bad Deal</span></td><td>Wholesale</td><td class="ltr" style="text-align:end">$45,000</td><td class="ltr" style="text-align:end">$18,000</td><td class="ltr" style="text-align:end">$62,000</td><td class="ltr" style="text-align:end">$650</td><td class="ltr" style="text-align:end;color:var(--bad)">$38,000</td><td class="ltr" style="text-align:end;color:var(--text-subtle)">—</td><td class="ltr" style="text-align:end">$70,000</td><td class="ltr" style="text-align:end;color:var(--bad)">0.72%</td><td class="ltr" style="text-align:end;color:var(--text-subtle)">—</td><td class="ltr">2/1</td><td class="ltr">890</td><td class="ltr">Robert @ QC</td><td class="ltr" style="color:var(--text-subtle)">—</td></tr>
+                <tr class="crm-row"><td class="ltr">1203 Woodruff Pl, Indy, IN</td><td><span class="pill pill-won">Won ✓</span></td><td><span style="color:var(--good);font-weight:700">Super Deal</span></td><td>BRRRR</td><td class="ltr" style="text-align:end">$88,000</td><td class="ltr" style="text-align:end">$32,000</td><td class="ltr" style="text-align:end">$168,000</td><td class="ltr" style="text-align:end">$1,485</td><td class="ltr" style="text-align:end">$105,000</td><td class="ltr" style="text-align:end">$88,000</td><td class="ltr" style="text-align:end">$132,000</td><td class="ltr" style="text-align:end;color:var(--good)">1.12%</td><td class="ltr" style="text-align:end;color:var(--good)">22.1%</td><td class="ltr">3/1</td><td class="ltr" style="text-align:end">1,220</td><td class="ltr">Sarah M.</td><td class="ltr" style="color:var(--good)">Closed</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <style>
+        .crm-row td { padding: 10px 12px; border-bottom: 1px solid var(--border); white-space:nowrap; }
+        .crm-row:hover td { background: var(--surface-2); }
+        .pill { padding: 2px 8px; border-radius: 4px; font-size: 10.5px; font-weight: 700; letter-spacing:.03em; text-transform: uppercase; font-family: var(--font-ui); display:inline-block; }
+        .pill-open { background: var(--accent-soft); color: var(--accent); }
+        .pill-contract { background: var(--warn-bg); color: var(--warn); }
+        .pill-sent { background: rgba(124, 58, 237, 0.10); color: #7C3AED; }
+        .pill-won { background: var(--good-bg); color: var(--good); }
+        .pill-reject { background: var(--surface-3); color: var(--text-subtle); }
+      </style>
+    </section>
+
+    <!-- ============ WHOLESALERS TRACKER ============ -->
+    <section class="screen" id="s-wholesalers">
+      <div class="page-head">
+        <div class="page-head-l">
+          <h1>Wholesalers Tracker</h1>
+          <p>42 wholesalers פעילים · 8 ב־Top Tier · ציון איכות מחושב לפי היסטוריית עסקאות</p>
+        </div>
+        <div class="page-head-r">
+          <button class="btn">+ הוסף Wholesaler ידני</button>
+        </div>
+      </div>
+      <div class="page-body">
+        <div class="kpi-row" style="grid-template-columns: repeat(4, 1fr)">
+          <div class="kpi"><span class="kpi-label">סה"כ עסקאות</span><span class="kpi-value">1,247</span><span class="kpi-sub">מכל ה־wholesalers · 90 יום</span></div>
+          <div class="kpi"><span class="kpi-label">אחוז 🟢</span><span class="kpi-value" style="color:var(--good)">8.4%</span><span class="kpi-sub">105 עסקאות איכות</span></div>
+          <div class="kpi"><span class="kpi-label">אחוז שנסגרו</span><span class="kpi-value">1.2%</span><span class="kpi-sub">15 מתוך 1,247</span></div>
+          <div class="kpi"><span class="kpi-label">Top Wholesaler</span><span class="kpi-value" style="font-size:15px; font-family:var(--font-ui); text-align:start" class="ltr">John Thompson</span><span class="kpi-sub">Score 9.2/10</span></div>
+        </div>
+
+        <div class="panel">
+          <div class="panel-head">
+            <div class="panel-title">דירוג Wholesalers</div>
+            <div style="display:flex; gap:4px">
+              <span class="chip active">All</span>
+              <span class="chip">Top 10</span>
+              <span class="chip">This Month</span>
+            </div>
+          </div>
+          <div style="padding: 0">
+            <div style="display:grid; grid-template-columns: 50px 1.6fr 1fr .8fr .8fr .8fr .8fr 80px; gap:12px; padding:10px 18px; background:var(--surface-2); font-size:11px; color:var(--text-subtle); text-transform:uppercase; letter-spacing:.04em; font-weight:600; border-bottom:1px solid var(--border)">
+              <div>#</div><div>Wholesaler</div><div>Markets</div><div>עסקאות שלח</div><div>אחוז 🟢</div><div>נסגרו</div><div>Score</div><div>Trend</div>
+            </div>
+            <div class="ws-row"><div style="font-family:var(--font-data);font-weight:700;font-size:15px;color:var(--good)">1</div><div><div style="display:flex;align-items:center;gap:8px"><div class="avatar" style="width:28px;height:28px;font-size:10px;background:linear-gradient(135deg,#0F766E,#14B8A6)">JT</div><div><div class="ltr" style="font-weight:600">John Thompson</div><div class="ltr" style="font-size:11px;color:var(--text-muted)">Elite Deals LLC · john@elitedealsindy.com</div></div></div></div><div class="ltr" style="font-size:12px">Indianapolis, IN</div><div class="ltr num">142</div><div class="ltr num" style="color:var(--good)">18.3%</div><div class="ltr num">4</div><div class="ltr num" style="font-weight:700;color:var(--good)">9.2/10</div><div style="color:var(--good)">▲</div></div>
+            <div class="ws-row"><div style="font-family:var(--font-data);font-weight:700;font-size:15px;color:var(--good)">2</div><div><div style="display:flex;align-items:center;gap:8px"><div class="avatar" style="width:28px;height:28px;font-size:10px;background:linear-gradient(135deg,#B45309,#D97706)">SM</div><div><div class="ltr" style="font-weight:600">Sarah Miller</div><div class="ltr" style="font-size:11px;color:var(--text-muted)">Buyfast Wholesale · sarah@buyfast.co</div></div></div></div><div class="ltr" style="font-size:12px">Indianapolis, IN · Cincinnati, OH</div><div class="ltr num">98</div><div class="ltr num" style="color:var(--good)">14.7%</div><div class="ltr num">2</div><div class="ltr num" style="font-weight:700;color:var(--good)">8.7/10</div><div style="color:var(--good)">▲</div></div>
+            <div class="ws-row"><div style="font-family:var(--font-data);font-weight:700;font-size:15px">3</div><div><div style="display:flex;align-items:center;gap:8px"><div class="avatar" style="width:28px;height:28px;font-size:10px;background:linear-gradient(135deg,#7C3AED,#A78BFA)">MJ</div><div><div class="ltr" style="font-weight:600">Mike Johnson</div><div class="ltr" style="font-size:11px;color:var(--text-muted)">Ohio Off-Market · mike@ohioom.com</div></div></div></div><div class="ltr" style="font-size:12px">Hamilton, OH · Cleveland, OH</div><div class="ltr num">87</div><div class="ltr num">11.2%</div><div class="ltr num">3</div><div class="ltr num" style="font-weight:700">7.9/10</div><div style="color:var(--text-subtle)">▬</div></div>
+            <div class="ws-row"><div style="font-family:var(--font-data);font-weight:700;font-size:15px">4</div><div><div style="display:flex;align-items:center;gap:8px"><div class="avatar" style="width:28px;height:28px;font-size:10px;background:linear-gradient(135deg,#0369A1,#0EA5E9)">JR</div><div><div class="ltr" style="font-weight:600">Josh Riley</div><div class="ltr" style="font-size:11px;color:var(--text-muted)">MidwestFlip · josh@midwestflip.io</div></div></div></div><div class="ltr" style="font-size:12px">Indianapolis, IN</div><div class="ltr num">74</div><div class="ltr num">9.5%</div><div class="ltr num">2</div><div class="ltr num" style="font-weight:700">7.4/10</div><div style="color:var(--good)">▲</div></div>
+            <div class="ws-row"><div style="font-family:var(--font-data);font-weight:700;font-size:15px">5</div><div><div style="display:flex;align-items:center;gap:8px"><div class="avatar" style="width:28px;height:28px;font-size:10px;background:linear-gradient(135deg,#B91C1C,#DC2626)">DK</div><div><div class="ltr" style="font-weight:600">David Kim</div><div class="ltr" style="font-size:11px;color:var(--text-muted)">HeartlandDeals · david@hd.com</div></div></div></div><div class="ltr" style="font-size:12px">Indianapolis, IN · Louisville, KY</div><div class="ltr num">65</div><div class="ltr num" style="color:var(--warn)">6.1%</div><div class="ltr num">1</div><div class="ltr num" style="font-weight:700">6.2/10</div><div style="color:var(--bad)">▼</div></div>
+            <div class="ws-row"><div style="font-family:var(--font-data);font-weight:700;font-size:15px">6</div><div><div style="display:flex;align-items:center;gap:8px"><div class="avatar" style="width:28px;height:28px;font-size:10px;background:linear-gradient(135deg,#059669,#10B981)">AC</div><div><div class="ltr" style="font-weight:600">Alex Chen</div><div class="ltr" style="font-size:11px;color:var(--text-muted)">CincyDeals · alex@cincydeals.com</div></div></div></div><div class="ltr" style="font-size:12px">Cincinnati, OH</div><div class="ltr num">54</div><div class="ltr num" style="color:var(--bad)">3.7%</div><div class="ltr num">0</div><div class="ltr num" style="font-weight:700;color:var(--warn)">5.1/10</div><div style="color:var(--bad)">▼</div></div>
+            <div class="ws-row"><div style="font-family:var(--font-data);font-weight:700;font-size:15px">7</div><div><div style="display:flex;align-items:center;gap:8px"><div class="avatar" style="width:28px;height:28px;font-size:10px;background:linear-gradient(135deg,#DB2777,#EC4899)">EW</div><div><div class="ltr" style="font-weight:600">Emma Wilson</div><div class="ltr" style="font-size:11px;color:var(--text-muted)">RapidHomes · emma@rapid.io</div></div></div></div><div class="ltr" style="font-size:12px">Indianapolis, IN</div><div class="ltr num">48</div><div class="ltr num" style="color:var(--bad)">2.1%</div><div class="ltr num">0</div><div class="ltr num" style="font-weight:700;color:var(--bad)">4.2/10</div><div style="color:var(--bad)">▼</div></div>
+          </div>
+        </div>
+      </div>
+      <style>
+        .ws-row { display:grid; grid-template-columns: 50px 1.6fr 1fr .8fr .8fr .8fr .8fr 80px; gap:12px; padding: 12px 18px; align-items:center; border-bottom:1px solid var(--border); font-family: var(--font-ui); }
+        .ws-row:last-child { border-bottom:none; }
+        .ws-row:hover { background: var(--surface-2); }
+      </style>
+    </section>
+
+    <!-- ============ MATERIALS PRICE LIST ============ -->
+    <section class="screen" id="s-materials">
+      <div class="page-head">
+        <div class="page-head-l">
+          <h1>מחירון חומרים ושיפוץ</h1>
+          <p>28 פריטים בסיסיים · <span class="ltr">🟢 12 עם מחיר אישי שלך</span> · Reset מחזיר למחיר הגלובלי</p>
+        </div>
+        <div class="page-head-r">
+          <button class="btn">Import Excel</button>
+          <button class="btn">Export Excel</button>
+          <button class="btn btn-primary">+ הוסף פריט</button>
+        </div>
+      </div>
+
+      <div class="page-body">
+        <div class="panel" style="padding:0; overflow:hidden">
+          <div class="filter-bar">
+            <div class="search"><svg class="ic" viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3"/></svg><input type="text" placeholder="חפש פריט..." /></div>
+            <span class="chip active">All (28)</span>
+            <span class="chip">Kitchen (6)</span>
+            <span class="chip">Bath (2)</span>
+            <span class="chip">HVAC (4)</span>
+            <span class="chip">Roof (1)</span>
+            <span class="chip">Elec (4)</span>
+            <span class="chip">Plumb (3)</span>
+            <span class="chip">Exterior (3)</span>
+            <span class="chip">✏️ Custom (12)</span>
+          </div>
+          <div style="display:grid; grid-template-columns: 100px 1.6fr .8fr .8fr .8fr .8fr .6fr 100px; gap:10px; padding: 10px 18px; background:var(--surface-2); font-size:11px; text-transform:uppercase; letter-spacing:.04em; color:var(--text-subtle); font-weight:600; border-bottom:1px solid var(--border)">
+            <div>Category</div><div>Item</div><div>Unit</div><div>Default</div><div>Range (Low)</div><div>Range (High)</div><div>Your Price</div><div></div>
+          </div>
+          <div class="mat-row"><span class="reh-cat">Demo</span><div><b>Demo, Trash out, Prep</b></div><div class="ltr" style="font-size:12px; color:var(--text-muted)">per home</div><div class="ltr num">$1,500</div><div class="ltr num" style="color:var(--text-subtle)">$1,200</div><div class="ltr num" style="color:var(--text-subtle)">$2,000</div><div class="ltr num" style="font-weight:600">$1,500</div><div><span style="color:var(--text-subtle);font-size:11px">Default</span></div></div>
+          <div class="mat-row"><span class="reh-cat">Paint</span><div><b>Paint & Drywall</b></div><div class="ltr" style="font-size:12px; color:var(--text-muted)">per sqft</div><div class="ltr num">$2.50</div><div class="ltr num" style="color:var(--text-subtle)">$2.00</div><div class="ltr num" style="color:var(--text-subtle)">$3.50</div><div class="ltr num" style="font-weight:600; color:var(--accent)">$2.30 ✏️</div><div><button class="btn btn-sm btn-ghost" style="font-size:11px;color:var(--text-subtle)">Reset</button></div></div>
+          <div class="mat-row"><span class="reh-cat">Floor</span><div><b>Flooring (LVP)</b></div><div class="ltr" style="font-size:12px; color:var(--text-muted)">per sqft</div><div class="ltr num">$4.50</div><div class="ltr num" style="color:var(--text-subtle)">$3.50</div><div class="ltr num" style="color:var(--text-subtle)">$6.00</div><div class="ltr num" style="font-weight:600; color:var(--accent)">$4.25 ✏️</div><div><button class="btn btn-sm btn-ghost" style="font-size:11px;color:var(--text-subtle)">Reset</button></div></div>
+          <div class="mat-row"><span class="reh-cat">Kitchen</span><div><b>New Kitchen Cabinets</b></div><div class="ltr" style="font-size:12px; color:var(--text-muted)">per home</div><div class="ltr num">$4,000</div><div class="ltr num" style="color:var(--text-subtle)">$3,000</div><div class="ltr num" style="color:var(--text-subtle)">$6,500</div><div class="ltr num" style="font-weight:600">$4,000</div><div><span style="color:var(--text-subtle);font-size:11px">Default</span></div></div>
+          <div class="mat-row"><span class="reh-cat">Kitchen</span><div><b>Fix Kitchen Cabinets</b></div><div class="ltr" style="font-size:12px; color:var(--text-muted)">per home</div><div class="ltr num">$600</div><div class="ltr num" style="color:var(--text-subtle)">$400</div><div class="ltr num" style="color:var(--text-subtle)">$900</div><div class="ltr num" style="font-weight:600">$600</div><div><span style="color:var(--text-subtle);font-size:11px">Default</span></div></div>
+          <div class="mat-row"><span class="reh-cat">Kitchen</span><div><b>Countertop — Quartz</b></div><div class="ltr" style="font-size:12px; color:var(--text-muted)">per home</div><div class="ltr num">$2,000</div><div class="ltr num" style="color:var(--text-subtle)">$1,500</div><div class="ltr num" style="color:var(--text-subtle)">$3,000</div><div class="ltr num" style="font-weight:600; color:var(--accent)">$1,850 ✏️</div><div><button class="btn btn-sm btn-ghost" style="font-size:11px;color:var(--text-subtle)">Reset</button></div></div>
+          <div class="mat-row"><span class="reh-cat">Kitchen</span><div><b>Countertop — Formica/Butcher</b></div><div class="ltr" style="font-size:12px; color:var(--text-muted)">per home</div><div class="ltr num">$500</div><div class="ltr num" style="color:var(--text-subtle)">$350</div><div class="ltr num" style="color:var(--text-subtle)">$700</div><div class="ltr num" style="font-weight:600; color:var(--accent)">$475 ✏️</div><div><button class="btn btn-sm btn-ghost" style="font-size:11px;color:var(--text-subtle)">Reset</button></div></div>
+          <div class="mat-row"><span class="reh-cat">Kitchen</span><div><b>Backsplash</b></div><div class="ltr" style="font-size:12px; color:var(--text-muted)">per home</div><div class="ltr num">$900</div><div class="ltr num" style="color:var(--text-subtle)">$600</div><div class="ltr num" style="color:var(--text-subtle)">$1,300</div><div class="ltr num" style="font-weight:600">$900</div><div><span style="color:var(--text-subtle);font-size:11px">Default</span></div></div>
+          <div class="mat-row"><span class="reh-cat">Kitchen</span><div><b>Appliances Package</b></div><div class="ltr" style="font-size:12px; color:var(--text-muted)">per home</div><div class="ltr num">$2,000</div><div class="ltr num" style="color:var(--text-subtle)">$1,500</div><div class="ltr num" style="color:var(--text-subtle)">$3,500</div><div class="ltr num" style="font-weight:600; color:var(--accent)">$1,750 ✏️</div><div><button class="btn btn-sm btn-ghost" style="font-size:11px;color:var(--text-subtle)">Reset</button></div></div>
+          <div class="mat-row"><span class="reh-cat">Bath</span><div><b>Bath — Cosmetics</b></div><div class="ltr" style="font-size:12px; color:var(--text-muted)">per bath</div><div class="ltr num">$1,500</div><div class="ltr num" style="color:var(--text-subtle)">$1,000</div><div class="ltr num" style="color:var(--text-subtle)">$2,200</div><div class="ltr num" style="font-weight:600">$1,500</div><div><span style="color:var(--text-subtle);font-size:11px">Default</span></div></div>
+          <div class="mat-row"><span class="reh-cat">Bath</span><div><b>Bath — Full Remodel</b></div><div class="ltr" style="font-size:12px; color:var(--text-muted)">per bath</div><div class="ltr num">$3,000</div><div class="ltr num" style="color:var(--text-subtle)">$2,500</div><div class="ltr num" style="color:var(--text-subtle)">$5,000</div><div class="ltr num" style="font-weight:600; color:var(--accent)">$2,800 ✏️</div><div><button class="btn btn-sm btn-ghost" style="font-size:11px;color:var(--text-subtle)">Reset</button></div></div>
+          <div class="mat-row"><span class="reh-cat">Elec</span><div><b>Rewire Home</b></div><div class="ltr" style="font-size:12px; color:var(--text-muted)">per home</div><div class="ltr num">$6,500</div><div class="ltr num" style="color:var(--text-subtle)">$5,000</div><div class="ltr num" style="color:var(--text-subtle)">$9,000</div><div class="ltr num" style="font-weight:600">$6,500</div><div><span style="color:var(--text-subtle);font-size:11px">Default</span></div></div>
+          <div class="mat-row"><span class="reh-cat">Elec</span><div><b>Replace Panel & Service</b></div><div class="ltr" style="font-size:12px; color:var(--text-muted)">per home</div><div class="ltr num">$4,000</div><div class="ltr num" style="color:var(--text-subtle)">$3,000</div><div class="ltr num" style="color:var(--text-subtle)">$5,500</div><div class="ltr num" style="font-weight:600; color:var(--accent)">$3,750 ✏️</div><div><button class="btn btn-sm btn-ghost" style="font-size:11px;color:var(--text-subtle)">Reset</button></div></div>
+          <div class="mat-row"><span class="reh-cat">HVAC</span><div><b>New Furnace</b></div><div class="ltr" style="font-size:12px; color:var(--text-muted)">per home</div><div class="ltr num">$3,000</div><div class="ltr num" style="color:var(--text-subtle)">$2,500</div><div class="ltr num" style="color:var(--text-subtle)">$4,500</div><div class="ltr num" style="font-weight:600">$3,000</div><div><span style="color:var(--text-subtle);font-size:11px">Default</span></div></div>
+          <div class="mat-row"><span class="reh-cat">HVAC</span><div><b>New AC</b></div><div class="ltr" style="font-size:12px; color:var(--text-muted)">per home</div><div class="ltr num">$3,500</div><div class="ltr num" style="color:var(--text-subtle)">$2,800</div><div class="ltr num" style="color:var(--text-subtle)">$5,000</div><div class="ltr num" style="font-weight:600; color:var(--accent)">$3,200 ✏️</div><div><button class="btn btn-sm btn-ghost" style="font-size:11px;color:var(--text-subtle)">Reset</button></div></div>
+          <div class="mat-row"><span class="reh-cat">Roof</span><div><b>New Roof</b></div><div class="ltr" style="font-size:12px; color:var(--text-muted)">per home</div><div class="ltr num">$6,000</div><div class="ltr num" style="color:var(--text-subtle)">$4,500</div><div class="ltr num" style="color:var(--text-subtle)">$8,500</div><div class="ltr num" style="font-weight:600; color:var(--accent)">$5,600 ✏️</div><div><button class="btn btn-sm btn-ghost" style="font-size:11px;color:var(--text-subtle)">Reset</button></div></div>
+          <div class="mat-row"><span class="reh-cat">Plumb</span><div><b>Sewer Line (Underground)</b></div><div class="ltr" style="font-size:12px; color:var(--text-muted)">per home</div><div class="ltr num">$12,000</div><div class="ltr num" style="color:var(--text-subtle)">$8,000</div><div class="ltr num" style="color:var(--text-subtle)">$18,000</div><div class="ltr num" style="font-weight:600">$12,000</div><div><span style="color:var(--text-subtle);font-size:11px">Default</span></div></div>
+          <div style="padding: 12px 18px; text-align:center; border-top:1px solid var(--border)">
+            <button class="btn btn-ghost btn-sm" style="color:var(--accent)">הצג 11 פריטים נוספים ↓</button>
+          </div>
+        </div>
+      </div>
+      <style>
+        .mat-row { display:grid; grid-template-columns: 100px 1.6fr .8fr .8fr .8fr .8fr .6fr 100px; gap:10px; padding:10px 18px; border-bottom:1px solid var(--border); font-size:13px; align-items:center; }
+        .mat-row:last-child { border-bottom:none; }
+        .mat-row:hover { background: var(--surface-2); }
+      </style>
+    </section>
+
+    <!-- ============ NEIGHBORHOODS ============ -->
+    <section class="screen" id="s-neighborhoods">
+      <div class="page-head">
+        <div class="page-head-l">
+          <h1>שכונות ושווקים</h1>
+          <p>18 ערים במעקב · 47 שכונות פעילות · ציוני שוק וגראפים</p>
+        </div>
+        <div class="page-head-r">
+          <button class="btn"><svg class="ic" viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></svg>הוסף שוק</button>
+        </div>
+      </div>
+      <div class="page-body">
+        <div style="display:grid; grid-template-columns: repeat(3, 1fr); gap: 14px">
+          <div class="panel">
+            <div style="padding: 16px 18px">
+              <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:10px">
+                <div>
+                  <div style="font-weight:700; font-size:15px" class="ltr">Indianapolis, IN</div>
+                  <div style="font-size:11.5px; color:var(--text-muted)">שוק ראשי · 23 עסקאות פעילות</div>
+                </div>
+                <div class="ltr" style="text-align:center"><div style="font-family:var(--font-data);font-weight:700;font-size:22px;color:var(--good)">A-</div><div style="font-size:10px;color:var(--text-subtle)">Grade</div></div>
+              </div>
+              <div style="display:grid; grid-template-columns: 1fr 1fr; gap:6px; font-size:11.5px; color:var(--text-muted); margin-top:12px">
+                <div class="stat-line"><span>Trend</span><span style="color:var(--good)">Flat/Growing</span></div>
+                <div class="stat-line"><span>Tenant Friendly</span><span style="color:var(--good)">Yes</span></div>
+                <div class="stat-line"><span>5Y Appreciation</span><span class="ltr num">+54%</span></div>
+                <div class="stat-line"><span>Crime Rating</span><span class="ltr num">4/10</span></div>
+                <div class="stat-line"><span>Median Price</span><span class="ltr num">$245k</span></div>
+                <div class="stat-line"><span>Avg Rent 3BR</span><span class="ltr num">$1,545</span></div>
+                <div class="stat-line"><span>Rent Ratio</span><span class="ltr num" style="color:var(--good)">7.6%</span></div>
+                <div class="stat-line"><span>Hot Rate</span><span class="ltr num">77</span></div>
+              </div>
+            </div>
+          </div>
+          <div class="panel">
+            <div style="padding: 16px 18px">
+              <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:10px">
+                <div>
+                  <div style="font-weight:700; font-size:15px" class="ltr">Cincinnati, OH</div>
+                  <div style="font-size:11.5px; color:var(--text-muted)">12 עסקאות פעילות</div>
+                </div>
+                <div class="ltr" style="text-align:center"><div style="font-family:var(--font-data);font-weight:700;font-size:22px;color:var(--good)">B+</div><div style="font-size:10px;color:var(--text-subtle)">Grade</div></div>
+              </div>
+              <div style="display:grid; grid-template-columns: 1fr 1fr; gap:6px; font-size:11.5px; color:var(--text-muted); margin-top:12px">
+                <div class="stat-line"><span>Trend</span><span style="color:var(--good)">Growing</span></div>
+                <div class="stat-line"><span>Tenant Friendly</span><span>Neutral</span></div>
+                <div class="stat-line"><span>5Y Appreciation</span><span class="ltr num">+48%</span></div>
+                <div class="stat-line"><span>Crime Rating</span><span class="ltr num">5/10</span></div>
+                <div class="stat-line"><span>Median Price</span><span class="ltr num">$198k</span></div>
+                <div class="stat-line"><span>Avg Rent 3BR</span><span class="ltr num">$1,285</span></div>
+                <div class="stat-line"><span>Rent Ratio</span><span class="ltr num" style="color:var(--good)">7.8%</span></div>
+                <div class="stat-line"><span>Hot Rate</span><span class="ltr num">82</span></div>
+              </div>
+            </div>
+          </div>
+          <div class="panel">
+            <div style="padding: 16px 18px">
+              <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:10px">
+                <div>
+                  <div style="font-weight:700; font-size:15px" class="ltr">Cleveland, OH</div>
+                  <div style="font-size:11.5px; color:var(--text-muted)">7 עסקאות פעילות</div>
+                </div>
+                <div class="ltr" style="text-align:center"><div style="font-family:var(--font-data);font-weight:700;font-size:22px;color:var(--warn)">B</div><div style="font-size:10px;color:var(--text-subtle)">Grade</div></div>
+              </div>
+              <div style="display:grid; grid-template-columns: 1fr 1fr; gap:6px; font-size:11.5px; color:var(--text-muted); margin-top:12px">
+                <div class="stat-line"><span>Trend</span><span>Flat</span></div>
+                <div class="stat-line"><span>Tenant Friendly</span><span style="color:var(--good)">Yes</span></div>
+                <div class="stat-line"><span>5Y Appreciation</span><span class="ltr num">+37%</span></div>
+                <div class="stat-line"><span>Crime Rating</span><span class="ltr num" style="color:var(--warn)">6/10</span></div>
+                <div class="stat-line"><span>Median Price</span><span class="ltr num">$132k</span></div>
+                <div class="stat-line"><span>Avg Rent 3BR</span><span class="ltr num">$1,050</span></div>
+                <div class="stat-line"><span>Rent Ratio</span><span class="ltr num" style="color:var(--good)">9.5%</span></div>
+                <div class="stat-line"><span>Hot Rate</span><span class="ltr num">68</span></div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="panel" style="margin-top:20px">
+          <div class="panel-head">
+            <div class="panel-title">שכונות ב־Indianapolis</div>
+            <span class="chip active">All grades</span>
+          </div>
+          <div style="display:grid; grid-template-columns: 1.6fr .6fr .6fr 1fr .8fr .8fr .8fr; gap:12px; padding:10px 18px; background:var(--surface-2); font-size:11px; text-transform:uppercase; letter-spacing:.04em; color:var(--text-subtle); font-weight:600; border-bottom:1px solid var(--border)">
+            <div>Neighborhood</div><div>Grade</div><div>Crime</div><div>Median $</div><div>Avg Rent</div><div>Ratio</div><div>Appreciation 5Y</div>
+          </div>
+          <div class="nb-row"><div class="ltr">Eagledale</div><div><span style="color:var(--good);font-weight:700">B+</span></div><div class="ltr num">22</div><div class="ltr num">$142k</div><div class="ltr num">$1,285</div><div class="ltr num" style="color:var(--good)">9.0%</div><div class="ltr num" style="color:var(--good)">+43%</div></div>
+          <div class="nb-row"><div class="ltr">Broad Ripple</div><div><span style="color:var(--good);font-weight:700">A-</span></div><div class="ltr num">15</div><div class="ltr num">$285k</div><div class="ltr num">$1,850</div><div class="ltr num">6.5%</div><div class="ltr num" style="color:var(--good)">+52%</div></div>
+          <div class="nb-row"><div class="ltr">Fountain Square</div><div><span style="color:var(--good);font-weight:700">B+</span></div><div class="ltr num">28</div><div class="ltr num">$198k</div><div class="ltr num">$1,450</div><div class="ltr num">7.3%</div><div class="ltr num" style="color:var(--good)">+61%</div></div>
+          <div class="nb-row"><div class="ltr">Emerson Heights</div><div><span style="color:var(--warn);font-weight:700">C+</span></div><div class="ltr num">42</div><div class="ltr num">$118k</div><div class="ltr num">$1,050</div><div class="ltr num" style="color:var(--good)">8.9%</div><div class="ltr num">+38%</div></div>
+          <div class="nb-row"><div class="ltr">Haughville</div><div><span style="color:var(--warn);font-weight:700">C</span></div><div class="ltr num">58</div><div class="ltr num">$85k</div><div class="ltr num">$925</div><div class="ltr num" style="color:var(--good)">10.9%</div><div class="ltr num">+29%</div></div>
+          <div class="nb-row"><div class="ltr">Martindale-Brightwood</div><div><span style="color:var(--bad);font-weight:700">C-</span></div><div class="ltr num">72</div><div class="ltr num">$72k</div><div class="ltr num">$780</div><div class="ltr num" style="color:var(--good)">10.8%</div><div class="ltr num">+22%</div></div>
+          <div class="nb-row"><div class="ltr">Near Northside</div><div><span style="color:var(--bad);font-weight:700">D</span></div><div class="ltr num">85</div><div class="ltr num">$54k</div><div class="ltr num">$650</div><div class="ltr num" style="color:var(--warn)">14.4%</div><div class="ltr num">+12%</div></div>
+        </div>
+      </div>
+      <style>
+        .nb-row { display:grid; grid-template-columns: 1.6fr .6fr .6fr 1fr .8fr .8fr .8fr; gap:12px; padding: 10px 18px; align-items:center; border-bottom:1px solid var(--border); font-size:13px; }
+        .nb-row:last-child { border-bottom:none; }
+        .nb-row:hover { background: var(--surface-2); }
+      </style>
+    </section>
+
+    <!-- ============ SETTINGS / BUY BOX ============ -->
+    <section class="screen" id="s-settings">
+      <div class="page-head">
+        <div class="page-head-l">
+          <h1>הגדרות · Buy Box + פיננסים</h1>
+          <p>הפרמטרים לפיהם המערכת מסננת עסקאות ומחשבת ציון</p>
+        </div>
+        <div class="page-head-r">
+          <button class="btn">בטל שינויים</button>
+          <button class="btn btn-primary">שמור</button>
+        </div>
+      </div>
+
+      <div class="page-body">
+        <div style="display:grid; grid-template-columns: 240px 1fr; gap: 24px">
+          <nav style="display:flex; flex-direction:column; gap:2px; position:sticky; top:20px; align-self:start">
+            <button class="nav-item active" style="text-align:start">Buy Box</button>
+            <button class="nav-item" style="text-align:start">Financing</button>
+            <button class="nav-item" style="text-align:start">יעדי ROI</button>
+            <button class="nav-item" style="text-align:start">חשבונות מייל</button>
+            <button class="nav-item" style="text-align:start">שווקים במעקב</button>
+            <button class="nav-item" style="text-align:start">Profile</button>
+            <button class="nav-item" style="text-align:start">Billing</button>
+          </nav>
+
+          <div style="display:flex; flex-direction:column; gap:16px">
+            <div class="panel">
+              <div class="panel-head"><div class="panel-title">Buy Box — קריטריונים</div><span style="font-size:11px;color:var(--text-subtle)">כל עסקה חייבת לעמוד בקריטריונים אלו כדי לקבל 🟢</span></div>
+              <div style="padding: 18px; display:grid; grid-template-columns: 1fr 1fr; gap:16px">
+                <div class="fld"><label>Max All In</label><div class="input"><span>$</span><input class="ltr num" value="130,000"></div><small>עלות מקסימלית כוללת</small></div>
+                <div class="fld"><label>Min ARV</label><div class="input"><span>$</span><input class="ltr num" value="120,000"></div><small>שווי מינימלי אחרי שיפוץ</small></div>
+                <div class="fld"><label>Max Renovation</label><div class="input"><span>$</span><input class="ltr num" value="45,000"></div><small>תקציב שיפוץ מקסימלי</small></div>
+                <div class="fld"><label>Min SqFt</label><div class="input"><input class="ltr num" value="900"><span>sqft</span></div><small>גודל בית מינימלי</small></div>
+                <div class="fld"><label>Min Beds</label><div class="input"><input class="ltr num" value="2"><span>BR</span></div><small>עדיף 3+</small></div>
+                <div class="fld"><label>Year Built (מ־)</label><div class="input"><input class="ltr num" value="1950"></div><small>שנת בנייה מוקדמת מקסימלית</small></div>
+                <div class="fld" style="grid-column:1/-1"><label>סוגי נכסים</label><div style="display:flex; gap:8px; flex-wrap:wrap"><span class="chip active">SFH</span><span class="chip active">Duplex</span><span class="chip active">Triplex</span><span class="chip active">Fourplex</span><span class="chip">Townhouse</span><span class="chip">Condo</span></div></div>
+                <div class="fld" style="grid-column:1/-1"><label>Neighborhood Grade מינימלי</label><div style="display:flex; gap:8px; flex-wrap:wrap"><span class="chip">A</span><span class="chip">B</span><span class="chip active">C+</span><span class="chip">C</span><span class="chip">C-</span><span class="chip">D</span></div></div>
+              </div>
+            </div>
+
+            <div class="panel">
+              <div class="panel-head"><div class="panel-title">יעדי ROI · Rental</div></div>
+              <div style="padding: 18px; display:grid; grid-template-columns: 1fr 1fr 1fr; gap:16px">
+                <div class="fld"><label>Rent Rule יעד</label><div class="input"><input class="ltr num" value="1.10"><span>%</span></div><small>מעל 1.3% = מצוין</small></div>
+                <div class="fld"><label>ROI יעד</label><div class="input"><input class="ltr num" value="9.0"><span>%</span></div><small>Return on All In</small></div>
+                <div class="fld"><label>DSCR מינימלי</label><div class="input"><input class="ltr num" value="1.25"></div><small>Lender minimum</small></div>
+              </div>
+            </div>
+
+            <div class="panel">
+              <div class="panel-head"><div class="panel-title">יעדי ROI · Flip</div></div>
+              <div style="padding: 18px; display:grid; grid-template-columns: 1fr 1fr; gap:16px">
+                <div class="fld"><label>Flip ROI יעד</label><div class="input"><input class="ltr num" value="18.0"><span>%</span></div><small>מעל 18% = 🟢</small></div>
+                <div class="fld"><label>Min Profit</label><div class="input"><span>$</span><input class="ltr num" value="18,000"></div><small>רווח מינימלי בעסקה</small></div>
+              </div>
+            </div>
+
+            <div class="panel">
+              <div class="panel-head"><div class="panel-title">הנחות פיננסיות</div></div>
+              <div style="padding: 18px; display:grid; grid-template-columns: 1fr 1fr 1fr; gap:16px">
+                <div class="fld"><label>Rental Loan LTV</label><div class="input"><input class="ltr num" value="70"><span>%</span></div><small>Long-term loan</small></div>
+                <div class="fld"><label>Rental Interest</label><div class="input"><input class="ltr num" value="8.50"><span>%</span></div><small>נכון להיום</small></div>
+                <div class="fld"><label>Refi LTV (BRRRR)</label><div class="input"><input class="ltr num" value="70"><span>%</span></div><small>65-75% טווח</small></div>
+                <div class="fld"><label>Flip LTC</label><div class="input"><input class="ltr num" value="75"><span>%</span></div><small>Loan to Cost</small></div>
+                <div class="fld"><label>Flip Reno Financed</label><div class="input"><input class="ltr num" value="100"><span>%</span></div><small>100% של רהב</small></div>
+                <div class="fld"><label>Flip Interest</label><div class="input"><input class="ltr num" value="11"><span>%</span></div><small>Hard money</small></div>
+                <div class="fld"><label>Extra Expenses Buffer</label><div class="input"><input class="ltr num" value="12"><span>%</span></div><small>הוצאות נוספות</small></div>
+                <div class="fld"><label>Unexpected Rehab</label><div class="input"><input class="ltr num" value="7"><span>%</span></div><small>אחוז הפתעה</small></div>
+                <div class="fld"><label>Outdoor / Landscape</label><div class="input"><input class="ltr num" value="10"><span>%</span></div><small>של Subtotal</small></div>
+              </div>
+            </div>
+
+            <div class="panel">
+              <div class="panel-head"><div class="panel-title">חשבונות מייל מחוברים</div><button class="btn btn-sm btn-primary">+ חבר Gmail</button></div>
+              <div style="padding: 6px 0">
+                <div class="acct-row"><div style="display:flex; align-items:center; gap:10px"><div class="avatar" style="width:32px;height:32px;font-size:11px;background:linear-gradient(135deg,#DB2777,#EF4444)">G</div><div><div class="ltr" style="font-weight:600">maor@lofraier.com</div><div class="ltr" style="font-size:11px;color:var(--text-muted)">Gmail · תוויות: Deals, Wholesalers</div></div></div><div style="display:flex;align-items:center;gap:8px"><span class="verdict verdict-good"><span class="verdict-dot"></span>Active</span><span style="font-size:11px;color:var(--text-subtle)" class="ltr">Synced 4m ago</span></div></div>
+                <div class="acct-row"><div style="display:flex; align-items:center; gap:10px"><div class="avatar" style="width:32px;height:32px;font-size:11px;background:linear-gradient(135deg,#0369A1,#0EA5E9)">O</div><div><div class="ltr" style="font-weight:600">maor@personalinvest.co</div><div class="ltr" style="font-size:11px;color:var(--text-muted)">Outlook · תוויות: RealEstate</div></div></div><div style="display:flex;align-items:center;gap:8px"><span class="verdict verdict-warn"><span class="verdict-dot"></span>Reauth</span><button class="btn btn-sm">חדש</button></div></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <style>
+        .fld { display:flex; flex-direction:column; gap:5px; }
+        .fld label { font-size:12px; font-weight:600; color:var(--text-muted); }
+        .fld small { font-size:11px; color:var(--text-subtle); }
+        .input { display:flex; align-items:center; gap:6px; border:1px solid var(--border); border-radius: var(--radius); padding: 6px 10px; background: var(--surface); }
+        .input:focus-within { border-color: var(--accent); box-shadow: 0 0 0 3px var(--accent-soft); }
+        .input span { color:var(--text-subtle); font-size:12px; font-family:var(--font-data); }
+        .input input { flex:1; background:none; border:none; outline:none; color:var(--text); font-size:13.5px; padding:2px 0; }
+        .acct-row { padding: 12px 18px; display:flex; justify-content:space-between; align-items:center; border-bottom:1px solid var(--border); }
+        .acct-row:last-child { border-bottom:none; }
+      </style>
+    </section>
+
+    <!-- ============ ONBOARDING ============ -->
+    <section class="screen" id="s-onboarding">
+      <div class="page-head">
+        <div class="page-head-l">
+          <h1>Onboarding · שלב 3 מתוך 5</h1>
+          <p>חבר את תיבת ה־Gmail שלך כדי שנתחיל לנתח עסקאות אוטומטית</p>
+        </div>
+      </div>
+      <div class="page-body">
+        <div style="max-width:720px; margin:0 auto; width:100%">
+          <!-- Progress -->
+          <div style="display:flex; align-items:center; gap:8px; margin-bottom:28px; padding: 0 8px">
+            <div class="step step-done"><span>1</span><b>ברוך הבא</b></div>
+            <div class="step-line step-line-done"></div>
+            <div class="step step-done"><span>2</span><b>אסטרטגיה</b></div>
+            <div class="step-line step-line-done"></div>
+            <div class="step step-current"><span>3</span><b>Gmail</b></div>
+            <div class="step-line"></div>
+            <div class="step"><span>4</span><b>Buy Box</b></div>
+            <div class="step-line"></div>
+            <div class="step"><span>5</span><b>סיום</b></div>
+          </div>
+
+          <div class="panel">
+            <div style="padding: 32px; text-align:center">
+              <div style="width:64px; height:64px; margin: 0 auto 20px; border-radius:16px; background: var(--accent-soft); display:grid; place-items:center">
+                <svg viewBox="0 0 24 24" style="width:32px;height:32px;stroke:var(--accent);stroke-width:2;fill:none;stroke-linecap:round;stroke-linejoin:round"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><path d="M22 6l-10 7L2 6"/></svg>
+              </div>
+              <h2 style="margin:0 0 8px; font-size:20px; font-weight:700; letter-spacing:-.02em">חבר את תיבת ה־Gmail שלך</h2>
+              <p style="margin:0 0 24px; color:var(--text-muted); font-size:13.5px; max-width:520px; margin-inline:auto">המערכת תסרוק אוטומטית מיילים מ־wholesalers ותנתח כל עסקה בפחות מ־30 שניות. אנחנו קוראים בלבד — לא שולחים, לא משנים.</p>
+
+              <button class="btn btn-primary" style="padding:12px 24px; font-size:14px">
+                <svg viewBox="0 0 24 24" style="width:20px;height:20px;stroke:white;stroke-width:2;fill:none;stroke-linecap:round;stroke-linejoin:round"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><path d="M22 6l-10 7L2 6"/></svg>
+                חבר את Gmail
+              </button>
+
+              <div style="margin-top:24px; padding: 16px; background:var(--surface-2); border-radius:var(--radius); text-align:start; direction:rtl">
+                <div style="font-size:12px; font-weight:600; color:var(--text-muted); text-transform:uppercase; letter-spacing:.05em; margin-bottom:10px">מה נבקש גישה?</div>
+                <div style="display:flex; align-items:start; gap:10px; font-size:13px; color:var(--text-muted); margin-bottom:8px">
+                  <svg class="ic" viewBox="0 0 24 24" style="color:var(--good);flex-shrink:0;margin-top:2px"><path d="M20 6L9 17l-5-5"/></svg>
+                  <span>קריאה בלבד של מיילים בתוויות שתבחר (Deals / Wholesalers)</span>
+                </div>
+                <div style="display:flex; align-items:start; gap:10px; font-size:13px; color:var(--text-muted); margin-bottom:8px">
+                  <svg class="ic" viewBox="0 0 24 24" style="color:var(--good);flex-shrink:0;margin-top:2px"><path d="M20 6L9 17l-5-5"/></svg>
+                  <span>סנכרון בזמן אמת (Push notifications מ־Gmail)</span>
+                </div>
+                <div style="display:flex; align-items:start; gap:10px; font-size:13px; color:var(--text-muted)">
+                  <svg class="ic" viewBox="0 0 24 24" style="color:var(--bad);flex-shrink:0;margin-top:2px"><path d="M18 6L6 18M6 6l12 12"/></svg>
+                  <span>לא ישלח מיילים, לא ימחק, לא ישנה תוויות</span>
+                </div>
+              </div>
+
+              <div style="margin-top:20px; display:flex; gap:8px; justify-content:center">
+                <button class="btn btn-ghost" style="color:var(--text-muted)">חזרה</button>
+                <button class="btn btn-ghost" style="color:var(--text-muted)">דלג לעכשיו</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <style>
+        .step { display:flex; align-items:center; gap:8px; padding:6px 14px; border-radius:999px; font-size:12px; color:var(--text-subtle); background:var(--surface-2); border:1px solid var(--border); }
+        .step span { width:20px; height:20px; border-radius:50%; background:var(--surface-3); display:grid; place-items:center; font-family:var(--font-data); font-weight:700; font-size:11px; }
+        .step b { font-weight:600; }
+        .step-done { background: var(--good-bg); color: var(--good); border-color: var(--good-border); }
+        .step-done span { background: var(--good); color: white; }
+        .step-current { background: var(--accent-soft); color: var(--accent); border-color: var(--accent); }
+        .step-current span { background: var(--accent); color: white; }
+        .step-line { flex:1; height:2px; background: var(--border); border-radius:1px; }
+        .step-line-done { background: var(--good); }
+      </style>
+    </section>
+  </main>
+</div>
+<script>
+  const themeToggle = document.getElementById('theme-toggle');
+  themeToggle.addEventListener('click', () => {
+    const root = document.documentElement;
+    const current = root.getAttribute('data-theme');
+    if (current === 'dark') root.setAttribute('data-theme', 'light');
+    else if (current === 'light') root.setAttribute('data-theme', 'dark');
+    else {
+      const isDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+      root.setAttribute('data-theme', isDark ? 'light' : 'dark');
+    }
+  });
+
+  function showScreen(id) {
+    document.querySelectorAll('.screen').forEach(el => el.classList.remove('active'));
+    document.querySelectorAll('.nav-item').forEach(el => el.classList.remove('active'));
+    const target = document.getElementById('s-' + id);
+    if (target) target.classList.add('active');
+    const nav = document.querySelector('.nav-item[data-screen="' + id + '"]');
+    if (nav) nav.classList.add('active');
+    window.scrollTo({top: 0, behavior: 'smooth'});
+  }
+  document.querySelectorAll('.nav-item[data-screen]').forEach(btn => {
+    btn.addEventListener('click', () => showScreen(btn.dataset.screen));
+  });
+
+  // Deal Detail tabs
+  document.querySelectorAll('.tab').forEach(tab => {
+    tab.addEventListener('click', () => {
+      const target = tab.dataset.tab;
+      const container = tab.closest('.panel');
+      container.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+      container.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+      tab.classList.add('active');
+      const content = container.querySelector('.tab-content[data-tab-c="' + target + '"]');
+      if (content) content.classList.add('active');
+    });
+  });
+
+  // Quantity buttons (rehab)
+  document.querySelectorAll('.qty').forEach(q => {
+    const input = q.querySelector('input');
+    const buttons = q.querySelectorAll('button');
+    buttons[0].addEventListener('click', () => {
+      let val = parseFloat(input.value.replace(/,/g, ''));
+      if (!isNaN(val) && val > 0) input.value = (val - 1).toString();
+    });
+    buttons[1].addEventListener('click', () => {
+      let val = parseFloat(input.value.replace(/,/g, ''));
+      if (isNaN(val)) val = 0;
+      input.value = (val + 1).toString();
+    });
+  });
+
+  // Chip toggling (visual only)
+  document.querySelectorAll('.chip').forEach(chip => {
+    chip.addEventListener('click', () => {
+      // For chip groups (siblings only)
+      const parent = chip.parentElement;
+      if (parent.querySelectorAll('.chip').length > 1) {
+        // Allow multi-select in Buy Box, single select elsewhere
+        if (parent.querySelectorAll('.chip.active').length > 1 || !chip.classList.contains('active')) {
+          chip.classList.toggle('active');
+        }
+      }
+    });
+  });
+</script>
