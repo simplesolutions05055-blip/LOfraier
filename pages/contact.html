@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>צור קשר · Simple Solutions</title>
+  <meta name="description" content="שיחת אבחון של 30 דקות. בלי מכירה. בלי חוזים. רק אמת על העסק שלך." />
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Heebo:wght@300;400;500;600;700;800;900&family=Frank+Ruhl+Libre:wght@400;500;700;900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../assets/css/style.css" />
+</head>
+<body data-base="../">
+  <main>
+    <section class="page-hero">
+      <div class="hero-bg">
+        <div class="blob blob-1"></div>
+        <div class="blob blob-2"></div>
+        <div class="blob blob-3"></div>
+        <div class="grain"></div>
+      </div>
+      <div style="position:relative; z-index:2">
+        <span class="eyebrow">צור קשר</span>
+        <h1>30 דקות. <em>אמת אחת.</em></h1>
+        <p>שיחת אבחון. בלי מכירה, בלי חוזים, בלי לחץ. רק שיחה שקופה על העסק שלך ואיך אפשר לעזור.</p>
+      </div>
+    </section>
+
+    <section style="padding-top:0">
+      <div class="container content-block">
+        <div class="feature-list reveal" style="grid-template-columns: repeat(3, 1fr)">
+          <div class="feature">
+            <h4>טלפון</h4>
+            <p><a href="tel:0509697776" dir="ltr" style="color:var(--ink-2)">050-969-7776</a></p>
+          </div>
+          <div class="feature">
+            <h4>אימייל</h4>
+            <p><a href="mailto:simple.solutions05055@gmail.com" style="color:var(--ink-2); word-break:break-all">simple.solutions05055@gmail.com</a></p>
+          </div>
+          <div class="feature">
+            <h4>וואטסאפ</h4>
+            <p><a href="https://wa.me/972509697776" target="_blank" rel="noopener" style="color:var(--ink-2)">שלחו הודעה ישירה</a></p>
+          </div>
+        </div>
+
+        <h2 class="reveal">או השאירו פרטים כאן</h2>
+        <p class="reveal">נחזור אליכם תוך 24 שעות, בימי עסקים. הבטחה.</p>
+
+        <form class="contact-form reveal" onsubmit="event.preventDefault(); this.querySelector('button').textContent='תודה! נחזור אליך בקרוב'; this.querySelector('button').disabled=true;">
+          <input type="text" name="name" placeholder="שם מלא" required>
+          <input type="tel" name="phone" placeholder="טלפון" required>
+          <input type="email" name="email" placeholder="אימייל">
+          <input type="text" name="business" placeholder="שם העסק / תחום">
+          <textarea name="message" placeholder="ספר בקצרה על העסק שלך והאתגר הכי גדול היום"></textarea>
+          <button type="submit">שליחת פרטים</button>
+        </form>
+
+        <div class="cta-box reveal" style="margin-top:80px">
+          <h2>לא אוהב טפסים?</h2>
+          <p>שלח לנו וואטסאפ ישיר — אנחנו בדרך כלל עונים תוך שעה.</p>
+          <div class="cta-buttons">
+            <a href="https://wa.me/972509697776" class="btn btn-whatsapp" target="_blank" rel="noopener">
+              <svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor"><path d="M12.04 2C6.58 2 2.13 6.45 2.13 11.91c0 1.75.46 3.46 1.32 4.96L2 22l5.25-1.38c1.45.79 3.08 1.21 4.79 1.21 5.46 0 9.91-4.45 9.91-9.91S17.5 2 12.04 2M17 15.35c-.24.67-1.22 1.24-1.83 1.28-.48.03-.99.16-3.4-.71-2.87-1.03-4.71-3.99-4.85-4.18-.14-.19-1.16-1.54-1.16-2.94 0-1.4.73-2.09 1-2.37.26-.28.57-.35.76-.35.19 0 .38 0 .55.01.19.01.44-.07.68.52.24.59.83 2.04.9 2.19.07.15.11.32.02.51-.09.19-.14.31-.28.48-.14.17-.29.38-.42.51-.14.14-.28.29-.12.56.17.28.75 1.23 1.61 2 1.11.99 2.05 1.29 2.34 1.44.28.14.45.12.62-.07.17-.19.71-.83.9-1.12.19-.28.38-.24.65-.14.26.09 1.66.78 1.94.92.28.14.47.21.54.33.07.12.07.69-.17 1.35z"/></svg>
+              <span>שלח וואטסאפ</span>
+            </a>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <script src="../assets/js/layout.js" defer></script>
+  <script src="../assets/js/main.js" defer></script>
+  <script src="../assets/js/octopus.js" defer></script>
+</body>
+</html>

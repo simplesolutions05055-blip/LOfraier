@@ -1,0 +1,520 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Simple Solutions — המערכת שמכניסה יותר ממה שהיא עולה</title>
+  <meta name="description" content="Simple Plan · Business OS — ניהול קמפיינים, ניהול סושיאל ואוטומציות לעסקים נותני שירות." />
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Heebo:wght@300;400;500;600;700;800;900&family=Frank+Ruhl+Libre:wght@400;500;700;900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="assets/css/style.css" />
+</head>
+<body>
+
+  <!-- Loader -->
+  <div class="loader" id="loader">
+    <div class="loader-inner">
+      <span class="loader-word">Simple</span>
+      <span class="loader-word">Solutions</span>
+    </div>
+    <div class="loader-bar"><span></span></div>
+  </div>
+
+  <!-- Cursor -->
+  <div class="cursor" id="cursor"></div>
+  <div class="cursor-dot" id="cursor-dot"></div>
+
+  <!-- Navigation -->
+  <header class="site-header" id="site-header">
+    <div class="nav-wrap">
+      <a href="/" class="logo">
+        <span class="logo-mark">◐</span>
+        <span class="logo-text">Simple <em>Solutions</em></span>
+      </a>
+      <nav class="site-nav">
+        <a href="/">בית</a>
+        <a href="pages/campaigns.html">ניהול קמפיינים</a>
+        <a href="pages/social.html">ניהול סושיאל</a>
+        <a href="pages/automation.html">אוטומציות</a>
+        <a href="pages/articles.html">מאמרים</a>
+        <a href="pages/about.html">אודות</a>
+      </nav>
+      <a href="pages/contact.html" class="nav-cta">
+        <span>צור קשר</span>
+        <svg viewBox="0 0 24 24" width="18" height="18"><path d="M14 5l7 7-7 7M21 12H3" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </a>
+      <button class="mobile-toggle" id="mobile-toggle" aria-label="תפריט">
+        <span></span><span></span><span></span>
+      </button>
+    </div>
+  </header>
+
+  <!-- Octopus companion -->
+  <div class="octopus-stage" id="octopus-stage" aria-hidden="true">
+    <svg id="octopus" viewBox="0 0 400 520" xmlns="http://www.w3.org/2000/svg">
+      <defs>
+        <radialGradient id="bodyGrad" cx="50%" cy="35%" r="65%">
+          <stop offset="0%" stop-color="#ffd7c2"/>
+          <stop offset="35%" stop-color="#ff9670"/>
+          <stop offset="70%" stop-color="#d94a3a"/>
+          <stop offset="100%" stop-color="#7a1a1a"/>
+        </radialGradient>
+        <radialGradient id="bellyGrad" cx="50%" cy="60%" r="55%">
+          <stop offset="0%" stop-color="#ffe6d2"/>
+          <stop offset="100%" stop-color="#ff9670" stop-opacity="0"/>
+        </radialGradient>
+        <radialGradient id="eyeGrad" cx="35%" cy="35%" r="60%">
+          <stop offset="0%" stop-color="#fff"/>
+          <stop offset="60%" stop-color="#f5e9dc"/>
+          <stop offset="100%" stop-color="#c8a889"/>
+        </radialGradient>
+        <radialGradient id="pupilGrad" cx="50%" cy="50%" r="50%">
+          <stop offset="0%" stop-color="#1a1a1a"/>
+          <stop offset="100%" stop-color="#000"/>
+        </radialGradient>
+        <linearGradient id="tentacleGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+          <stop offset="0%" stop-color="#d94a3a"/>
+          <stop offset="60%" stop-color="#a02a24"/>
+          <stop offset="100%" stop-color="#5a0f0f"/>
+        </linearGradient>
+        <filter id="softShadow" x="-30%" y="-30%" width="160%" height="160%">
+          <feGaussianBlur stdDeviation="6" />
+          <feOffset dx="0" dy="4" result="offsetblur"/>
+          <feComponentTransfer><feFuncA type="linear" slope="0.35"/></feComponentTransfer>
+          <feMerge><feMergeNode/><feMergeNode in="SourceGraphic"/></feMerge>
+        </filter>
+        <filter id="innerGlow" x="-20%" y="-20%" width="140%" height="140%">
+          <feGaussianBlur stdDeviation="8" result="blur"/>
+          <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
+        </filter>
+        <pattern id="suckers" x="0" y="0" width="10" height="10" patternUnits="userSpaceOnUse">
+          <circle cx="5" cy="5" r="1.6" fill="#3a0808" opacity="0.55"/>
+          <circle cx="5" cy="5" r="0.7" fill="#ffb89a" opacity="0.35"/>
+        </pattern>
+      </defs>
+
+      <!-- Tentacles (behind body) -->
+      <g id="tentacles-back" filter="url(#softShadow)">
+        <path class="tentacle" data-idx="0" d="M170,290 Q120,360 130,430 Q140,490 100,510" stroke="url(#tentacleGrad)" stroke-width="28" stroke-linecap="round" fill="none"/>
+        <path class="tentacle" data-idx="1" d="M140,280 Q80,320 60,380 Q40,440 20,460" stroke="url(#tentacleGrad)" stroke-width="26" stroke-linecap="round" fill="none"/>
+        <path class="tentacle" data-idx="2" d="M230,290 Q280,360 270,430 Q260,490 300,510" stroke="url(#tentacleGrad)" stroke-width="28" stroke-linecap="round" fill="none"/>
+        <path class="tentacle" data-idx="3" d="M260,280 Q320,320 340,380 Q360,440 380,460" stroke="url(#tentacleGrad)" stroke-width="26" stroke-linecap="round" fill="none"/>
+      </g>
+
+      <!-- Body -->
+      <g id="body-group">
+        <ellipse cx="200" cy="200" rx="140" ry="150" fill="url(#bodyGrad)" filter="url(#softShadow)"/>
+        <ellipse cx="200" cy="220" rx="100" ry="90" fill="url(#bellyGrad)" opacity="0.7"/>
+
+        <!-- Head bumps for realism -->
+        <ellipse cx="150" cy="140" rx="18" ry="12" fill="#ffb89a" opacity="0.5"/>
+        <ellipse cx="250" cy="145" rx="16" ry="11" fill="#ffb89a" opacity="0.5"/>
+        <ellipse cx="200" cy="115" rx="22" ry="10" fill="#ffb89a" opacity="0.35"/>
+
+        <!-- Spots -->
+        <circle cx="130" cy="200" r="4" fill="#7a1a1a" opacity="0.4"/>
+        <circle cx="145" cy="230" r="3" fill="#7a1a1a" opacity="0.45"/>
+        <circle cx="260" cy="205" r="3.5" fill="#7a1a1a" opacity="0.4"/>
+        <circle cx="275" cy="235" r="3" fill="#7a1a1a" opacity="0.45"/>
+        <circle cx="200" cy="270" r="3" fill="#7a1a1a" opacity="0.35"/>
+
+        <!-- Eyes -->
+        <g id="eyes">
+          <ellipse cx="160" cy="195" rx="26" ry="30" fill="url(#eyeGrad)"/>
+          <ellipse cx="240" cy="195" rx="26" ry="30" fill="url(#eyeGrad)"/>
+          <ellipse id="pupil-left"  cx="160" cy="200" rx="10" ry="14" fill="url(#pupilGrad)"/>
+          <ellipse id="pupil-right" cx="240" cy="200" rx="10" ry="14" fill="url(#pupilGrad)"/>
+          <circle cx="156" cy="192" r="4" fill="#fff"/>
+          <circle cx="236" cy="192" r="4" fill="#fff"/>
+          <circle cx="164" cy="205" r="1.6" fill="#fff" opacity="0.8"/>
+          <circle cx="244" cy="205" r="1.6" fill="#fff" opacity="0.8"/>
+          <!-- Eyelids for blink -->
+          <rect id="lid-left"  x="132" y="163" width="56" height="0" fill="#a02a24" rx="26"/>
+          <rect id="lid-right" x="212" y="163" width="56" height="0" fill="#a02a24" rx="26"/>
+        </g>
+
+        <!-- Smile / beak -->
+        <path d="M180,268 Q200,282 220,268" stroke="#5a0f0f" stroke-width="3" fill="none" stroke-linecap="round"/>
+      </g>
+
+      <!-- Tentacles (front) -->
+      <g id="tentacles-front" filter="url(#softShadow)">
+        <path class="tentacle" data-idx="4" d="M175,320 Q160,400 180,470 Q195,510 170,510" stroke="url(#tentacleGrad)" stroke-width="30" stroke-linecap="round" fill="none"/>
+        <path class="tentacle" data-idx="5" d="M225,320 Q240,400 220,470 Q205,510 230,510" stroke="url(#tentacleGrad)" stroke-width="30" stroke-linecap="round" fill="none"/>
+        <path class="tentacle" data-idx="6" d="M195,325 Q185,420 210,490" stroke="url(#tentacleGrad)" stroke-width="24" stroke-linecap="round" fill="none"/>
+        <path class="tentacle" data-idx="7" d="M205,325 Q215,420 190,490" stroke="url(#tentacleGrad)" stroke-width="24" stroke-linecap="round" fill="none"/>
+
+        <!-- Suckers overlay on front tentacles -->
+        <path class="suckers-overlay" d="M175,320 Q160,400 180,470 Q195,510 170,510" stroke="url(#suckers)" stroke-width="18" stroke-linecap="round" fill="none" opacity="0.7"/>
+        <path class="suckers-overlay" d="M225,320 Q240,400 220,470 Q205,510 230,510" stroke="url(#suckers)" stroke-width="18" stroke-linecap="round" fill="none" opacity="0.7"/>
+      </g>
+
+      <!-- Highlight -->
+      <ellipse cx="165" cy="115" rx="45" ry="20" fill="#fff" opacity="0.28"/>
+      <ellipse cx="155" cy="105" rx="20" ry="8" fill="#fff" opacity="0.5"/>
+    </svg>
+    <div class="ink-trail" id="ink-trail"></div>
+  </div>
+
+  <!-- Progress bar -->
+  <div class="scroll-progress" id="scroll-progress"></div>
+
+  <main>
+
+    <!-- HERO -->
+    <section class="hero" id="hero">
+      <div class="hero-bg">
+        <div class="blob blob-1"></div>
+        <div class="blob blob-2"></div>
+        <div class="blob blob-3"></div>
+        <div class="grain"></div>
+      </div>
+
+      <div class="hero-content">
+        <div class="hero-tag reveal">
+          <span class="dot"></span>
+          <span>Simple Plan · Business OS</span>
+        </div>
+        <h1 class="hero-title">
+          <span class="line reveal-line"><span>המערכת</span></span>
+          <span class="line reveal-line"><span>שמכניסה יותר</span></span>
+          <span class="line reveal-line"><span>ממה <em>שהיא עולה</em></span></span>
+        </h1>
+        <p class="hero-sub reveal">
+          בעלי עסקים נותני שירות לא צריכים עוד פלסטרים.
+          זו לא בעיה שלך — זו בעיה של מבנה.
+        </p>
+        <div class="hero-cta reveal">
+          <a href="pages/contact.html" class="btn btn-primary">
+            <span>נעים להכיר</span>
+            <svg viewBox="0 0 24 24" width="18" height="18"><path d="M14 5l7 7-7 7M21 12H3" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </a>
+          <a href="#services" class="btn btn-ghost">
+            <span>גלו את השירותים</span>
+          </a>
+        </div>
+
+        <div class="hero-metrics reveal">
+          <div class="metric">
+            <div class="metric-num" data-count="50">0</div>
+            <div class="metric-label">+ לקוחות פעילים</div>
+          </div>
+          <div class="metric">
+            <div class="metric-num" data-count="12" data-suffix="M">0</div>
+            <div class="metric-label">₪ תחת ניהול</div>
+          </div>
+          <div class="metric">
+            <div class="metric-num" data-count="87" data-suffix="%">0</div>
+            <div class="metric-label">שימור לקוחות</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="scroll-cue">
+        <span>גלול למטה</span>
+        <div class="arrow"></div>
+      </div>
+    </section>
+
+    <!-- MARQUEE -->
+    <section class="marquee" aria-hidden="true">
+      <div class="marquee-track">
+        <span>ROAS שמדבר במספרים</span><span class="sep">✦</span>
+        <span>ניהול קמפיינים</span><span class="sep">✦</span>
+        <span>אסטרטגיית סמכות</span><span class="sep">✦</span>
+        <span>תוכן ויראלי</span><span class="sep">✦</span>
+        <span>אוטומציות חכמות</span><span class="sep">✦</span>
+        <span>מענה תוך שניות</span><span class="sep">✦</span>
+        <span>ROAS שמדבר במספרים</span><span class="sep">✦</span>
+        <span>ניהול קמפיינים</span><span class="sep">✦</span>
+        <span>אסטרטגיית סמכות</span><span class="sep">✦</span>
+        <span>תוכן ויראלי</span><span class="sep">✦</span>
+        <span>אוטומציות חכמות</span><span class="sep">✦</span>
+        <span>מענה תוך שניות</span><span class="sep">✦</span>
+      </div>
+    </section>
+
+    <!-- QUOTES -->
+    <section class="quotes-section" id="quotes">
+      <div class="container">
+        <div class="section-header reveal">
+          <span class="eyebrow">3 ציטוטים אמיתיים</span>
+          <h2>למה בעלי עסקים באים אלינו?</h2>
+        </div>
+        <div class="quotes-grid">
+          <figure class="quote-card reveal">
+            <div class="quote-mark">"</div>
+            <blockquote>ניסיתי חמישה משרדי פרסום. כל אחד הבטיח, אף אחד לא עמד.</blockquote>
+            <figcaption>— עורכת דין נזיקין, רעננה</figcaption>
+          </figure>
+          <figure class="quote-card reveal">
+            <div class="quote-mark">"</div>
+            <blockquote>הבנתי שהבעיה היא לא הפרסום. הבעיה היא שאין לי מערכת שמחזיקה את זה יחד.</blockquote>
+            <figcaption>— מכון לייזר, מודיעין</figcaption>
+          </figure>
+          <figure class="quote-card reveal">
+            <div class="quote-mark">"</div>
+            <blockquote>מהחודש הראשון ראיתי לידים איכותיים באמת. אחרי חצי שנה — עסק אחר לחלוטין.</blockquote>
+            <figcaption>— סוכנות רכבים, ראשון לציון</figcaption>
+          </figure>
+        </div>
+      </div>
+    </section>
+
+    <!-- SERVICES -->
+    <section class="services" id="services">
+      <div class="container">
+        <div class="section-header reveal">
+          <span class="eyebrow">שלוש זרועות · צמיחה אחת</span>
+          <h2>שלושה שירותים <em>שעובדים יחד</em></h2>
+          <p>כמו שלושה זרועות של תמנון — כל אחת מטפלת בחלק אחר, וכולן מתואמות במוח אחד.</p>
+        </div>
+
+        <div class="service-grid">
+          <a href="pages/campaigns.html" class="service-card reveal" data-color="peach">
+            <div class="service-num">01</div>
+            <div class="service-icon">
+              <svg viewBox="0 0 60 60" width="52" height="52">
+                <circle cx="30" cy="30" r="24" fill="none" stroke="currentColor" stroke-width="2"/>
+                <path d="M20,30 L28,38 L42,22" stroke="currentColor" stroke-width="3" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+            </div>
+            <h3>ניהול קמפיינים</h3>
+            <p>Meta + TikTok. אופטימיזציה יומיומית. ROAS שמדבר במספרים.</p>
+            <div class="service-cta">
+              <span>לפרטים</span>
+              <svg viewBox="0 0 24 24" width="18" height="18"><path d="M14 5l7 7-7 7M21 12H3" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            </div>
+          </a>
+
+          <a href="pages/social.html" class="service-card reveal" data-color="coral">
+            <div class="service-num">02</div>
+            <div class="service-icon">
+              <svg viewBox="0 0 60 60" width="52" height="52">
+                <rect x="12" y="12" width="36" height="36" rx="10" fill="none" stroke="currentColor" stroke-width="2"/>
+                <circle cx="30" cy="30" r="8" fill="none" stroke="currentColor" stroke-width="2"/>
+                <circle cx="41" cy="19" r="2" fill="currentColor"/>
+              </svg>
+            </div>
+            <h3>ניהול סושיאל</h3>
+            <p>אסטרטגיית סמכות. תוכן ויראלי. 10K עוקבים — או החזר יחסי.</p>
+            <div class="service-cta">
+              <span>לפרטים</span>
+              <svg viewBox="0 0 24 24" width="18" height="18"><path d="M14 5l7 7-7 7M21 12H3" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            </div>
+          </a>
+
+          <a href="pages/automation.html" class="service-card reveal" data-color="terracotta">
+            <div class="service-num">03</div>
+            <div class="service-icon">
+              <svg viewBox="0 0 60 60" width="52" height="52">
+                <path d="M15,30 Q15,15 30,15 Q45,15 45,30 Q45,45 30,45 Q22,45 20,40" fill="none" stroke="currentColor" stroke-width="2"/>
+                <path d="M20,40 L14,44 M20,40 L23,46" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+                <circle cx="30" cy="30" r="4" fill="currentColor"/>
+              </svg>
+            </div>
+            <h3>אוטומציות</h3>
+            <p>וואטסאפ + צ׳אט-בוטים. מענה תוך שניות, 24/7.</p>
+            <div class="service-cta">
+              <span>לפרטים</span>
+              <svg viewBox="0 0 24 24" width="18" height="18"><path d="M14 5l7 7-7 7M21 12H3" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            </div>
+          </a>
+        </div>
+      </div>
+    </section>
+
+    <!-- MANIFESTO -->
+    <section class="manifesto" id="manifesto">
+      <div class="container">
+        <div class="manifesto-inner">
+          <span class="eyebrow reveal">המניפסט שלנו</span>
+          <h2 class="reveal">
+            אנחנו לא מוכרים לידים.<br>
+            אנחנו בונים <em>מערכת</em> שמחזירה את הרווח למקום שלו.
+          </h2>
+          <div class="manifesto-cols">
+            <div class="reveal">
+              <h4>למה מבנה?</h4>
+              <p>כי פרסום בלי מבנה זה רעש. תוכן בלי מבנה זה סיזיפי. אוטומציה בלי מבנה זה מלכודת. מבנה זה שדרוש רק פעם אחת, ואז כל השאר מתחיל לעבוד לבד.</p>
+            </div>
+            <div class="reveal">
+              <h4>למה שלוש זרועות?</h4>
+              <p>כי לא מספיק להביא לידים — צריך לחמם אותם, לענות להם, לסגור אותם, ולוודא שהם חוזרים. כל זרוע דוחפת את השנייה קדימה.</p>
+            </div>
+            <div class="reveal">
+              <h4>למה אנחנו?</h4>
+              <p>כי אנחנו לא עוד סוכנות. אנחנו הצוות שיושב לצדך, מבין את המספרים שלך, ומתחייב לתוצאה מדידה — לא להבטחות.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- STATS BAND -->
+    <section class="stats-band">
+      <div class="container">
+        <div class="stat reveal"><span class="stat-num">50+</span><span>לקוחות פעילים</span></div>
+        <div class="stat reveal"><span class="stat-num">12M ₪</span><span>תחת ניהול</span></div>
+        <div class="stat reveal"><span class="stat-num">87%</span><span>שימור לקוחות</span></div>
+        <div class="stat reveal"><span class="stat-num">24/7</span><span>מענה אוטומטי</span></div>
+      </div>
+    </section>
+
+    <!-- PROCESS -->
+    <section class="process" id="process">
+      <div class="container">
+        <div class="section-header reveal">
+          <span class="eyebrow">איך זה עובד</span>
+          <h2>מהשיחה הראשונה — עד ה־ROI</h2>
+        </div>
+        <div class="process-timeline">
+          <div class="process-step reveal">
+            <div class="step-num">01</div>
+            <h4>שיחת אבחון</h4>
+            <p>שעה של אמת. מבינים איפה העסק, איפה החולשות, ומה באמת אפשר לשפר החודש הבא.</p>
+          </div>
+          <div class="process-step reveal">
+            <div class="step-num">02</div>
+            <h4>תכנון מבנה</h4>
+            <p>מגדירים את שלוש הזרועות — קמפיינים, סושיאל, אוטומציות — ואיך הן מדברות זו עם זו.</p>
+          </div>
+          <div class="process-step reveal">
+            <div class="step-num">03</div>
+            <h4>הפעלה</h4>
+            <p>מקימים הכל: פיקסלים, קריאייטיב, בוטים, אוטומציות. עולה חי תוך שבועיים.</p>
+          </div>
+          <div class="process-step reveal">
+            <div class="step-num">04</div>
+            <h4>אופטימיזציה</h4>
+            <p>יום-יום. מספרים, לא רגשות. דוחות שבועיים, שיחת אסטרטגיה חודשית.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- FOUNDER -->
+    <section class="founder" id="founder">
+      <div class="container">
+        <div class="founder-card reveal">
+          <div class="founder-photo">
+            <div class="photo-inner">
+              <span>מ.ע</span>
+            </div>
+          </div>
+          <div class="founder-text">
+            <span class="eyebrow">המייסד</span>
+            <h2>מאור עטייה</h2>
+            <p>הקמתי את Simple Solutions אחרי שראיתי יותר מדי בעלי עסקים משלמים על "פרסום" ומקבלים תירוצים. הבטחתי לעצמי לבנות משהו אחר: מערכת מדידה, שקופה, שמתחייבת לתוצאה.</p>
+            <p>היום אנחנו צוות של עשרה, מנהלים תקציבים של +12 מיליון ש״ח בשנה, ומתגאים בכל לקוח שנשאר איתנו יותר משנה.</p>
+            <a href="pages/about.html" class="btn btn-ghost">
+              <span>קראו את הסיפור המלא</span>
+              <svg viewBox="0 0 24 24" width="18" height="18"><path d="M14 5l7 7-7 7M21 12H3" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            </a>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- FAQ -->
+    <section class="faq" id="faq">
+      <div class="container">
+        <div class="section-header reveal">
+          <span class="eyebrow">שאלות שכולם שואלים</span>
+          <h2>מה חשוב לדעת לפני שמתחילים?</h2>
+        </div>
+        <div class="faq-list">
+          <details class="faq-item reveal">
+            <summary>
+              <span>מתי אני אראה תוצאות?</span>
+              <span class="faq-toggle"></span>
+            </summary>
+            <p>לידים איכותיים — תוך שבועיים מהעלייה לאוויר. שיפור משמעותי ב־ROAS — תוך 30–60 יום. שינוי אמיתי במבנה העסק — בין 3 ל־6 חודשים.</p>
+          </details>
+          <details class="faq-item reveal">
+            <summary>
+              <span>מה גובה ההשקעה?</span>
+              <span class="faq-toggle"></span>
+            </summary>
+            <p>ההשקעה משתנה לפי היקף השירות ותקציב המדיה. בשיחת האבחון נבנה לך הצעה מדויקת שמתאימה לשלב שבו העסק שלך נמצא.</p>
+          </details>
+          <details class="faq-item reveal">
+            <summary>
+              <span>מה קורה אם אני לא מרוצה?</span>
+              <span class="faq-toggle"></span>
+            </summary>
+            <p>אין חוזים ארוכים בכפייה. אנחנו עובדים ברבעונים. אם אחרי רבעון אתה מרגיש שזה לא בשבילך — נפרדים בכיף, בלי קנסות ובלי סחבת.</p>
+          </details>
+          <details class="faq-item reveal">
+            <summary>
+              <span>מה מייחד אתכם ממשרדי פרסום אחרים?</span>
+              <span class="faq-toggle"></span>
+            </summary>
+            <p>שני דברים: אחד — אנחנו לא מוכרים לך שירות, אלא מערכת. שני — אנחנו מדווחים במספרים, לא ברגשות. אתה תמיד יודע איפה הכסף שלך.</p>
+          </details>
+        </div>
+      </div>
+    </section>
+
+    <!-- CTA -->
+    <section class="cta-section" id="cta">
+      <div class="container">
+        <div class="cta-box reveal">
+          <h2>מוכנים למערכת <em>שעובדת בשבילכם?</em></h2>
+          <p>שיחת אבחון של 30 דקות. בלי מכירה. בלי חוזים. רק אמת על העסק שלך.</p>
+          <div class="cta-buttons">
+            <a href="pages/contact.html" class="btn btn-primary">
+              <span>לתאם שיחה עכשיו</span>
+              <svg viewBox="0 0 24 24" width="18" height="18"><path d="M14 5l7 7-7 7M21 12H3" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            </a>
+            <a href="https://wa.me/972509697776" class="btn btn-whatsapp" target="_blank" rel="noopener">
+              <svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor"><path d="M12.04 2C6.58 2 2.13 6.45 2.13 11.91c0 1.75.46 3.46 1.32 4.96L2 22l5.25-1.38c1.45.79 3.08 1.21 4.79 1.21 5.46 0 9.91-4.45 9.91-9.91S17.5 2 12.04 2M17 15.35c-.24.67-1.22 1.24-1.83 1.28-.48.03-.99.16-3.4-.71-2.87-1.03-4.71-3.99-4.85-4.18-.14-.19-1.16-1.54-1.16-2.94 0-1.4.73-2.09 1-2.37.26-.28.57-.35.76-.35.19 0 .38 0 .55.01.19.01.44-.07.68.52.24.59.83 2.04.9 2.19.07.15.11.32.02.51-.09.19-.14.31-.28.48-.14.17-.29.38-.42.51-.14.14-.28.29-.12.56.17.28.75 1.23 1.61 2 1.11.99 2.05 1.29 2.34 1.44.28.14.45.12.62-.07.17-.19.71-.83.9-1.12.19-.28.38-.24.65-.14.26.09 1.66.78 1.94.92.28.14.47.21.54.33.07.12.07.69-.17 1.35z"/></svg>
+              <span>WhatsApp</span>
+            </a>
+          </div>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- Footer -->
+  <footer class="site-footer">
+    <div class="container">
+      <div class="footer-grid">
+        <div class="footer-brand">
+          <div class="footer-logo">Simple <em>Solutions</em></div>
+          <p>מערכת אחת. שלוש זרועות. צמיחה שמדברת במספרים.</p>
+        </div>
+        <div>
+          <h5>ניווט</h5>
+          <a href="/">בית</a>
+          <a href="pages/about.html">אודות</a>
+          <a href="pages/articles.html">מאמרים</a>
+          <a href="pages/contact.html">צור קשר</a>
+        </div>
+        <div>
+          <h5>שירותים</h5>
+          <a href="pages/campaigns.html">ניהול קמפיינים</a>
+          <a href="pages/social.html">ניהול סושיאל</a>
+          <a href="pages/automation.html">אוטומציות</a>
+        </div>
+        <div>
+          <h5>צור קשר</h5>
+          <a href="tel:0509697776" dir="ltr">050-969-7776</a>
+          <a href="mailto:simple.solutions05055@gmail.com">simple.solutions05055@gmail.com</a>
+          <a href="https://wa.me/972509697776" target="_blank" rel="noopener">WhatsApp</a>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        <span>© 2026 Simple Solutions · כל הזכויות שמורות</span>
+        <span>עוצב ונבנה בישראל 🇮🇱</span>
+      </div>
+    </div>
+  </footer>
+
+  <script src="assets/js/main.js" defer></script>
+  <script src="assets/js/octopus.js" defer></script>
+</body>
+</html>
